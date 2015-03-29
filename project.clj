@@ -32,6 +32,7 @@
                                     {:source-paths ["test"]
                                      :output-path "target/test-classes"
                                      :rules :cljs}]}}}
-  :aliases {"all-tests" ["with-profile" "cljs:1.4:1.5:1.6" "test"]
-            "cljx-auto" ["with-profile" "cljx" "cljx" "auto"]
-            "cljx-once" ["with-profile" "cljx" "cljx" "once"]})
+  :aliases {"all-tests"    ["with-profile" "cljs:1.4:1.5:1.6" "test"]
+            "latest-tests" ["with-profile" "cljs:1.6" "test"]
+            "cljx-auto"    ["with-profile" "cljx" "cljx" "auto"]
+            "cljx-once"    ["with-profile" "cljx" "cljx" "once"]})
