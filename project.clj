@@ -10,7 +10,7 @@
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
-             :cljs {:dependencies [[org.clojure/clojurescript "0.0-2665"]]
+             :cljs {:dependencies [[org.clojure/clojurescript "0.0-3126"]]
                     :plugins [[lein-cljsbuild "1.0.3"]
                               [com.cemerick/clojurescript.test "0.3.3"]]
                     :cljsbuild {:test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}
