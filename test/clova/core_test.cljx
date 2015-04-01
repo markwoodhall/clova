@@ -65,12 +65,15 @@
   (deftest validation
     (testing "testing validation using a validation set returns
              a valid? = false result and a sequence of the validation results"
-      (let [v-set (core/validation-set [:email core/email?])
-            result (core/validate v-set {:email "abc"})]
-        (is (not (:valid? result)))))
+      (let [v-set (core/validation-set [:email core/email? :post-code core/post-code?])
+            result (core/validate v-set {:email "abc" :post-code 12})]
+        (is (not (:valid? result)))
+        (is (= "Email address abc is invalid." (first (:results result))))
+        (is (= "Post code 12 is invalid." (second (:results result))))))
 
     (testing "testing validation using a validation set returns
-             a valid? = true result and a sequence of the validation results"
+             a valid? = true result and no validation results"
       (let [v-set (core/validation-set [:email core/email?])
             result (core/validate v-set {:email "test.email@googlemail.com"})]
-        (is (:valid? result))))))
+        (is (:valid? result))
+        (is (empty? (:results result)))))))

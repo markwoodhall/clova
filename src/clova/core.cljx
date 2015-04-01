@@ -7,7 +7,7 @@
   [doc-string fname validator-meta-data args & body]
   `(do
      (def
-       ~(with-meta fname {:doc doc-string})
+       ~(with-meta fname {:doc doc-string :arglists `'(~args)})
        (with-meta (fn ~fname ([~@args]
                               ~@body))
                   ~validator-meta-data))))
@@ -55,6 +55,10 @@
   "Takes a validation set an applies it to m"
   [v-set m]
   (let [valids (map (fn [v]
-                      (let [value (get-in m [(:target (meta v))])]
-                        (v value))) v-set)]
-    {:valid? (reduce #(and %1 %2) valids)}))
+                      (let [value (get-in m [(:target (meta v))])
+                            message (:default-message (meta v))]
+                        {:valid? (v value)
+                         :message #+clj (format message value)
+                                  #+cljs (.replace message "%s" value)})) v-set)]
+    {:valid? (reduce #(and (:valid? %1) (:valid? %2)) {:valid? true} valids)
+     :results (map :message (filter #(not (:valid? %)) valids))}))
