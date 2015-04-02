@@ -12,29 +12,34 @@
                               ~@body))
                   ~validator-meta-data))))
 
+(defn matches?
+  "Checks a string representation of value against regex and
+  returns true if value matches the regex. If value is not a
+  match then returns nil."
+  [regex value]
+  (when (re-seq regex (str value))
+    true))
+
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
   {:type :email :default-message "Email address %s is invalid."}
   [value]
-  (if (re-seq #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$" (str value))
-    true))
+  (matches? #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$" value))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
   {:type :zip-code :default-message "Zip code %s is invalid."}
   [value]
-  (if (re-seq #"^[0-9]{5}(-[0-9]{4})?$" (str value))
-    true))
+  (matches? #"^[0-9]{5}(-[0-9]{4})?$" value))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
   {:type :post-code :default-message "Post code %s is invalid."}
   [value]
-  (if (re-seq #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" (str value))
-    true))
+  (matches? #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" value))
 
 (defn validation-set
   "Takes a sequence (col) that represents
