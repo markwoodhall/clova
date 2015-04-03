@@ -41,6 +41,13 @@
   [value]
   (matches? #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" value))
 
+(defvalidator
+  "Checks an input value to see if it is a valid url"
+  url?
+  {:type :url :default-message "Url %s is invalid."}
+  [value]
+  (matches? #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]" value))
+
 (defn validation-set
   "Takes a sequence (col) that represents
   keys to validate and the functions used to validate them.

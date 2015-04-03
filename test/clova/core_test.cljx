@@ -8,6 +8,7 @@
       only-clova-set-meta #(select-keys % [:type :target :default-message])
       exp-email-meta {:type :email :target :email :default-message "Email address %s is invalid."}
       exp-post-meta {:type :post-code :target :post-code :default-message "Post code %s is invalid."}
+      exp-url-meta {:type :url :target :url :default-message "Url %s is invalid."}
       exp-zip-meta {:type :zip-code :target :zip-code :default-message "Zip code %s is invalid."}]
 
   (deftest email-validator
@@ -48,6 +49,19 @@
     (testing "validating an invalid uk post code"
       (doseq [post-code ["abc" 100 {:a 1} [1 2] "1-1-0" "B112SB" "b112sb"]]
         (is (not (core/post-code? post-code))))))
+
+  (deftest url-validator
+    (testing "url validator exposes correct meta data"
+      (is (= (dissoc exp-url-meta :target)
+             (only-clova-meta (meta core/url?)))))
+
+    (testing "validating a valid url "
+      (doseq [url ["http://google.com" "https://www.google.com"]]
+        (is (core/url? url))))
+
+    (testing "validating an invalid url"
+      (doseq [url ["aaaaasnnnnxnxx.c" "httpp://www.google.com"]]
+        (is (not (core/url? url))))))
 
   (deftest validation-set
     (testing "testing a validation set returns a sequence of the correct
