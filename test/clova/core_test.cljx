@@ -5,10 +5,11 @@
   #+cljs (:require-macros [cemerick.cljs.test :refer [is deftest testing are]]))
 
 (let [only-clova-meta #(select-keys % [:type :default-message])
-      only-clova-set-meta #(select-keys % [:type :target :default-message])
+      only-clova-set-meta #(select-keys % [:type :target :default-message :args])
       exp-email-meta {:type :email :target :email :default-message "Email address %s is invalid."}
       exp-post-meta {:type :post-code :target :post-code :default-message "Post code %s is invalid."}
       exp-url-meta {:type :url :target :url :default-message "Url %s is invalid."}
+      exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s must be between %s and %s"}
       exp-zip-meta {:type :zip-code :target :zip-code :default-message "Zip code %s is invalid."}]
 
   (deftest email-validator
@@ -63,6 +64,19 @@
       (doseq [url ["aaaaasnnnnxnxx.c" "httpp://www.google.com"]]
         (is (not (core/url? url))))))
 
+  (deftest between-validator
+    (testing "between validator exposes correct meta data"
+      (is (= (dissoc exp-between-meta :target :args)
+             (only-clova-meta (meta core/between?)))))
+
+    (testing "validating a valid between value"
+      (doseq [between [1 2 3 4 5 6 7 8 9]]
+        (is (core/between? between 1 9))))
+
+    (testing "validating an invalid between"
+      (doseq [between [0 10 11 12 20 30 40]]
+        (is (not (core/between? between 1 9))))))
+
   (deftest validation-set
     (testing "testing a validation set returns a sequence of the correct
              validation functions"
@@ -74,7 +88,13 @@
             post-code-meta (meta (nth v-set 2))]
         (is (= exp-email-meta (only-clova-set-meta email-meta)))
         (is (= exp-zip-meta (only-clova-set-meta zip-meta)))
-        (is (= exp-post-meta (only-clova-set-meta post-code-meta))))))
+        (is (= exp-post-meta (only-clova-set-meta post-code-meta)))))
+
+    (testing "testing a validation set with multi arity returns a sequence of the correct
+             validation functions"
+      (let [v-set (core/validation-set [:age [core/between? 1 9]])
+            between-meta (meta (first v-set))]
+        (is (= exp-between-meta (only-clova-set-meta between-meta))))))
 
   (deftest validation
     (testing "testing validation using a validation set returns

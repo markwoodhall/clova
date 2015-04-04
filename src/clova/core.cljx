@@ -42,11 +42,19 @@
   (matches? #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" value))
 
 (defvalidator
-  "Checks an input value to see if it is a valid url"
+  "Checks an input value to see if it is a valid url."
   url?
   {:type :url :default-message "Url %s is invalid."}
   [value]
   (matches? #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]" value))
+
+(defvalidator
+  "Checks an input value to see if it is between lower and upper."
+  between?
+  {:type :between :default-message "%s must be between %s and %s"}
+  [value lower upper]
+  (and (>= value lower)
+       (<= value upper)))
 
 (defn validation-set
   "Takes a sequence (col) that represents
@@ -58,10 +66,15 @@
   the validation."
   [col]
   {:pre [(even? (count col))]}
-  (map #(let [func (second %)]
-          (with-meta
-            func
-            (merge (meta func) {:target (first %)}))) (partition 2 col)))
+  (map #(let [func-or-seq (second %)
+              func (if (sequential? func-or-seq)
+                     (first func-or-seq)
+                     func-or-seq)
+              func-meta (meta func)
+              args (if (sequential? func-or-seq)
+                     {:args (rest func-or-seq)})
+              val-meta (merge args {:target (first %)})]
+          (with-meta func (merge func-meta val-meta))) (partition 2 col)))
 
 (defn validate
   "Takes a validation set an applies it to m"
