@@ -1,4 +1,6 @@
 (ns clova.core
+  #+cljs (:require [goog.string :as gstring]
+                   [goog.string.format])
   #+cljs (:require-macros [clova.core :refer [defvalidator]]))
 
 (defmacro defvalidator
@@ -86,6 +88,6 @@
                             message (:default-message (meta v))]
                         {:valid? (apply v value args)
                          :message #+clj (apply format message value (name v-name) args)
-                         #+cljs (.replace message "%s" value)})) v-set)]
-    {:valid? (reduce #(and (:valid? %1) (:valid? %2)) {:valid? true} valids)
+                         #+cljs (apply gstring/format message value (name v-name) args)})) v-set)]
+    {:valid? (reduce #(and %1 %2) true (map :valid? valids))
      :results (map :message (filter #(not (:valid? %)) valids))}))
