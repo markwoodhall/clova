@@ -23,35 +23,35 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:type :email :default-message "Email address %s is invalid."}
+  {:type :email :default-message "%s is an invalid value for %s."}
   [value]
   (matches? #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$" value))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:type :zip-code :default-message "Zip code %s is invalid."}
+  {:type :zip-code :default-message "%s is an invalid value for %s."}
   [value]
   (matches? #"^[0-9]{5}(-[0-9]{4})?$" value))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:type :post-code :default-message "Post code %s is invalid."}
+  {:type :post-code :default-message "%s is an invalid value for %s."}
   [value]
   (matches? #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" value))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:type :url :default-message "Url %s is invalid."}
+  {:type :url :default-message "%s is an invalid value for %s."}
   [value]
   (matches? #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]" value))
 
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s must be between %s and %s"}
+  {:type :between :default-message "%s is an invalid value for %s, it must be between %s and %s"}
   [value lower upper]
   (and (>= value lower)
        (<= value upper)))
@@ -80,10 +80,12 @@
   "Takes a validation set an applies it to m"
   [v-set m]
   (let [valids (map (fn [v]
-                      (let [value (get-in m [(:target (meta v))])
+                      (let [v-name (:target (meta v))
+                            value (get-in m [v-name])
+                            args (:args (meta v))
                             message (:default-message (meta v))]
-                        {:valid? (v value)
-                         :message #+clj (format message value)
-                                  #+cljs (.replace message "%s" value)})) v-set)]
+                        {:valid? (apply v value args)
+                         :message #+clj (apply format message value (name v-name) args)
+                         #+cljs (.replace message "%s" value)})) v-set)]
     {:valid? (reduce #(and (:valid? %1) (:valid? %2)) {:valid? true} valids)
      :results (map :message (filter #(not (:valid? %)) valids))}))
