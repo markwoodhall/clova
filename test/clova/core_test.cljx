@@ -115,14 +115,21 @@
                                         :post-code core/post-code?
                                         :zip-code core/zip-code?
                                         :matches [core/matches? #"amatch"]
+                                        :url core/url?
                                         :age [core/between? 18 40]])
-            result (core/validate v-set {:email "abc" :post-code 12 :zip-code "abc" :matches "nomatch" :age 10})]
+            result (core/validate v-set {:email "abc"
+                                         :post-code 12
+                                         :zip-code "abc"
+                                         :matches "nomatch"
+                                         :url "abc"
+                                         :age 10})]
         (is (not (:valid? result)))
         (is (= "abc is an invalid value for email." (first (:results result))))
         (is (= "12 is an invalid value for post-code." (second (:results result))))
         (is (= "abc is an invalid value for zip-code." (nth (:results result) 2)))
         (is (= "nomatch is an invalid value for matches." (nth (:results result) 3)))
-        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 4)))))
+        (is (= "abc is an invalid value for url." (nth (:results result) 4)))
+        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 5)))))
 
     (testing "testing validation using a validation set returns
              a valid? = true result and no validation results"
@@ -130,11 +137,13 @@
                                         :post-code core/post-code?
                                         :zip-code core/zip-code?
                                         :matches [core/matches? #"amatch"]
+                                        :url core/url?
                                         :age [core/between? 18 40]])
             result (core/validate v-set {:email "test.email@googlemail.com"
                                          :post-code "B11 2SB"
                                          :matches "amatch"
                                          :zip-code 96801
+                                         :url "http://google.com"
                                          :age 21})]
         (is (:valid? result))
         (is (empty? (:results result)))))))
