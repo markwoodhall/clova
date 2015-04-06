@@ -9,7 +9,8 @@
       exp-email-meta {:type :email :target :email :default-message "%s is an invalid value for %s."}
       exp-post-meta {:type :post-code :target :post-code :default-message "%s is an invalid value for %s."}
       exp-url-meta {:type :url :target :url :default-message "%s is an invalid value for %s."}
-      exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is an invalid value for %s, it must be between %s and %s"}
+      exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is an invalid value for %s, it must be between %s and %s."}
+      exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is an invalid value for %s."}
       exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s is an invalid value for %s."}]
 
   (deftest email-validator
@@ -77,6 +78,17 @@
       (doseq [between [0 10 11 12 20 30 40]]
         (is (not (core/between? between 1 9))))))
 
+  (deftest matches-validator
+    (testing "matches validator exposes correct meta data"
+      (is (= (dissoc exp-matches-meta :target :args)
+             (only-clova-meta (meta core/matches?)))))
+
+    (testing "validating a value that matches"
+      (is (core/matches? "amatch" #"amatch")))
+
+    (testing "validating a value that does not match"
+      (is (not (core/matches? "nonmatch" #"amatch")))))
+
   (deftest validation-set
     (testing "testing a validation set returns a sequence of the correct
              validation functions"
@@ -101,18 +113,28 @@
              a valid? = false result and a sequence of the validation results"
       (let [v-set (core/validation-set [:email core/email?
                                         :post-code core/post-code?
+                                        :zip-code core/zip-code?
+                                        :matches [core/matches? #"amatch"]
                                         :age [core/between? 18 40]])
-            result (core/validate v-set {:email "abc" :post-code 12 :age 10})]
+            result (core/validate v-set {:email "abc" :post-code 12 :zip-code "abc" :matches "nomatch" :age 10})]
         (is (not (:valid? result)))
         (is (= "abc is an invalid value for email." (first (:results result))))
         (is (= "12 is an invalid value for post-code." (second (:results result))))
-        (is (= "10 is an invalid value for age, it must be between 18 and 40" (nth (:results result) 2)))))
+        (is (= "abc is an invalid value for zip-code." (nth (:results result) 2)))
+        (is (= "nomatch is an invalid value for matches." (nth (:results result) 3)))
+        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 4)))))
 
     (testing "testing validation using a validation set returns
              a valid? = true result and no validation results"
       (let [v-set (core/validation-set [:email core/email?
+                                        :post-code core/post-code?
+                                        :zip-code core/zip-code?
+                                        :matches [core/matches? #"amatch"]
                                         :age [core/between? 18 40]])
             result (core/validate v-set {:email "test.email@googlemail.com"
+                                         :post-code "B11 2SB"
+                                         :matches "amatch"
+                                         :zip-code 96801
                                          :age 21})]
         (is (:valid? result))
         (is (empty? (:results result)))))))

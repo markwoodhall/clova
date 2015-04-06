@@ -14,11 +14,13 @@
                               ~@body))
                   ~validator-meta-data))))
 
-(defn matches?
+(defvalidator
   "Checks a string representation of value against regex and
   returns true if value matches the regex. If value is not a
   match then returns nil."
-  [regex value]
+  matches?
+  {:type :matches :default-message "%s is an invalid value for %s."}
+  [value regex]
   (when (re-seq regex (str value))
     true))
 
@@ -27,33 +29,33 @@
   email?
   {:type :email :default-message "%s is an invalid value for %s."}
   [value]
-  (matches? #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$" value))
+  (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
   {:type :zip-code :default-message "%s is an invalid value for %s."}
   [value]
-  (matches? #"^[0-9]{5}(-[0-9]{4})?$" value))
+  (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
   {:type :post-code :default-message "%s is an invalid value for %s."}
   [value]
-  (matches? #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$" value))
+  (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
   {:type :url :default-message "%s is an invalid value for %s."}
   [value]
-  (matches? #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]" value))
+  (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s is an invalid value for %s, it must be between %s and %s"}
+  {:type :between :default-message "%s is an invalid value for %s, it must be between %s and %s."}
   [value lower upper]
   (and (>= value lower)
        (<= value upper)))
