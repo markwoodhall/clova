@@ -8,7 +8,7 @@ Define a validation set:
 
 ```clojure
 (let [validation-set (core/validation-set [:email core/email?
-		                           :post-code core/post-code?
+                                           :post-code core/post-code?
                                            :zip-code core/zip-code?
                                            :matches [core/matches? #"amatch"]
                                            :url core/url?
