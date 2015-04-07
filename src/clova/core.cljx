@@ -4,7 +4,8 @@
   #+cljs (:require-macros [clova.core :refer [defvalidator]]))
 
 (defmacro defvalidator
-  "Defines a new function that validates its arguments.
+  "Wraps body in a function and defines it with meta data
+  used to support the validation process.
   Works using a similar pattern to \"defn\"."
   [doc-string fname validator-meta-data args & body]
   `(do
