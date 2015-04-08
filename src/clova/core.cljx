@@ -85,12 +85,16 @@
   "Takes a validation set an applies it to m"
   [v-set m]
   (let [valids (map (fn [v]
-                      (let [v-name (:target (meta v))
-                            value (get-in m [v-name])
+                      (let [target (:target (meta v))
+                            target (if (not (sequential? target))
+                                       [target]
+                                       target)
+                            target-name (reduce #(str %1 " " %2) (map name target))
+                            value (get-in m target)
                             args (:args (meta v))
                             message (:default-message (meta v))]
                         {:valid? (apply v value args)
-                         :message #+clj (apply format message value (name v-name) args)
-                         #+cljs (apply gstring/format message value (name v-name) args)})) v-set)]
+                         :message #+clj (apply format message value target-name args)
+                         #+cljs (apply gstring/format message value target-name args)})) v-set)]
     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
      :results (map :message (filter #(not (:valid? %)) valids))}))

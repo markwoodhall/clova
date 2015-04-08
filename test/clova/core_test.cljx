@@ -116,20 +116,23 @@
                                         :zip-code core/zip-code?
                                         :matches [core/matches? #"amatch"]
                                         :url core/url?
-                                        :age [core/between? 18 40]])
+                                        :age [core/between? 18 40]
+                                        [:nested :value] [core/between? 1 10]])
             result (core/validate v-set {:email "abc"
                                          :post-code 12
                                          :zip-code "abc"
                                          :matches "nomatch"
                                          :url "abc"
-                                         :age 10})]
+                                         :age 10
+                                         :nested {:value 0}})]
         (is (not (:valid? result)))
         (is (= "abc is an invalid value for email." (first (:results result))))
         (is (= "12 is an invalid value for post-code." (second (:results result))))
         (is (= "abc is an invalid value for zip-code." (nth (:results result) 2)))
         (is (= "nomatch is an invalid value for matches." (nth (:results result) 3)))
         (is (= "abc is an invalid value for url." (nth (:results result) 4)))
-        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 5)))))
+        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 5)))
+        (is (= "0 is an invalid value for nested value, it must be between 1 and 10." (nth (:results result) 6)))))
 
     (testing "testing validation using a validation set returns
              a valid? = true result and no validation results"
@@ -138,12 +141,14 @@
                                         :zip-code core/zip-code?
                                         :matches [core/matches? #"amatch"]
                                         :url core/url?
-                                        :age [core/between? 18 40]])
+                                        :age [core/between? 18 40]
+                                        [:nested :value] [core/between? 1 10]])
             result (core/validate v-set {:email "test.email@googlemail.com"
                                          :post-code "B11 2SB"
                                          :matches "amatch"
                                          :zip-code 96801
                                          :url "http://google.com"
-                                         :age 21})]
+                                         :age 21
+                                         :nested {:value 5}})]
         (is (:valid? result))
         (is (empty? (:results result)))))))
