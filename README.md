@@ -46,5 +46,4 @@ Get the validation results (messages):
 
 Copyright © 2015 Mark Woodhall
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
