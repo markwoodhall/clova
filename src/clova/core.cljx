@@ -82,7 +82,9 @@
           (with-meta func (merge func-meta val-meta))) (partition 2 col)))
 
 (defn validate
-  "Takes a validation set an applies it to m"
+  "Takes a validation set an applies it to m.
+  Returns a map containing :valid? which either has a truthy or falsy value as
+  well as a sequence of validation failure messages, if applicable."
   [v-set m]
   (let [valids (map (fn [v]
                       (let [target (:target (meta v))
@@ -98,3 +100,10 @@
                          #+cljs (apply gstring/format message value target-name args)})) v-set)]
     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
      :results (map :message (filter #(not (:valid? %)) valids))}))
+
+(defn valid?
+  "Takes a validation set and applies it to m.
+  This is just a shorthand method over the validate function and returns
+  only a truthy or falsy value indicating the validation status."
+  [v-set m]
+  (:valid? (validate v-set m)))
