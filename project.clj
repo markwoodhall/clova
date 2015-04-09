@@ -3,6 +3,8 @@
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
+  :scm {:name "github"
+        :url "https://github.com/markwoodhall/clova"}
   :prep-tasks [["cljx-once"]]
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :source-paths ["src" "target/classes"]
