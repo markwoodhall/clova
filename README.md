@@ -2,6 +2,10 @@
 
 A minimal validation library for Clojure and ClojureScript.
 
+## Status
+
+[![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
+
 ## Usage
 
 Define a validation set. Validation sets are pairs of keys to validate
