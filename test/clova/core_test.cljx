@@ -12,6 +12,7 @@
 (def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is an invalid value for %s, it must be between %s and %s."})
 (def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is an invalid value for %s."})
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s is an invalid value for %s."})
+(def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is an invalid value for %s."})
 
 (deftest email-validator
   (testing "email validator exposes correct meta data"
@@ -89,6 +90,17 @@
   (testing "validating a value that does not match"
     (is (not (core/matches? "nonmatch" #"amatch")))))
 
+(deftest one-of-validator
+  (testing "one-of validator exposes correct meta data"
+    (is (= (dissoc exp-one-of-meta :target :args)
+           (only-clova-meta (meta core/one-of?)))))
+
+  (testing "validating a value that is one of a collection"
+    (is (core/one-of? "one" ["one" "two" "three"])))
+
+  (testing "validating a value that is not one of a collection"
+    (is (not (core/one-of? "nonmatch" ["one" "two" "three"])))))
+
 (deftest validation-set
   (testing "testing a validation set returns a sequence of the correct
            validation functions"
@@ -115,6 +127,7 @@
                                     :matches [core/matches? #"amatch"]
                                     :url core/url?
                                     :age [core/between? 18 40]
+                                    :one-of [core/one-of? [1 2 3]]
                                     [:nested :value] [core/between? 1 10]])]
     (testing "testing valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -123,6 +136,7 @@
                                       :matches "nomatch"
                                       :url "abc"
                                       :age 10
+                                      :one-of 4
                                       :nested {:value 0}})]
         (is (not valid))))
 
@@ -133,6 +147,7 @@
                                       :zip-code 96801
                                       :url "http://google.com"
                                       :age 21
+                                      :one-of 1
                                       :nested {:value 5}})]
         (is valid)))
 
@@ -144,6 +159,7 @@
                                          :matches "nomatch"
                                          :url "abc"
                                          :age 10
+                                         :one-of 4
                                          :nested {:value 0}})]
         (is (not (:valid? result)))
         (is (= "abc is an invalid value for email." (first (:results result))))
@@ -152,7 +168,8 @@
         (is (= "nomatch is an invalid value for matches." (nth (:results result) 3)))
         (is (= "abc is an invalid value for url." (nth (:results result) 4)))
         (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 5)))
-        (is (= "0 is an invalid value for nested value, it must be between 1 and 10." (nth (:results result) 6)))))
+        (is (= "4 is an invalid value for one-of." (nth (:results result) 6)))
+        (is (= "0 is an invalid value for nested value, it must be between 1 and 10." (nth (:results result) 7)))))
 
     (testing "testing validate using a validation set returns
              a valid? = true result and no validation results"
@@ -162,6 +179,7 @@
                                          :zip-code 96801
                                          :url "http://google.com"
                                          :age 21
+                                         :one-of 1
                                          :nested {:value 5}})]
         (is (:valid? result))
         (is (empty? (:results result)))))))

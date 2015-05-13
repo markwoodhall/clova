@@ -61,6 +61,13 @@
   (and (>= value lower)
        (<= value upper)))
 
+(defvalidator
+  "Checks an input value to see if its one of the items in a col"
+  one-of?
+  {:type :one-of :default-message "%s is an invalid value for %s."}
+  [value col]
+  (some #{value} col))
+
 (defn validation-set
   "Takes a sequence (col) that represents
   keys to validate and the functions used to validate them.
