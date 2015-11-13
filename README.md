@@ -20,7 +20,9 @@ and the functions used to validate them.
                         :zip-code core/zip-code?
                         :matches [core/matches? #"amatch"]
                         :url core/url?
-                        :age [core/between? 18 40]])
+                        :age [core/between? 18 40]
+                        [:nested :value] [core/between? 0 10]])
+
 ```
 
 Use the validation set:
@@ -32,8 +34,12 @@ Use the validation set:
                              :matches "amatch"
                              :zip-code 96801
                              :url "http://google.com"
-                             :age 21})
+                             :age 21
+                             :nested {:value 1}})
 ```
+
+Notice how we can use a seqeunce of keys to define a validation function for a value in a 
+nested map.
 
 Get the validation status:
 
