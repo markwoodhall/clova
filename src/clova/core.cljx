@@ -74,7 +74,7 @@
 
   e.g. [:email email? :post-code post-code?]
 
-  It is all possible to specify keys to traverse nested maps. 
+  It is also possible to specify keys to traverse nested maps. 
 
   e.g. using [[:user :credentials :name] [matches? #\"someregex\"]]
   we can define a validation function to target the :name key in a map like
