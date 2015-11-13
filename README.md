@@ -6,10 +6,18 @@ A minimal validation library for Clojure and ClojureScript.
 
 [![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
 
-## Usage
+## Installation
 
-The latest version of clova can be found on Clojars.
+
+`clova` is available from [Clojars](https://clojars.org/clova)
+
+#
+
+Add the following to `project.clj` `:dependencies`:
+
 [![Clojars Project](http://clojars.org/clova/latest-version.svg)](http://clojars.org/clova)
+
+## Usage
 
 [API Docs](http://markwoodhall.github.io/clova)
 
