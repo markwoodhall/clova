@@ -8,6 +8,8 @@ A minimal validation library for Clojure and ClojureScript.
 
 ## Usage
 
+[API Docs](http://markwoodhall.github.io/clova)
+
 Define a validation set. Validation sets are pairs of keys to validate
 and the functions used to validate them.
 
