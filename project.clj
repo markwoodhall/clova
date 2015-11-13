@@ -1,10 +1,13 @@
-(defproject clova "0.1.0-SNAPSHOT"
+(defproject clova "0.1.0"
   :description "A simple validation library for Clojure and ClojureScript."
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :scm {:name "github"
         :url "https://github.com/markwoodhall/clova"}
+  :deploy-repositories [
+    ["clojars" {:sign-releases false}]
+  ]
   :prep-tasks [["cljx-once"]]
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :source-paths ["src" "target/classes"]
