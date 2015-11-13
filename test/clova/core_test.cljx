@@ -102,7 +102,7 @@
     (is (not (core/one-of? "nonmatch" ["one" "two" "three"])))))
 
 (deftest validation-set
-  (testing "testing a validation set returns a sequence of the correct
+  (testing "validation set returns a sequence of the correct
            validation functions"
     (let [v-set (core/validation-set [:email core/email?
                                       :zip-code core/zip-code?
@@ -129,7 +129,7 @@
                                     :age [core/between? 18 40]
                                     :one-of [core/one-of? [1 2 3]]
                                     [:nested :value] [core/between? 1 10]])]
-    (testing "testing valid? returns correct result for a failure"
+    (testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
                                       :post-code 12
                                       :zip-code "abc"
@@ -140,7 +140,7 @@
                                       :nested {:value 0}})]
         (is (not valid))))
 
-    (testing "testing valid? returns correct result for a success"
+    (testing "valid? returns correct result for a success"
       (let [valid (core/valid? v-set {:email "test.email@googlemail.com"
                                       :post-code "B11 2SB"
                                       :matches "amatch"
@@ -151,7 +151,7 @@
                                       :nested {:value 5}})]
         (is valid)))
 
-    (testing "testing validate using a validation set returns
+    (testing "validate using a validation set returns
              a valid? = false result and a sequence of the validation results"
       (let [result (core/validate v-set {:email "abc"
                                          :post-code 12
@@ -171,7 +171,7 @@
         (is (= "4 is an invalid value for one-of." (nth (:results result) 6)))
         (is (= "0 is an invalid value for nested value, it must be between 1 and 10." (nth (:results result) 7)))))
 
-    (testing "testing validate using a validation set returns
+    (testing "validate using a validation set returns
              a valid? = true result and no validation results"
       (let [result (core/validate v-set {:email "test.email@googlemail.com"
                                          :post-code "B11 2SB"
