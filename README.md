@@ -8,6 +8,9 @@ A minimal validation library for Clojure and ClojureScript.
 
 ## Usage
 
+The latest version of clova can be found on Clojars.
+[![Clojars Project](http://clojars.org/clova/latest-version.svg)](http://clojars.org/clova)
+
 [API Docs](http://markwoodhall.github.io/clova)
 
 Define a validation set. Validation sets are pairs of keys to validate
