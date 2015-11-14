@@ -6,13 +6,27 @@
 
 (def only-clova-meta #(select-keys % [:type :default-message]))
 (def only-clova-set-meta #(select-keys % [:type :target :default-message :args]))
-(def exp-email-meta {:type :email :target :email :default-message "%s is an invalid value for %s."})
-(def exp-post-meta {:type :post-code :target :post-code :default-message "%s is an invalid value for %s."})
-(def exp-url-meta {:type :url :target :url :default-message "%s is an invalid value for %s."})
-(def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is an invalid value for %s, it must be between %s and %s."})
-(def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is an invalid value for %s."})
-(def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s is an invalid value for %s."})
-(def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is an invalid value for %s."})
+(def exp-email-meta {:type :email :target :email :default-message "%s should be a valid email address."})
+(def exp-post-meta {:type :post-code :target :post-code :default-message "%s should be a valid post code."})
+(def exp-url-meta {:type :url :target :url :default-message "%s should be a valid url."})
+(def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is %s but it must be between %s and %s."})
+(def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is invalid value %s."})
+(def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
+(def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
+(def exp-present-meta {:type :present :target :present :default-message "%s is required."})
+
+(deftest present-validator
+  (testing "present validator exposes correct meta data"
+    (is (= (dissoc exp-present-meta :target)
+           (only-clova-meta (meta core/present?)))))
+
+  (testing "validating a valid value"
+    (doseq [value [1 2 true false "" "hello" {} [] {:a 1}]]
+      (is (core/present? value))))
+
+  (testing "validating an invalid value"
+    (doseq [value [nil]]
+      (is (not (core/present? value))))))
 
 (deftest email-validator
   (testing "email validator exposes correct meta data"
@@ -128,6 +142,7 @@
                                     :url core/url?
                                     :age [core/between? 18 40]
                                     :one-of [core/one-of? [1 2 3]]
+                                    :present core/present?
                                     [:nested :value] [core/between? 1 10]])]
     (testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -137,6 +152,7 @@
                                       :url "abc"
                                       :age 10
                                       :one-of 4
+                                      :present nil
                                       :nested {:value 0}})]
         (is (not valid))))
 
@@ -148,6 +164,7 @@
                                       :url "http://google.com"
                                       :age 21
                                       :one-of 1
+                                      :present true
                                       :nested {:value 5}})]
         (is valid)))
 
@@ -160,16 +177,18 @@
                                          :url "abc"
                                          :age 10
                                          :one-of 4
+                                         :present nil
                                          :nested {:value 0}})]
         (is (not (:valid? result)))
-        (is (= "abc is an invalid value for email." (first (:results result))))
-        (is (= "12 is an invalid value for post-code." (second (:results result))))
-        (is (= "abc is an invalid value for zip-code." (nth (:results result) 2)))
-        (is (= "nomatch is an invalid value for matches." (nth (:results result) 3)))
-        (is (= "abc is an invalid value for url." (nth (:results result) 4)))
-        (is (= "10 is an invalid value for age, it must be between 18 and 40." (nth (:results result) 5)))
-        (is (= "4 is an invalid value for one-of." (nth (:results result) 6)))
-        (is (= "0 is an invalid value for nested value, it must be between 1 and 10." (nth (:results result) 7)))))
+        (is (= "email should be a valid email address." (first (:results result))))
+        (is (= "post-code should be a valid post code." (second (:results result))))
+        (is (= "zip-code should be a valid zip code." (nth (:results result) 2)))
+        (is (= "matches is invalid value nomatch." (nth (:results result) 3)))
+        (is (= "url should be a valid url." (nth (:results result) 4)))
+        (is (= "age is 10 but it must be between 18 and 40." (nth (:results result) 5)))
+        (is (= "one-of is 4 but should be one of [1 2 3]." (nth (:results result) 6)))
+        (is (= "present is required." (nth (:results result) 7)))
+        (is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 8)))))
 
     (testing "validate using a validation set returns
              a valid? = true result and no validation results"
@@ -180,6 +199,7 @@
                                          :url "http://google.com"
                                          :age 21
                                          :one-of 1
+                                         :present true
                                          :nested {:value 5}})]
         (is (:valid? result))
         (is (empty? (:results result)))))))

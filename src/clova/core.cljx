@@ -15,12 +15,21 @@
                               ~@body))
                   ~validator-meta-data))))
 
+(def not-nil? (complement nil?))
+
+(defvalidator
+  "Checks for the presence of a non nil value."
+  present?
+  {:type :present :default-message "%s is required."}
+  [value]
+  (not-nil? value))
+
 (defvalidator
   "Checks a string representation of value against regex and
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {:type :matches :default-message "%s is an invalid value for %s."}
+  {:type :matches :default-message "%s is invalid value %s."}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -28,35 +37,35 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:type :email :default-message "%s is an invalid value for %s."}
+  {:type :email :default-message "%s should be a valid email address."}
   [value]
   (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:type :zip-code :default-message "%s is an invalid value for %s."}
+  {:type :zip-code :default-message "%s should be a valid zip code."}
   [value]
   (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:type :post-code :default-message "%s is an invalid value for %s."}
+  {:type :post-code :default-message "%s should be a valid post code."}
   [value]
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:type :url :default-message "%s is an invalid value for %s."}
+  {:type :url :default-message "%s should be a valid url."}
   [value]
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s is an invalid value for %s, it must be between %s and %s."}
+  {:type :between :default-message "%s is %s but it must be between %s and %s."}
   [value lower upper]
   (and (>= value lower)
        (<= value upper)))
@@ -64,7 +73,7 @@
 (defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
-  {:type :one-of :default-message "%s is an invalid value for %s."}
+  {:type :one-of :default-message "%s is %s but should be one of %s."}
   [value col]
   (some #{value} col))
 
@@ -74,7 +83,7 @@
 
   e.g. [:email email? :post-code post-code?]
 
-  It is also possible to specify keys to traverse nested maps. 
+  It is also possible to specify keys to traverse nested maps.
 
   e.g. using [[:user :credentials :name] [matches? #\"someregex\"]]
   we can define a validation function to target the :name key in a map like
@@ -109,8 +118,8 @@
                             args (:args (meta v))
                             message (:default-message (meta v))]
                         {:valid? (apply v value args)
-                         :message #+clj (apply format message value target-name args)
-                         #+cljs (apply gstring/format message value target-name args)})) v-set)]
+                         :message #+clj (apply format message target-name value args)
+                         #+cljs (apply gstring/format message target-name value args)})) v-set)]
     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
      :results (map :message (filter #(not (:valid? %)) valids))}))
 
