@@ -1,6 +1,8 @@
 (ns clova.core
+  #+clj (:require [clova.util :refer [not-nil?]])
   #+cljs (:require [goog.string :as gstring]
-                   [goog.string.format])
+                   [goog.string.format]
+                   [clova.util :refer [not-nil?]])
   #+cljs (:require-macros [clova.core :refer [defvalidator]]))
 
 (defmacro defvalidator
@@ -14,8 +16,6 @@
        (with-meta (fn ~fname ([~@args]
                               ~@body))
                   ~validator-meta-data))))
-
-(def not-nil? (complement nil?))
 
 (defvalidator
   "Checks for the presence of a non nil value."
