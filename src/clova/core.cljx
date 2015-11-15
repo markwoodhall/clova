@@ -63,6 +63,13 @@
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
+  "Checks an input value to see if it is greater than lower."
+  greater?
+  {:type :greater :default-message "%s is %s but it must be greater than %s."}
+  [value lower]
+  (> value lower))
+
+(defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
   {:type :between :default-message "%s is %s but it must be between %s and %s."}

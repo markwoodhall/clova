@@ -9,6 +9,7 @@
 (def exp-email-meta {:type :email :target :email :default-message "%s should be a valid email address."})
 (def exp-post-meta {:type :post-code :target :post-code :default-message "%s should be a valid post code."})
 (def exp-url-meta {:type :url :target :url :default-message "%s should be a valid url."})
+(def exp-greater-meta {:type :greater :args [1] :target :count :default-message "%s is %s but it must be greater than %s."})
 (def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is %s but it must be between %s and %s."})
 (def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is invalid value %s."})
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
@@ -93,6 +94,19 @@
     (doseq [between [0 10 11 12 20 30 40]]
       (is (not (core/between? between 1 9))))))
 
+(deftest greater-validator
+  (testing "greater validator exposes correct meta data"
+    (is (= (dissoc exp-greater-meta :target :args)
+           (only-clova-meta (meta core/greater?)))))
+
+  (testing "validating a valid greater value"
+    (doseq [greater [1 2 3 4 5 6 7 8 9]]
+      (is (core/greater? greater 0))))
+
+  (testing "validating an invalid greater value"
+    (doseq [greater [1 2 3 4 5 6 7 8 9]]
+      (is (not (core/greater? greater 10))))))
+
 (deftest matches-validator
   (testing "matches validator exposes correct meta data"
     (is (= (dissoc exp-matches-meta :target :args)
@@ -143,6 +157,7 @@
                                     :age [core/between? 18 40]
                                     :one-of [core/one-of? [1 2 3]]
                                     :present core/present?
+                                    :count [core/greater? 2]
                                     [:nested :value] [core/between? 1 10]])]
     (testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -153,6 +168,7 @@
                                       :age 10
                                       :one-of 4
                                       :present nil
+                                      :count 1
                                       :nested {:value 0}})]
         (is (not valid))))
 
@@ -165,6 +181,7 @@
                                       :age 21
                                       :one-of 1
                                       :present true
+                                      :count 3
                                       :nested {:value 5}})]
         (is valid)))
 
@@ -178,6 +195,7 @@
                                          :age 10
                                          :one-of 4
                                          :present nil
+                                         :count 1
                                          :nested {:value 0}})]
         (is (not (:valid? result)))
         (is (= "email should be a valid email address." (first (:results result))))
@@ -188,7 +206,8 @@
         (is (= "age is 10 but it must be between 18 and 40." (nth (:results result) 5)))
         (is (= "one-of is 4 but should be one of [1 2 3]." (nth (:results result) 6)))
         (is (= "present is required." (nth (:results result) 7)))
-        (is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 8)))))
+        (is (= "count is 1 but it must be greater than 2." (nth (:results result) 8)))
+        (is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 9)))))
 
     (testing "validate using a validation set returns
              a valid? = true result and no validation results"
@@ -200,6 +219,7 @@
                                          :age 21
                                          :one-of 1
                                          :present true
+                                         :count 3
                                          :nested {:value 5}})]
         (is (:valid? result))
         (is (empty? (:results result)))))))
