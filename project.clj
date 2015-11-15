@@ -8,6 +8,7 @@
   :deploy-repositories [
     ["clojars" {:sign-releases false}]
   ]
+  :codox {:namespaces [clova.core] :source-uri "https://github.com/markwoodhall/clova/blob/master/{filepath}#L{line}"}
   :prep-tasks [["cljx-once"]]
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :source-paths ["src" "target/classes"]
