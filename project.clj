@@ -15,6 +15,7 @@
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :cljs {:dependencies [[org.clojure/clojurescript "0.0-3126"]]
                     :plugins [[lein-cljsbuild "1.0.3"]
                               [com.cemerick/clojurescript.test "0.3.3"]]
@@ -37,7 +38,7 @@
                                     {:source-paths ["test"]
                                      :output-path "target/test-classes"
                                      :rules :cljs}]}}}
-  :aliases {"test-all"    ["with-profile" "cljs:1.4:1.5:1.6" "test"]
-            "test-latest" ["with-profile" "cljs:1.6" "test"]
+  :aliases {"test-all"    ["with-profile" "cljs:1.4:1.5:1.6:1.7" "test"]
+            "test-latest" ["with-profile" "cljs:1.7" "test"]
             "cljx-auto"    ["with-profile" "cljx" "cljx" "auto"]
             "cljx-once"    ["with-profile" "cljx" "cljx" "once"]})
