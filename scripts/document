@@ -1,5 +1,7 @@
 #!/bin/sh
 lein codox;
-cp -r ./doc/* ../doctemp;
-git checkout gh-pages
-cp -r ../doctemp/* ./
+cp -r ./target/doc ../doctemp;
+git fetch origin gh-pages:gh-pages
+git checkout gh-pages;
+cp -r ../doctemp/ ./
+rm -rf ../doctemp
