@@ -69,6 +69,13 @@
   (> value lower))
 
 (defvalidator
+  "Checks an input value to see if it is less than lower."
+  lesser?
+  {:type :lesser :default-message "%s is %s but it must be less than %s."}
+  [value lower]
+  (< value lower))
+
+(defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
   {:type :between :default-message "%s is %s but it must be between %s and %s."}

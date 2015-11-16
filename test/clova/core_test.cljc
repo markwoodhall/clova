@@ -9,6 +9,7 @@
 (def exp-post-meta {:type :post-code :target :post-code :default-message "%s should be a valid post code."})
 (def exp-url-meta {:type :url :target :url :default-message "%s should be a valid url."})
 (def exp-greater-meta {:type :greater :args [1] :target :count :default-message "%s is %s but it must be greater than %s."})
+(def exp-lesser-meta {:type :lesser :args [100] :target :count2 :default-message "%s is %s but it must be less than %s."})
 (def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is %s but it must be between %s and %s."})
 (def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is invalid value %s."})
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
@@ -106,6 +107,19 @@
     (doseq [greater [1 2 3 4 5 6 7 8 9]]
       (t/is (not (core/greater? greater 10))))))
 
+(t/deftest lesser-validator
+  (t/testing "lesser validator exposes correct meta data"
+    (t/is (= (dissoc exp-lesser-meta :target :args)
+             (only-clova-meta (meta core/lesser?)))))
+
+  (t/testing "validating a valid lesser value"
+    (doseq [lesser [1 2 3 4 5 6 7 8 9]]
+      (t/is (core/lesser? lesser 10))))
+
+  (t/testing "validating an invalid lesser value"
+    (doseq [lesser [1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/lesser? lesser 0))))))
+
 (t/deftest matches-validator
   (t/testing "matches validator exposes correct meta data"
     (t/is (= (dissoc exp-matches-meta :target :args)
@@ -157,6 +171,7 @@
                                     :one-of [core/one-of? [1 2 3]]
                                     :present core/present?
                                     :count [core/greater? 2]
+                                    :count2 [core/lesser? 0]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -168,6 +183,7 @@
                                       :one-of 4
                                       :present nil
                                       :count 1
+                                      :count2 1
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -181,6 +197,7 @@
                                       :one-of 1
                                       :present true
                                       :count 3
+                                      :count2 -1
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -195,6 +212,7 @@
                                          :one-of 4
                                          :present nil
                                          :count 1
+                                         :count2 1
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -206,7 +224,8 @@
         (t/is (= "one-of is 4 but should be one of [1 2 3]." (nth (:results result) 6)))
         (t/is (= "present is required." (nth (:results result) 7)))
         (t/is (= "count is 1 but it must be greater than 2." (nth (:results result) 8)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 9)))))
+        (t/is (= "count2 is 1 but it must be less than 0." (nth (:results result) 9)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 10)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -219,6 +238,7 @@
                                          :one-of 1
                                          :present true
                                          :count 3
+                                         :count2 -1
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))))
