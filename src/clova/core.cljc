@@ -1,9 +1,8 @@
 (ns clova.core
-  #+clj (:require [clova.util :refer [not-nil?]])
-  #+cljs (:require [goog.string :as gstring]
-                   [goog.string.format]
-                   [clova.util :refer [not-nil?]])
-  #+cljs (:require-macros [clova.core :refer [defvalidator]]))
+  (:require [clova.util :refer [not-nil?]]
+             #?(:cljs [goog.string :as gstr])
+             #?(:cljs [goog.string.format]))
+  #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
 
 (defmacro defvalidator
   "Wraps body in a function and defines it with meta data
@@ -125,8 +124,8 @@
                             args (:args (meta v))
                             message (:default-message (meta v))]
                         {:valid? (apply v value args)
-                         :message #+clj (apply format message target-name value args)
-                         #+cljs (apply gstring/format message target-name value args)})) v-set)]
+                         :message #?(:clj (apply format message target-name value args)
+                                     :cljs (apply gstr/format message target-name value args))})) v-set)]
     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
      :results (map :message (filter #(not (:valid? %)) valids))}))
 

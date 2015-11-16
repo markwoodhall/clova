@@ -9,38 +9,8 @@
     ["clojars" {:sign-releases false}]
   ]
   :codox {:namespaces [clova.core]
-          :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}x#L{line}"}
-  :prep-tasks [["cljx-once"]]
-  :dependencies [[org.clojure/clojure "1.6.0"]]
-  :source-paths ["src" "target/classes"]
-  :test-paths ["target/test-classes"]
-  :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
-             :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
-             :cljs {:dependencies [[org.clojure/clojurescript "0.0-3126"]]
-                    :plugins [[lein-cljsbuild "1.0.3"]
-                              [com.cemerick/clojurescript.test "0.3.3"]]
-                    :cljsbuild {:test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}
-                                :builds [{:source-paths ["target/classes" "target/test-classes"]
-                                          :compiler {:output-to "target/testable.js"
-                                                     :optimizations :whitespace}}]}
-                    :prep-tasks [["cljsbuild" "once"]]
-                    :hooks [leiningen.cljsbuild]}
-             :cljx {:plugins [[com.keminglabs/cljx "0.4.0"]]
-                    :cljx {:builds [{:source-paths ["src"]
-                                     :output-path "target/classes"
-                                     :rules :clj}
-                                    {:source-paths ["src"]
-                                     :output-path "target/classes"
-                                     :rules :cljs}
-                                    {:source-paths ["test"]
-                                     :output-path "target/test-classes"
-                                     :rules :clj}
-                                    {:source-paths ["test"]
-                                     :output-path "target/test-classes"
-                                     :rules :cljs}]}}}
-  :aliases {"test-all"    ["with-profile" "cljs:1.4:1.5:1.6:1.7" "test"]
-            "test-latest" ["with-profile" "cljs:1.7" "test"]
-            "cljx-auto"    ["with-profile" "cljx" "cljx" "auto"]
-            "cljx-once"    ["with-profile" "cljx" "cljx" "once"]})
+          :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}#L{line}"}
+  :dependencies [[org.clojure/clojure "1.7.0" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.170" :scope "provided"]]
+  :jar-exclusions [#"\.swp|\.swo|user.clj"]
+  :source-paths ["src"])
