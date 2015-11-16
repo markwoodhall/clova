@@ -1,0 +1,5 @@
+#!/bin/sh
+lein codox;
+cp -r ./doc/* ../doctemp;
+git checkout gh-pages
+cp -r ../doctemp/* ./
