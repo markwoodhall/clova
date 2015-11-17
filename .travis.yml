@@ -3,7 +3,7 @@ before_install:
   - sudo apt-get install -y nodejs
 language: clojure
 lein: lein2
-script: lein2 test clova.core-test; ./scripts/build; node ./out/tests.js
+script: ./scripts/buildandtest;
 jdk:
   - openjdk7
   - oraclejdk7
