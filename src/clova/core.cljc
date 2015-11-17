@@ -19,7 +19,7 @@
 (defvalidator
   "Checks for the presence of a non nil value."
   present?
-  {:type :present :default-message "%s is required."}
+  {:type :present :default-message "%s is required." :added "0.2.0"}
   [value]
   (not-nil? value))
 
@@ -28,7 +28,7 @@
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {:type :matches :default-message "%s is invalid value %s."}
+  {:type :matches :default-message "%s is invalid value %s." :added "0.2.0"}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -36,42 +36,42 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:type :email :default-message "%s should be a valid email address."}
+  {:type :email :default-message "%s should be a valid email address." :added "0.2.0"}
   [value]
   (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:type :zip-code :default-message "%s should be a valid zip code."}
+  {:type :zip-code :default-message "%s should be a valid zip code." :added "0.2.0"}
   [value]
   (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:type :post-code :default-message "%s should be a valid post code."}
+  {:type :post-code :default-message "%s should be a valid post code." :added "0.2.0"}
   [value]
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:type :url :default-message "%s should be a valid url."}
+  {:type :url :default-message "%s should be a valid url." :added "0.2.0"}
   [value]
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is greater than lower."
   greater?
-  {:type :greater :default-message "%s is %s but it must be greater than %s."}
+  {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0"}
   [value lower]
   (> value lower))
 
 (defvalidator
   "Checks an input value to see if it is less than lower."
   lesser?
-  {:type :lesser :default-message "%s is %s but it must be less than %s."}
+  {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0"}
   [value lower]
   (< value lower))
 
