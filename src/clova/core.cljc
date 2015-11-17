@@ -11,7 +11,7 @@
   [doc-string fname validator-meta-data args & body]
   `(do
      (def
-       ~(with-meta fname {:doc doc-string :arglists `'(~args)})
+       ~(with-meta fname {:doc doc-string :added (:added validator-meta-data) :arglists `'(~args)})
        (with-meta (fn ~fname ([~@args]
                               ~@body))
                   ~validator-meta-data))))
