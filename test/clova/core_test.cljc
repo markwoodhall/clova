@@ -253,4 +253,4 @@
       [m]
       (if (t/successful? m)
         (set! (.-exitCode js/process) 0)
-        (set! (.-exitCode js/process) 1)))) 
+        (set! (.-exitCode js/process) 1))))
