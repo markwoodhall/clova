@@ -16,6 +16,7 @@
 (def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
 (def exp-present-meta {:type :present :target :present :default-message "%s is required."})
 (def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
+(def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
 
 (t/deftest present-validator
   (t/testing "present validator exposes correct meta data"
@@ -131,8 +132,22 @@
       (t/is (core/positive? positive))))
 
   (t/testing "validating an invalid positive value"
-    (doseq [not-positive [0 -1, -2, -10, -20, -100, -200]]
+    (doseq [not-positive [0 -1 -2 -10 -20 -100 -200]]
       (t/is (not (core/positive? not-positive))))))
+
+
+(t/deftest negative-validator
+  (t/testing "negative validator exposes correct meta data"
+    (t/is (= (dissoc exp-negative-meta :target :args)
+             (only-clova-meta (meta core/negative?)))))
+
+  (t/testing "validating a valid negative value"
+    (doseq [negative [-1 -2 -3 -4 -5 -6 -7 -8 -9]]
+      (t/is (core/negative? negative))))
+
+  (t/testing "validating an invalid negative value"
+    (doseq [not-negative [0 1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/negative? not-negative))))))
 
 (t/deftest matches-validator
   (t/testing "matches validator exposes correct meta data"
@@ -186,7 +201,8 @@
                                     :present core/present?
                                     :count [core/greater? 2]
                                     :count2 [core/lesser? 0]
-                                    :positive [core/positive?]
+                                    :positive core/positive?
+                                    :negative core/negative?
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -200,6 +216,7 @@
                                       :count 1
                                       :count2 1
                                       :positive -1
+                                      :negative 1
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -215,6 +232,7 @@
                                       :count 3
                                       :count2 -1
                                       :positive 1
+                                      :negative -1
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -231,6 +249,7 @@
                                          :count 1
                                          :count2 1
                                          :positive -1
+                                         :negative 1
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -244,7 +263,8 @@
         (t/is (= "count is 1 but it must be greater than 2." (nth (:results result) 8)))
         (t/is (= "count2 is 1 but it must be less than 0." (nth (:results result) 9)))
         (t/is (= "positive is -1 but it should be a positive number." (nth (:results result) 10)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 11)))))
+        (t/is (= "negative is 1 but it should be a negative number." (nth (:results result) 11)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 12)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -259,6 +279,7 @@
                                          :count 3
                                          :count2 -1
                                          :positive 1
+                                         :negative -1
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))))
