@@ -92,7 +92,7 @@
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s is %s but it must be between %s and %s."}
+  {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0"}
   [value lower upper]
   (and (>= value lower)
        (<= value upper)))
@@ -100,7 +100,7 @@
 (defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
-  {:type :one-of :default-message "%s is %s but should be one of %s."}
+  {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0"}
   [value col]
   (some #{value} col))
 
