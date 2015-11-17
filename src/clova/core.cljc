@@ -76,6 +76,13 @@
   (< value lower))
 
 (defvalidator
+  "Checks an input value to see if it is a positive number."
+  positive?
+  {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0"}
+  [value]
+  (pos? value))
+
+(defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
   {:type :between :default-message "%s is %s but it must be between %s and %s."}
