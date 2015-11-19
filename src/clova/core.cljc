@@ -19,7 +19,7 @@
 (defvalidator
   "Checks for the presence of a non nil value."
   present?
-  {:type :present :default-message "%s is required." :added "0.2.0"}
+  {:type :present :default-message "%s is required." :added "0.2.0" :allow-missing-key? true}
   [value]
   (not-nil? value))
 
@@ -28,7 +28,7 @@
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {:type :matches :default-message "%s is invalid value %s." :added "0.2.0"}
+  {:type :matches :default-message "%s is invalid value %s." :added "0.2.0" :allow-missing-key? true}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -36,35 +36,35 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:type :email :default-message "%s should be a valid email address." :added "0.2.0"}
+  {:type :email :default-message "%s should be a valid email address." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:type :zip-code :default-message "%s should be a valid zip code." :added "0.2.0"}
+  {:type :zip-code :default-message "%s should be a valid zip code." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:type :post-code :default-message "%s should be a valid post code." :added "0.2.0"}
+  {:type :post-code :default-message "%s should be a valid post code." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:type :url :default-message "%s should be a valid url." :added "0.2.0"}
+  {:type :url :default-message "%s should be a valid url." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is greater than lower."
   greater?
-  {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0"}
+  {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
   (when (not-nil? value)
     (> value lower)))
@@ -72,7 +72,7 @@
 (defvalidator
   "Checks an input value to see if it is less than lower."
   lesser?
-  {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0"}
+  {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
   (when (not-nil? value)
     (< value lower)))
@@ -80,7 +80,7 @@
 (defvalidator
   "Checks an input value to see if it is a positive number."
   positive?
-  {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0"}
+  {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0" :allow-missing-key? true}
   [value]
   (when (not-nil? value)
     (pos? value)))
@@ -88,7 +88,7 @@
 (defvalidator
   "Checks an input value to see if it is a negative number."
   negative?
-  {:type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0"}
+  {:type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0" :allow-missing-key? true}
   [value]
   (when (not-nil? value)
     (neg? value)))
@@ -96,7 +96,7 @@
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0"}
+  {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :allow-missing-key? true}
   [value lower upper]
   (when (not-nil? value)
     (and (>= value lower)
@@ -106,7 +106,7 @@
   "Check an input value to see if it has a length equal to l.
   Work on sequences and strings."
   length?
-  {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0"}
+  {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0" :allow-missing-key? true}
   [value l]
   (when (not-nil? value)
     (= l (count (seq value)))))
@@ -115,7 +115,7 @@
   "Check an input value to see if it has a length longer than l.
   Work on sequences and strings."
   longer?
-  {:type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0"}
+  {:type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
   (when (not-nil? value)
     (< l (count (seq value)))))
@@ -124,7 +124,7 @@
   "Check an input value to see if it has a length shorter than l.
   Work on sequences and strings."
   shorter?
-  {:type :shorter :default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0"}
+  {:type :shorter :default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
   (when (not-nil? value)
     (> l (count (seq value)))))
@@ -132,9 +132,16 @@
 (defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
-  {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0"}
+  {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0" :allow-missing-key? true}
   [value col]
   (some #{value} col))
+
+(defn required
+  "Takes a validator and alters the meta data so that :allow-missing-key? is set to false.
+  This means that validation will fail if the validated key is not present in the map."
+  {:added "0.7.0"}
+  [validator-fn]
+  (with-meta validator-fn (assoc (meta validator-fn) :allow-missing-key? false)))
 
 (defn validation-set
   "Takes a sequence (col) that represents
@@ -181,16 +188,19 @@
                                       [target]
                                       target)
                              target-name (reduce #(str %1 " " %2) (map name target))
-                             value (get-in m target)
+                             value (get-in m target :clova.core/key-not-found?)
                              args (:args (meta v))
                              v-type (:type (meta v))
+                             allow-missing-key? (:allow-missing-key? (meta v))
                              default-message (:default-message (meta v))
                              message (if (not-nil? default-message-fn)
                                        (if-let [m (default-message-fn v-type)]
                                          m
                                          default-message)
                                        default-message)]
-                         {:valid? (apply v value args)
+                         {:valid? (or (and allow-missing-key?
+                                           (= :clova.core/key-not-found? value))
+                                      (apply v value args))
                           :message #?(:clj (apply format message target-name value args)
                                            :cljs (apply gstr/format message target-name value args))})) v-set)]
      {:valid? (reduce #(and %1 %2) true (map :valid? valids))

@@ -353,7 +353,16 @@
                                                                                           :email (str "custom email error")
                                                                                           nil))})]
         (t/is (= "present is required." (second (:results result))))
-        (t/is (= "custom email error" (first (:results result))))))))
+        (t/is (= "custom email error" (first (:results result))))))
+
+    (t/testing "validate respects allow missing keys"
+      (let [result (core/validate v-set {})]
+        (t/is (:valid? result))))
+
+    (t/testing "validate respects allow missing keys when using required"
+      (let [v-set (core/validation-set [:email (core/required core/email?)])
+            result (core/validate v-set {})]
+        (t/is (not (:valid? result)))))))
 
 #?(:cljs
     (do
