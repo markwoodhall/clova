@@ -19,6 +19,7 @@
 (def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
 (def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
 (def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
+(def exp-shorter-meta {:type :shorter :target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
 
 (t/deftest present-validator
   (t/testing "present validator exposes correct meta data"
@@ -201,6 +202,19 @@
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
             (t/is (core/longer? v 2)))))
 
+(t/deftest horter-validator
+  (t/testing "shorter validator exposes correct meta data"
+    (t/is (= (dissoc exp-shorter-meta :target)
+             (only-clova-meta (meta core/shorter?)))))
+
+  (t/testing "validating a value that is longer or of equal length"
+    (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
+            (t/is (not (core/shorter? v 2)))))
+
+  (t/testing "validating a value that is shorter"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (core/shorter? v 4)))))
+
 (t/deftest validation-set
   (t/testing "validation set returns a sequence of the correct
              validation functions"
@@ -235,6 +249,7 @@
                                     :negative core/negative?
                                     :length [core/length? 3]
                                     :longer [core/longer? 2]
+                                    :shorter [core/shorter? 2]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -251,6 +266,7 @@
                                       :negative 1
                                       :length  "aaaaa"
                                       :longer [1 2]
+                                      :shorter "aaa"
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -269,6 +285,7 @@
                                       :negative -1
                                       :length  "aaa"
                                       :longer [1 2 3]
+                                      :shorter "a"
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -288,6 +305,7 @@
                                          :negative 1
                                          :length "aaaa"
                                          :longer [1 2]
+                                         :shorter "aaa"
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -304,7 +322,8 @@
         (t/is (= "negative is 1 but it should be a negative number." (nth (:results result) 11)))
         (t/is (= "length is aaaa but it should have a length of 3." (nth (:results result) 12)))
         (t/is (= "longer is [1 2] but it should have a length longer than 2." (nth (:results result) 13)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 14)))))
+        (t/is (= "shorter is aaa but it should have a length shorter than 2." (nth (:results result) 14)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 15)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -322,6 +341,7 @@
                                          :negative -1
                                          :length "aaa"
                                          :longer [1 2 3]
+                                         :shorter "a"
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
