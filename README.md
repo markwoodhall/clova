@@ -49,7 +49,7 @@ Use the validation set:
                              :nested {:value 1}})
 ```
 
-Notice how we can use a seqeunce of keys to define a validation function for a value in a 
+Notice how we can use a seqeunce of keys to define a validation function for a value in a
 nested map.
 
 Get the validation status:
@@ -64,6 +64,22 @@ Get the validation results (messages):
 (:results result)
 ```
 
+## Validators
+
+clova has the following built in validators
+
+1. [between?](http://markwoodhall.github.io/clova/clova.core.html#var-between.3F)
+2. [email?](http://markwoodhall.github.io/clova/clova.core.html#var-email.3F)
+3. [greater?](http://markwoodhall.github.io/clova/clova.core.html#var-greater.3F)
+4. [lesser?](http://markwoodhall.github.io/clova/clova.core.html#var-lesser.3F)
+5. [matches?](http://markwoodhall.github.io/clova/clova.core.html#var-matches.3F)
+6. [negative?](http://markwoodhall.github.io/clova/clova.core.html#var-negative.3F)
+7. [positive?](http://markwoodhall.github.io/clova/clova.core.html#var-positive.3F)
+8. [post-code?](http://markwoodhall.github.io/clova/clova.core.html#var-post-code.3F)
+9. [present?](http://markwoodhall.github.io/clova/clova.core.html#var-present.3F)
+10. [url?](http://markwoodhall.github.io/clova/clova.core.html#var-url.3F)
+11. [zip-code?](http://markwoodhall.github.io/clova/clova.core.html#var-zip-code.3F)
+12. [length?](http://markwoodhall.github.io/clova/clova.core.html#var-length.3F)
 
 ## License
 
