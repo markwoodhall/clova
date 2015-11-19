@@ -8,15 +8,16 @@
 (def exp-email-meta {:type :email :target :email :default-message "%s should be a valid email address."})
 (def exp-post-meta {:type :post-code :target :post-code :default-message "%s should be a valid post code."})
 (def exp-url-meta {:type :url :target :url :default-message "%s should be a valid url."})
-(def exp-greater-meta {:type :greater :args [1] :target :count :default-message "%s is %s but it must be greater than %s."})
-(def exp-lesser-meta {:type :lesser :args [100] :target :count2 :default-message "%s is %s but it must be less than %s."})
+(def exp-greater-meta {:type :greater :target :count :default-message "%s is %s but it must be greater than %s."})
+(def exp-lesser-meta {:type :lesser  :target :count2 :default-message "%s is %s but it must be less than %s."})
 (def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is %s but it must be between %s and %s."})
-(def exp-matches-meta {:type :matches :args [#"\w*"] :target :matches :default-message "%s is invalid value %s."})
+(def exp-matches-meta {:type :matches :target :matches :default-message "%s is invalid value %s."})
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
 (def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
 (def exp-present-meta {:type :present :target :present :default-message "%s is required."})
 (def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
 (def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
+(def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
 
 (t/deftest present-validator
   (t/testing "present validator exposes correct meta data"
@@ -98,7 +99,7 @@
 
 (t/deftest greater-validator
   (t/testing "greater validator exposes correct meta data"
-    (t/is (= (dissoc exp-greater-meta :target :args)
+    (t/is (= (dissoc exp-greater-meta :target)
              (only-clova-meta (meta core/greater?)))))
 
   (t/testing "validating a valid greater value"
@@ -111,7 +112,7 @@
 
 (t/deftest lesser-validator
   (t/testing "lesser validator exposes correct meta data"
-    (t/is (= (dissoc exp-lesser-meta :target :args)
+    (t/is (= (dissoc exp-lesser-meta :target)
              (only-clova-meta (meta core/lesser?)))))
 
   (t/testing "validating a valid lesser value"
@@ -124,7 +125,7 @@
 
 (t/deftest positive-validator
   (t/testing "positive validator exposes correct meta data"
-    (t/is (= (dissoc exp-positive-meta :target :args)
+    (t/is (= (dissoc exp-positive-meta :target)
              (only-clova-meta (meta core/positive?)))))
 
   (t/testing "validating a valid positive value"
@@ -138,7 +139,7 @@
 
 (t/deftest negative-validator
   (t/testing "negative validator exposes correct meta data"
-    (t/is (= (dissoc exp-negative-meta :target :args)
+    (t/is (= (dissoc exp-negative-meta :target)
              (only-clova-meta (meta core/negative?)))))
 
   (t/testing "validating a valid negative value"
@@ -151,7 +152,7 @@
 
 (t/deftest matches-validator
   (t/testing "matches validator exposes correct meta data"
-    (t/is (= (dissoc exp-matches-meta :target :args)
+    (t/is (= (dissoc exp-matches-meta :target)
              (only-clova-meta (meta core/matches?)))))
 
   (t/testing "validating a value that matches"
@@ -162,7 +163,7 @@
 
 (t/deftest one-of-validator
   (t/testing "one-of validator exposes correct meta data"
-    (t/is (= (dissoc exp-one-of-meta :target :args)
+    (t/is (= (dissoc exp-one-of-meta :target)
              (only-clova-meta (meta core/one-of?)))))
 
   (t/testing "validating a value that is one of a collection"
@@ -170,6 +171,19 @@
 
   (t/testing "validating a value that is not one of a collection"
     (t/is (not (core/one-of? "nonmatch" ["one" "two" "three"])))))
+
+(t/deftest length-validator
+  (t/testing "length validator exposes correct meta data"
+    (t/is (= (dissoc exp-length-meta :target)
+             (only-clova-meta (meta core/length?)))))
+
+  (t/testing "validating a value that is shorter or longer"
+    (doseq [v ["aaaa" "aa" [1 2] [1 2 3 4]]]
+            (t/is (not (core/length? v 3)))))
+
+  (t/testing "validating a value that is the correct length"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (core/length? v 3)))))
 
 (t/deftest validation-set
   (t/testing "validation set returns a sequence of the correct
@@ -203,6 +217,7 @@
                                     :count2 [core/lesser? 0]
                                     :positive core/positive?
                                     :negative core/negative?
+                                    :length [core/length? 3]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -217,6 +232,7 @@
                                       :count2 1
                                       :positive -1
                                       :negative 1
+                                      :length  "aaaaa"
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -233,6 +249,7 @@
                                       :count2 -1
                                       :positive 1
                                       :negative -1
+                                      :length  "aaa"
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -250,6 +267,7 @@
                                          :count2 1
                                          :positive -1
                                          :negative 1
+                                         :length "aaaa"
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -264,7 +282,8 @@
         (t/is (= "count2 is 1 but it must be less than 0." (nth (:results result) 9)))
         (t/is (= "positive is -1 but it should be a positive number." (nth (:results result) 10)))
         (t/is (= "negative is 1 but it should be a negative number." (nth (:results result) 11)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 12)))))
+        (t/is (= "length is aaaa but it should have a length of 3." (nth (:results result) 12)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 13)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -280,6 +299,7 @@
                                          :count2 -1
                                          :positive 1
                                          :negative -1
+                                         :length "aaa"
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))))

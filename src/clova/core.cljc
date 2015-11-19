@@ -98,6 +98,14 @@
        (<= value upper)))
 
 (defvalidator
+  "Check an input value to see if it has a length equal to l.
+  Work on sequences and strings."
+  length?
+  {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0"}
+  [value l]
+  (= l (count (seq value))))
+
+(defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
   {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0"}
