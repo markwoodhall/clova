@@ -66,36 +66,41 @@
   greater?
   {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0"}
   [value lower]
-  (> value lower))
+  (when (not-nil? value)
+    (> value lower)))
 
 (defvalidator
   "Checks an input value to see if it is less than lower."
   lesser?
   {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0"}
   [value lower]
-  (< value lower))
+  (when (not-nil? value)
+    (< value lower)))
 
 (defvalidator
   "Checks an input value to see if it is a positive number."
   positive?
   {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0"}
   [value]
-  (pos? value))
+  (when (not-nil? value)
+    (pos? value)))
 
 (defvalidator
   "Checks an input value to see if it is a negative number."
   negative?
   {:type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0"}
   [value]
-  (neg? value))
+  (when (not-nil? value)
+    (neg? value)))
 
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
   {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0"}
   [value lower upper]
-  (and (>= value lower)
-       (<= value upper)))
+  (when (not-nil? value)
+    (and (>= value lower)
+         (<= value upper))))
 
 (defvalidator
   "Check an input value to see if it has a length equal to l.
@@ -103,7 +108,8 @@
   length?
   {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0"}
   [value l]
-  (= l (count (seq value))))
+  (when (not-nil? value)
+    (= l (count (seq value)))))
 
 (defvalidator
   "Checks an input value to see if its one of the items in a col"

@@ -42,7 +42,7 @@
       (t/is (core/email? email))))
 
   (t/testing "validating an invalid email address"
-    (doseq [email [100 {:a 1} [1 2] "testing" "test@.googlemail.com" "@googlemail.com"]]
+    (doseq [email [nil 100 {:a 1} [1 2] "testing" "test@.googlemail.com" "@googlemail.com"]]
       (t/is (not (core/email? email))))))
 
 (t/deftest zip-code-validator
@@ -55,7 +55,7 @@
       (t/is (core/zip-code? zip))))
 
   (t/testing "validating an invalid zip code"
-    (doseq [zip ["abc" 100 {:a 1} [1 2] "1-1-0"]]
+    (doseq [zip [nil "abc" 100 {:a 1} [1 2] "1-1-0"]]
       (t/is (not (core/zip-code? zip))))))
 
 (t/deftest post-code-validator
@@ -68,7 +68,7 @@
       (t/is (core/post-code? post-code))))
 
   (t/testing "validating an invalid uk post code"
-    (doseq [post-code ["abc" 100 {:a 1} [1 2] "1-1-0" "B112SB" "b112sb"]]
+    (doseq [post-code [nil "abc" 100 {:a 1} [1 2] "1-1-0" "B112SB" "b112sb"]]
       (t/is (not (core/post-code? post-code))))))
 
 (t/deftest url-validator
@@ -81,7 +81,7 @@
       (t/is (core/url? url))))
 
   (t/testing "validating an invalid url"
-    (doseq [url ["aaaaasnnnnxnxx.c" "httpp://www.google.com"]]
+    (doseq [url [nil "aaaaasnnnnxnxx.c" "httpp://www.google.com"]]
       (t/is (not (core/url? url))))))
 
 (t/deftest between-validator
@@ -94,7 +94,7 @@
       (t/is (core/between? between 1 9))))
 
   (t/testing "validating an invalid between"
-    (doseq [between [0 10 11 12 20 30 40]]
+    (doseq [between [0 10 11 12 20 30 40 nil]]
       (t/is (not (core/between? between 1 9))))))
 
 (t/deftest greater-validator
@@ -107,7 +107,7 @@
       (t/is (core/greater? greater 0))))
 
   (t/testing "validating an invalid greater value"
-    (doseq [greater [1 2 3 4 5 6 7 8 9]]
+    (doseq [greater [nil 1 2 3 4 5 6 7 8 9]]
       (t/is (not (core/greater? greater 10))))))
 
 (t/deftest lesser-validator
@@ -120,7 +120,7 @@
       (t/is (core/lesser? lesser 10))))
 
   (t/testing "validating an invalid lesser value"
-    (doseq [lesser [1 2 3 4 5 6 7 8 9]]
+    (doseq [lesser [nil 1 2 3 4 5 6 7 8 9]]
       (t/is (not (core/lesser? lesser 0))))))
 
 (t/deftest positive-validator
@@ -133,7 +133,7 @@
       (t/is (core/positive? positive))))
 
   (t/testing "validating an invalid positive value"
-    (doseq [not-positive [0 -1 -2 -10 -20 -100 -200]]
+    (doseq [not-positive [nil 0 -1 -2 -10 -20 -100 -200]]
       (t/is (not (core/positive? not-positive))))))
 
 
@@ -147,7 +147,7 @@
       (t/is (core/negative? negative))))
 
   (t/testing "validating an invalid negative value"
-    (doseq [not-negative [0 1 2 3 4 5 6 7 8 9]]
+    (doseq [not-negative [nil 0 1 2 3 4 5 6 7 8 9]]
       (t/is (not (core/negative? not-negative))))))
 
 (t/deftest matches-validator
@@ -159,7 +159,8 @@
     (t/is (core/matches? "amatch" #"amatch")))
 
   (t/testing "validating a value that does not match"
-    (t/is (not (core/matches? "nonmatch" #"amatch")))))
+    (doseq [v ["nonmatch" nil]]
+      (t/is (not (core/matches? "nonmatch" #"amatch"))))))
 
 (t/deftest one-of-validator
   (t/testing "one-of validator exposes correct meta data"
@@ -170,7 +171,8 @@
     (t/is (core/one-of? "one" ["one" "two" "three"])))
 
   (t/testing "validating a value that is not one of a collection"
-    (t/is (not (core/one-of? "nonmatch" ["one" "two" "three"])))))
+    (doseq [v ["nonmatch" nil]]
+      (t/is (not (core/one-of? "nonmatch" ["one" "two" "three"]))))))
 
 (t/deftest length-validator
   (t/testing "length validator exposes correct meta data"
@@ -178,7 +180,7 @@
              (only-clova-meta (meta core/length?)))))
 
   (t/testing "validating a value that is shorter or longer"
-    (doseq [v ["aaaa" "aa" [1 2] [1 2 3 4]]]
+    (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
             (t/is (not (core/length? v 3)))))
 
   (t/testing "validating a value that is the correct length"
@@ -302,7 +304,11 @@
                                          :length "aaa"
                                          :nested {:value 5}})]
         (t/is (:valid? result))
-        (t/is (empty? (:results result)))))))
+        (t/is (empty? (:results result)))))
+
+    (comment (t/testing "validate uses a custom function for default message lookup"
+      (let [result (core/validate v-set {:email ""})]
+        (t/is (= "custom email error" (first (:results result)))))))))
 
 #?(:cljs
     (do
