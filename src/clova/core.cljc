@@ -147,22 +147,36 @@
 (defn validate
   "Takes a validation set an applies it to m.
   Returns a map containing :valid? which either has a truthy or falsy value as
-  well as a sequence of validation failure messages, if applicable."
-  [v-set m]
-  (let [valids (map (fn [v]
-                      (let [target (:target (meta v))
-                            target (if (not (sequential? target))
-                                       [target]
-                                       target)
-                            target-name (reduce #(str %1 " " %2) (map name target))
-                            value (get-in m target)
-                            args (:args (meta v))
-                            message (:default-message (meta v))]
-                        {:valid? (apply v value args)
-                         :message #?(:clj (apply format message target-name value args)
-                                     :cljs (apply gstr/format message target-name value args))})) v-set)]
-    {:valid? (reduce #(and %1 %2) true (map :valid? valids))
-     :results (map :message (filter #(not (:valid? %)) valids))}))
+  well as a sequence of validation failure messages, if applicable.
+
+  Optionally takes a map of options:
+
+  :default-message-fn can be specified to override the default validation messages. If specified
+  the function will be called and receive the validator type as an argument. If the result of calling
+  the function is anything but nil it will be used as the default validation message."
+  ([v-set m]
+   (validate v-set m {}))
+  ([v-set m {:keys [default-message-fn]}]
+   (let [valids (map (fn [v]
+                       (let [target (:target (meta v))
+                             target (if (not (sequential? target))
+                                      [target]
+                                      target)
+                             target-name (reduce #(str %1 " " %2) (map name target))
+                             value (get-in m target)
+                             args (:args (meta v))
+                             v-type (:type (meta v))
+                             default-message (:default-message (meta v))
+                             message (if (not-nil? default-message-fn)
+                                       (if-let [m (default-message-fn v-type)]
+                                         m
+                                         default-message)
+                                       default-message)]
+                         {:valid? (apply v value args)
+                          :message #?(:clj (apply format message target-name value args)
+                                           :cljs (apply gstr/format message target-name value args))})) v-set)]
+     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
+      :results (map :message (filter #(not (:valid? %)) valids))})))
 
 (defn valid?
   "Takes a validation set and applies it to m.

@@ -306,9 +306,21 @@
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
 
-    (comment (t/testing "validate uses a custom function for default message lookup"
-      (let [result (core/validate v-set {:email ""})]
-        (t/is (= "custom email error" (first (:results result)))))))))
+    (t/testing "validate uses a custom function for default message lookup"
+      (let [v-set (core/validation-set [:email core/email? :present core/present?])
+            result (core/validate v-set {:email "" :present nil} {:default-message-fn (fn [v-type]
+                                                                                        (case v-type
+                                                                                          :email (str "custom email error")
+                                                                                          nil))})]
+        (t/is (= "present is required." (second (:results result))))
+        (t/is (= "custom email error" (first (:results result))))))))
+
+(comment (if-let [f ((fn [v-type]
+          (case v-type
+            :email (str "custom email error")
+            nil)) :present)]
+  f
+  "aa"))
 
 #?(:cljs
     (do
