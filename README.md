@@ -80,6 +80,8 @@ clova has the following built in validators
 10. [url?](http://markwoodhall.github.io/clova/clova.core.html#var-url.3F)
 11. [zip-code?](http://markwoodhall.github.io/clova/clova.core.html#var-zip-code.3F)
 12. [length?](http://markwoodhall.github.io/clova/clova.core.html#var-length.3F)
+13. [longer?](http://markwoodhall.github.io/clova/clova.core.html#var-longer.3F)
+14. [shorter?](http://markwoodhall.github.io/clova/clova.core.html#var-shorter.3F)
 
 ## License
 
