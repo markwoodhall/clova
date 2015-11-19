@@ -18,6 +18,7 @@
 (def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
 (def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
 (def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
+(def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
 
 (t/deftest present-validator
   (t/testing "present validator exposes correct meta data"
@@ -187,6 +188,19 @@
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
             (t/is (core/length? v 3)))))
 
+(t/deftest longer-validator
+  (t/testing "longer validator exposes correct meta data"
+    (t/is (= (dissoc exp-longer-meta :target)
+             (only-clova-meta (meta core/longer?)))))
+
+  (t/testing "validating a value that is shorter or of equal length"
+    (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
+            (t/is (not (core/longer? v 4)))))
+
+  (t/testing "validating a value that is longer"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (core/longer? v 2)))))
+
 (t/deftest validation-set
   (t/testing "validation set returns a sequence of the correct
              validation functions"
@@ -220,6 +234,7 @@
                                     :positive core/positive?
                                     :negative core/negative?
                                     :length [core/length? 3]
+                                    :longer [core/longer? 2]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -235,6 +250,7 @@
                                       :positive -1
                                       :negative 1
                                       :length  "aaaaa"
+                                      :longer [1 2]
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -252,6 +268,7 @@
                                       :positive 1
                                       :negative -1
                                       :length  "aaa"
+                                      :longer [1 2 3]
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -270,6 +287,7 @@
                                          :positive -1
                                          :negative 1
                                          :length "aaaa"
+                                         :longer [1 2]
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -285,7 +303,8 @@
         (t/is (= "positive is -1 but it should be a positive number." (nth (:results result) 10)))
         (t/is (= "negative is 1 but it should be a negative number." (nth (:results result) 11)))
         (t/is (= "length is aaaa but it should have a length of 3." (nth (:results result) 12)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 13)))))
+        (t/is (= "longer is [1 2] but it should have a length longer than 2." (nth (:results result) 13)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 14)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -302,6 +321,7 @@
                                          :positive 1
                                          :negative -1
                                          :length "aaa"
+                                         :longer [1 2 3]
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
@@ -314,13 +334,6 @@
                                                                                           nil))})]
         (t/is (= "present is required." (second (:results result))))
         (t/is (= "custom email error" (first (:results result))))))))
-
-(comment (if-let [f ((fn [v-type]
-          (case v-type
-            :email (str "custom email error")
-            nil)) :present)]
-  f
-  "aa"))
 
 #?(:cljs
     (do

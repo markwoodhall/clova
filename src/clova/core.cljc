@@ -112,6 +112,15 @@
     (= l (count (seq value)))))
 
 (defvalidator
+  "Check an input value to see if it has a length longer than l.
+  Work on sequences and strings."
+  longer?
+  {:type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0"}
+  [value l]
+  (when (not-nil? value)
+    (< l (count (seq value)))))
+
+(defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
   {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0"}
