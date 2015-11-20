@@ -362,7 +362,19 @@
     (t/testing "validate respects allow missing keys when using required"
       (let [v-set (core/validation-set [:email (core/required core/email?)])
             result (core/validate v-set {})]
-        (t/is (not (:valid? result)))))))
+        (t/is (not (:valid? result)))))
+
+    (t/testing "validate supports a failing validation set with duplicate keys and multiple validators"
+      (let [v-set (core/validation-set [:test [core/greater? 2]
+                                        :test [core/lesser? 5]])
+            result (core/validate v-set {:test 6})]
+        (t/is (not (:valid? result)))))
+
+    (t/testing "validate supports a validation set with duplicate keys and multiple validators"
+      (let [v-set (core/validation-set [:test [core/greater? 2]
+                                        :test [core/lesser? 5]])
+            result (core/validate v-set {:test 4})]
+        (t/is (:valid? result))))))
 
 #?(:cljs
     (do
