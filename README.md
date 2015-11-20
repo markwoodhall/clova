@@ -32,9 +32,19 @@ and the functions used to validate them.
                         :matches [core/matches? #"amatch"]
                         :url core/url?
                         :age [core/between? 18 40]
-                        [:nested :value] [core/between? 0 10]])
+                        [:nested :value] [core/between? 0 10]])]
 
 ```
+
+If you want to compose multiple validators you can. Currently you have to do so by specifying the validated key multiple times.
+
+```clojure
+(let [validation-set (core/validation-set
+                       [:age [core/greater? 18]
+                        :age [core/lesser? 30]])]
+
+```
+
 
 Use the validation set:
 
@@ -46,7 +56,7 @@ Use the validation set:
                              :zip-code 96801
                              :url "http://google.com"
                              :age 21
-                             :nested {:value 1}})
+                             :nested {:value 1}})]
 ```
 
 Notice how we can use a seqeunce of keys to define a validation function for a value in a
