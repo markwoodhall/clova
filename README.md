@@ -45,6 +45,20 @@ If you want to compose multiple validators you can. Currently you have to do so 
 
 ```
 
+Most of the time it is useful to only apply and fail validation if a given key is present in the map getting validated, this is
+the default behaviour. However if this is not the case and you wish to make a validator fail if the key is not present you can do.
+Just wrap the validator using the `required` function. You can also wrap validators that accept arguments with required too. Although
+it is a bit ugly.
+
+
+```clojure
+(let [validation-set (core/validation-set
+                       [:email (core/required core/email?])]
+
+
+(let [validation-set (core/validation-set
+                       [:val [(core/required core/greater?) 2]])]
+```
 
 Use the validation set:
 
