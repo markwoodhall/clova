@@ -55,7 +55,6 @@ Just use a `required?` validator as well.
                        [:email core/required?
                         :email core/email?])]
 
-
 (let [validation-set (core/validation-set
                        [:age core/required?
                         :age [core/between? 18 30]])]
