@@ -111,12 +111,13 @@ clova has the following built in validators
 6. [negative?](http://markwoodhall.github.io/clova/clova.core.html#var-negative.3F)
 7. [positive?](http://markwoodhall.github.io/clova/clova.core.html#var-positive.3F)
 8. [post-code?](http://markwoodhall.github.io/clova/clova.core.html#var-post-code.3F)
-9. [present?](http://markwoodhall.github.io/clova/clova.core.html#var-present.3F)
-10. [url?](http://markwoodhall.github.io/clova/clova.core.html#var-url.3F)
-11. [zip-code?](http://markwoodhall.github.io/clova/clova.core.html#var-zip-code.3F)
-12. [length?](http://markwoodhall.github.io/clova/clova.core.html#var-length.3F)
-13. [longer?](http://markwoodhall.github.io/clova/clova.core.html#var-longer.3F)
-14. [shorter?](http://markwoodhall.github.io/clova/clova.core.html#var-shorter.3F)
+9. [not-nil?](http://markwoodhall.github.io/clova/clova.core.html#var-not-nil.3F)
+10. [required?](http://markwoodhall.github.io/clova/clova.core.html#var-required.3F)
+11. [url?](http://markwoodhall.github.io/clova/clova.core.html#var-url.3F)
+12. [zip-code?](http://markwoodhall.github.io/clova/clova.core.html#var-zip-code.3F)
+13. [length?](http://markwoodhall.github.io/clova/clova.core.html#var-length.3F)
+14. [longer?](http://markwoodhall.github.io/clova/clova.core.html#var-longer.3F)
+15. [shorter?](http://markwoodhall.github.io/clova/clova.core.html#var-shorter.3F)
 
 ## License
 
