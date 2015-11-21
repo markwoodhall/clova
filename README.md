@@ -76,17 +76,6 @@ Use the validation set:
 Notice how we can use a seqeunce of keys to define a validation function for a value in a
 nested map.
 
-You can also specify a custom function for providing validation error messages. This function will
-be called with the validator type specified as an argument, if the custom function returns nil then
-the default validation message will be used.
-
-```clojure
-(core/validate v-set {:email ""} {:default-message-fn (fn [v-type]
-                                                        (case v-type
-                                                          :email (str "custom email error")
-                                                           nil))})
-```
-
 Get the validation status:
 
 ```clojure
@@ -97,6 +86,17 @@ Get the validation results (messages):
 
 ```clojure
 (:results result)
+```
+
+You can also specify a custom function for providing validation error messages. This function will
+be called with the validator type specified as an argument, if the custom function returns nil then
+the default validation message will be used.
+
+```clojure
+(core/validate v-set {:email ""} {:default-message-fn (fn [v-type]
+                                                        (case v-type
+                                                          :email (str "custom email error")
+                                                           nil))})
 ```
 
 ## Validators
