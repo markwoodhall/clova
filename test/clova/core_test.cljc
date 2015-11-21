@@ -14,25 +14,25 @@
 (def exp-matches-meta {:type :matches :target :matches :default-message "%s is invalid value %s."})
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
 (def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
-(def exp-present-meta {:type :present :target :present :default-message "%s is required."})
+(def exp-not-nil-meta {:type :not-nil :target :not-nil :default-message "%s is required."})
 (def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
 (def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
 (def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
 (def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
 (def exp-shorter-meta {:type :shorter :target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
 
-(t/deftest present-validator
-  (t/testing "present validator exposes correct meta data"
-    (t/is (= (dissoc exp-present-meta :target)
-             (only-clova-meta (meta core/present?)))))
+(t/deftest not-nil-validator
+  (t/testing "not-nil validator exposes correct meta data"
+    (t/is (= (dissoc exp-not-nil-meta :target)
+             (only-clova-meta (meta core/not-nil?)))))
 
   (t/testing "validating a valid value"
     (doseq [value [1 2 true false "" "hello" {} [] {:a 1}]]
-      (t/is (core/present? value))))
+      (t/is (core/not-nil? value))))
 
   (t/testing "validating an invalid value"
     (doseq [value [nil]]
-      (t/is (not (core/present? value))))))
+      (t/is (not (core/not-nil? value))))))
 
 (t/deftest email-validator
   (t/testing "email validator exposes correct meta data"
@@ -242,7 +242,7 @@
                                     :url core/url?
                                     :age [core/between? 18 40]
                                     :one-of [core/one-of? [1 2 3]]
-                                    :present core/present?
+                                    :not-nil core/not-nil?
                                     :count [core/greater? 2]
                                     :count2 [core/lesser? 0]
                                     :positive core/positive?
@@ -259,7 +259,7 @@
                                       :url "abc"
                                       :age 10
                                       :one-of 4
-                                      :present nil
+                                      :not-nil nil
                                       :count 1
                                       :count2 1
                                       :positive -1
@@ -278,7 +278,7 @@
                                       :url "http://google.com"
                                       :age 21
                                       :one-of 1
-                                      :present true
+                                      :not-nil true
                                       :count 3
                                       :count2 -1
                                       :positive 1
@@ -298,7 +298,7 @@
                                          :url "abc"
                                          :age 10
                                          :one-of 4
-                                         :present nil
+                                         :not-nil nil
                                          :count 1
                                          :count2 1
                                          :positive -1
@@ -315,7 +315,7 @@
         (t/is (= "url should be a valid url." (nth (:results result) 4)))
         (t/is (= "age is 10 but it must be between 18 and 40." (nth (:results result) 5)))
         (t/is (= "one-of is 4 but should be one of [1 2 3]." (nth (:results result) 6)))
-        (t/is (= "present is required." (nth (:results result) 7)))
+        (t/is (= "not-nil is required." (nth (:results result) 7)))
         (t/is (= "count is 1 but it must be greater than 2." (nth (:results result) 8)))
         (t/is (= "count2 is 1 but it must be less than 0." (nth (:results result) 9)))
         (t/is (= "positive is -1 but it should be a positive number." (nth (:results result) 10)))
@@ -334,7 +334,7 @@
                                          :url "http://google.com"
                                          :age 21
                                          :one-of 1
-                                         :present true
+                                         :not-nil true
                                          :count 3
                                          :count2 -1
                                          :positive 1
@@ -347,12 +347,12 @@
         (t/is (empty? (:results result)))))
 
     (t/testing "validate uses a custom function for default message lookup"
-      (let [v-set (core/validation-set [:email core/email? :present core/present?])
-            result (core/validate v-set {:email "" :present nil} {:default-message-fn (fn [v-type]
+      (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])
+            result (core/validate v-set {:email "" :not-nil nil} {:default-message-fn (fn [v-type]
                                                                                         (case v-type
                                                                                           :email (str "custom email error")
                                                                                           nil))})]
-        (t/is (= "present is required." (second (:results result))))
+        (t/is (= "not-nil is required." (second (:results result))))
         (t/is (= "custom email error" (first (:results result))))))
 
     (t/testing "validate respects allow missing keys"

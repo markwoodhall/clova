@@ -1,5 +1,5 @@
 (ns clova.core
-  (:require [clova.util :refer [not-nil? not-nil-or-missing?]]
+  (:require [clova.util :as u]
              #?(:cljs [goog.string :as gstr])
              #?(:cljs [goog.string.format]))
   #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
@@ -18,10 +18,10 @@
 
 (defvalidator
   "Checks for the presence of a non nil value."
-  present?
-  {:type :present :default-message "%s is required." :added "0.2.0" :allow-missing-key? true}
+  not-nil?
+  {:type :not-nil :default-message "%s is required." :added "0.2.0" :allow-missing-key? true}
   [value]
-  (not-nil? value))
+  (u/not-nil? value))
 
 (defvalidator
   "Checks a string representation of value against regex and
@@ -66,7 +66,7 @@
   greater?
   {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (> value lower)))
 
 (defvalidator
@@ -74,7 +74,7 @@
   lesser?
   {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (< value lower)))
 
 (defvalidator
@@ -82,7 +82,7 @@
   positive?
   {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0" :allow-missing-key? true}
   [value]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (pos? value)))
 
 (defvalidator
@@ -90,7 +90,7 @@
   negative?
   {:type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0" :allow-missing-key? true}
   [value]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (neg? value)))
 
 (defvalidator
@@ -98,7 +98,7 @@
   between?
   {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :allow-missing-key? true}
   [value lower upper]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (and (>= value lower)
          (<= value upper))))
 
@@ -108,7 +108,7 @@
   length?
   {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0" :allow-missing-key? true}
   [value l]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (= l (count (seq value)))))
 
 (defvalidator
@@ -117,7 +117,7 @@
   longer?
   {:type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (< l (count (seq value)))))
 
 (defvalidator
@@ -126,7 +126,7 @@
   shorter?
   {:type :shorter :default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
-  (when (not-nil-or-missing? value)
+  (when (u/not-nil-or-missing? value)
     (> l (count (seq value)))))
 
 (defvalidator
@@ -193,7 +193,7 @@
                              v-type (:type (meta v))
                              allow-missing-key? (:allow-missing-key? (meta v))
                              default-message (:default-message (meta v))
-                             message (if (not-nil? default-message-fn)
+                             message (if (u/not-nil? default-message-fn)
                                        (if-let [m (default-message-fn v-type)]
                                          m
                                          default-message)
