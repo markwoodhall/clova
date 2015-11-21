@@ -24,6 +24,14 @@
   (u/not-nil? value))
 
 (defvalidator
+  "Checks for the presence of a key based on the default value of :clova.core/key-not-found?
+  for a missing key."
+  required?
+  {:type :required :default-message "%s is required." :added "0.8.0" :allow-missing-key? false}
+  [value]
+  (u/not-missing? value))
+
+(defvalidator
   "Checks a string representation of value against regex and
   returns true if value matches the regex. If value is not a
   match then returns nil."
@@ -135,13 +143,6 @@
   {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0" :allow-missing-key? true}
   [value col]
   (some #{value} col))
-
-(defn required
-  "Takes a validator and alters the meta data so that :allow-missing-key? is set to false.
-  This means that validation will fail if the validated key is not present in the map."
-  {:added "0.7.0"}
-  [validator-fn]
-  (with-meta validator-fn (assoc (meta validator-fn) :allow-missing-key? false)))
 
 (defn validation-set
   "Takes a sequence (col) that represents

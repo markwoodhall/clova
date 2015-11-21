@@ -15,11 +15,25 @@
 (def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
 (def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
 (def exp-not-nil-meta {:type :not-nil :target :not-nil :default-message "%s is required."})
+(def exp-required-meta {:type :required :target :required :default-message "%s is required."})
 (def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
 (def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
 (def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
 (def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
 (def exp-shorter-meta {:type :shorter :target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
+
+(t/deftest required-validator
+  (t/testing "required validator exposes correct meta data"
+    (t/is (= (dissoc exp-required-meta :target)
+             (only-clova-meta (meta core/required?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [value [1 2 true false "" "hello" {} [] {:a 1}]]
+      (t/is (core/required? value))))
+
+  (t/testing "validating an invalid value"
+    (doseq [value [:clova.core/key-not-found?]]
+      (t/is (not (core/required? value))))))
 
 (t/deftest not-nil-validator
   (t/testing "not-nil validator exposes correct meta data"
@@ -250,6 +264,7 @@
                                     :length [core/length? 3]
                                     :longer [core/longer? 2]
                                     :shorter [core/shorter? 2]
+                                    :required [core/required?]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -286,6 +301,7 @@
                                       :length  "aaa"
                                       :longer [1 2 3]
                                       :shorter "a"
+                                      :required nil
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -323,7 +339,8 @@
         (t/is (= "length is aaaa but it should have a length of 3." (nth (:results result) 12)))
         (t/is (= "longer is [1 2] but it should have a length longer than 2." (nth (:results result) 13)))
         (t/is (= "shorter is aaa but it should have a length shorter than 2." (nth (:results result) 14)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 15)))))
+        (t/is (= "required is required." (nth (:results result) 15)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 16)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -342,6 +359,7 @@
                                          :length "aaa"
                                          :longer [1 2 3]
                                          :shorter "a"
+                                         :required nil
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
@@ -355,12 +373,15 @@
         (t/is (= "not-nil is required." (second (:results result))))
         (t/is (= "custom email error" (first (:results result))))))
 
-    (t/testing "validate respects allow missing keys"
+    (t/testing "validate respects allow missing keys so the only failure is for a required field"
       (let [result (core/validate v-set {})]
-        (t/is (:valid? result))))
+        (t/is (not (:valid? result)))
+        (t/is (= (count (:results result)) 1))
+        (t/is (= (first (:results result)) "required is required."))))
 
-    (t/testing "validate respects allow missing keys when using required"
-      (let [v-set (core/validation-set [:email (core/required core/email?)])
+    (t/testing "validate respects allow missing keys when using a required combination"
+      (let [v-set (core/validation-set [:email core/email?
+                                        :email core/required?])
             result (core/validate v-set {})]
         (t/is (not (:valid? result)))))
 
