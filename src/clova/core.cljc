@@ -185,9 +185,7 @@
   ([v-set m {:keys [default-message-fn]}]
    (let [valids (map (fn [v]
                        (let [target (:target (meta v))
-                             target (if (not (sequential? target))
-                                      [target]
-                                      target)
+                             target (u/as-seq target)
                              target-name (reduce #(str %1 " " %2) (map name target))
                              value (get-in m target :clova.core/key-not-found?)
                              args (:args (meta v))
