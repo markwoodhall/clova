@@ -56,7 +56,7 @@ but if it is then it must be one of "GET" or "POST".
   ;; {:results (), :valid? true}
 
   (validate v-set {:action "DEL"})
-  ;; {:results ("command is DEL but should be one of [\"GET\" \"POST\"]."),
+  ;; {:results ("action is DEL but should be one of [\"GET\" \"POST\"]."),
   ;;  :valid? false}
 
   (validate v-set {})
