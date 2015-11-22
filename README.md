@@ -98,6 +98,7 @@ the default validation message will be used.
                                                           :email (str "custom email error")
                                                            nil))})
 ```
+[See more usage examples.](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md)
 
 ## Validators
 
@@ -118,6 +119,7 @@ clova has the following built in validators
 13. [length?](http://markwoodhall.github.io/clova/clova.core.html#var-length.3F)
 14. [longer?](http://markwoodhall.github.io/clova/clova.core.html#var-longer.3F)
 15. [shorter?](http://markwoodhall.github.io/clova/clova.core.html#var-shorter.3F)
+16. [one-of?](http://markwoodhall.github.io/clova/clova.core.html#var-one-of.3F)
 
 ## License
 
