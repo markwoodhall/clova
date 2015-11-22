@@ -1,3 +1,8 @@
+## 0.8.1 (22-11-2015)
+
+* Fix issue where the `one-of?` validator does not return a true/false value and when used in
+isolation can result in erroneous results."
+
 ## 0.8.0 (21-11-2015)
 
 * Remove `required` wrapper function and replace it with a `required?` validator.
