@@ -142,7 +142,7 @@
   one-of?
   {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0" :allow-missing-key? true}
   [value col]
-  (some #{value} col))
+  (u/not-nil? (some #{value} col)))
 
 (defn validation-set
   "Takes a sequence (col) that represents
