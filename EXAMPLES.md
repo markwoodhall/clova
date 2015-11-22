@@ -42,4 +42,25 @@ it's value should be between 5 and 10.
 
 ```
 
+* You want to validate an `:action` key. The key *does not* have to be present
+but if it is then it must be one of "GET" or "POST".
+
+```clojure
+
+(let [v-set (validation-set [:action [one-of? ["GET" "POST"]]])]
+
+  (validate v-set {:action "POST"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:action "GET"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:action "DEL"})
+  ;; {:results ("command is DEL but should be one of [\"GET\" \"POST\"]."),
+  ;;  :valid? false}
+
+  (validate v-set {})
+  ;; {:results (), :valid? true}
+
+```
 
