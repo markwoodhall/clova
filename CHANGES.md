@@ -1,3 +1,12 @@
+## 0.10.0 (23-11-2015)
+
+* Add support for using validator functions as predicates to `all?`.
+
+```clojure
+(let [validation-set (core/validation-set [:age [all? [[greater? 18] [lesser? 30]]]])]
+
+```
+
 ## 0.9.0 (23-11-2015)
 
 * Add all? validator.
