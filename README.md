@@ -36,12 +36,10 @@ and the functions used to validate them.
 
 ```
 
-If you want to compose multiple validators you can. Currently you have to do so by specifying the validated key multiple times.
+If you want to compose multiple validators you can.
 
 ```clojure
-(let [validation-set (core/validation-set
-                       [:age [core/greater? 18]
-                        :age [core/lesser? 30]])]
+(let [validation-set (core/validation-set [:age [all? [[greater? 18] [lesser? 30]]]])]
 
 ```
 
@@ -58,6 +56,15 @@ Just use a `required?` validator as well.
 (let [validation-set (core/validation-set
                        [:age core/required?
                         :age [core/between? 18 30]])]
+```
+
+Note, it is not currently possible to use `required?` as part of an `all?` validator but you can use the following.
+
+```clojure
+(let [validation-set (core/validation-set
+                       [:age required?
+                        :age [all? [[greater? 18] [lesser? 30]]]])]
+
 ```
 
 Use the validation set:

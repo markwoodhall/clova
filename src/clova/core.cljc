@@ -158,7 +158,12 @@
   (let [c (u/as-seq col)]
     (every? true? (map #(if (u/function? %)
                           (% value)
-                          %) c))))
+                          (if (sequential? %)
+                            (let [func (first %)
+                                  args (rest %)]
+                              (when (u/function? func)
+                                (apply func value args)))
+                            %)) c))))
 
 (defn validation-set
   "Takes a sequence (col) that represents

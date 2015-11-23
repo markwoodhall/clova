@@ -34,7 +34,15 @@
 
   (t/testing "validating an invalid value"
     (doseq [col [false (fn [v] false) [false false] [(fn [v] false) (fn [v] false)] [(fn [v] true) (fn [v] false)]]]
-      (t/is (not (core/all? false col))))))
+      (t/is (not (core/all? false col)))))
+
+  (t/testing "validating an invalid value with other validators"
+    (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
+      (t/is (not (core/all? 2 col)))))
+
+  (t/testing "validating an valid value with other validators"
+    (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
+      (t/is (core/all? 7 col)))))
 
 (t/deftest required-validator
   (t/testing "required validator exposes correct meta data"
