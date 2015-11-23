@@ -21,6 +21,20 @@
 (def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
 (def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
 (def exp-shorter-meta {:type :shorter :target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
+(def exp-all-meta {:type :all :target :all :default-message "%s is %s but it does not meet all of the requirements."})
+
+(t/deftest all-validator
+  (t/testing "all validator exposes correct meta data"
+    (t/is (= (dissoc exp-all-meta :target)
+             (only-clova-meta (meta core/all?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [col [true (fn [v] true) [true true] [(fn [v] true) (fn [v] true)]]]
+      (t/is (core/all? true col))))
+
+  (t/testing "validating an invalid value"
+    (doseq [col [false (fn [v] false) [false false] [(fn [v] false) (fn [v] false)] [(fn [v] true) (fn [v] false)]]]
+      (t/is (not (core/all? false col))))))
 
 (t/deftest required-validator
   (t/testing "required validator exposes correct meta data"
@@ -265,6 +279,7 @@
                                     :longer [core/longer? 2]
                                     :shorter [core/shorter? 2]
                                     :required [core/required?]
+                                    :all [core/all? [(fn[v] (= v 5))]]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -282,6 +297,7 @@
                                       :length  "aaaaa"
                                       :longer [1 2]
                                       :shorter "aaa"
+                                      :all 4
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -302,6 +318,7 @@
                                       :longer [1 2 3]
                                       :shorter "a"
                                       :required nil
+                                      :all 5
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -322,6 +339,7 @@
                                          :length "aaaa"
                                          :longer [1 2]
                                          :shorter "aaa"
+                                         :all 4
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -340,7 +358,8 @@
         (t/is (= "longer is [1 2] but it should have a length longer than 2." (nth (:results result) 13)))
         (t/is (= "shorter is aaa but it should have a length shorter than 2." (nth (:results result) 14)))
         (t/is (= "required is required." (nth (:results result) 15)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 16)))))
+        (t/is (= "all is 4 but it does not meet all of the requirements." (nth (:results result) 16)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 17)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -360,6 +379,7 @@
                                          :longer [1 2 3]
                                          :shorter "a"
                                          :required nil
+                                         :all 5
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))

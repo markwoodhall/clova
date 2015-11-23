@@ -1,5 +1,6 @@
 (ns clova.core
   (:require [clova.util :as u]
+            [clojure.string :refer [join]]
              #?(:cljs [goog.string :as gstr])
              #?(:cljs [goog.string.format]))
   #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
@@ -144,6 +145,21 @@
   [value col]
   (u/not-nil? (some #{value} col)))
 
+(defvalidator
+  "Check an input value to see if it matches a given collection
+  of predicates. Predicates can be concrete values or they can be functions, they
+  can be single items or collections.
+
+  (all? true [true (fn [v] (= true v))]
+  (all? true (fn [v] (= true v)))"
+  all?
+  {:type :all :default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" :allow-missing-key? true}
+  [value col]
+  (let [c (u/as-seq col)]
+    (every? true? (map #(if (u/function? %)
+                          (% value)
+                          %) c))))
+
 (defn validation-set
   "Takes a sequence (col) that represents
   keys to validate and the functions used to validate them.
@@ -186,7 +202,7 @@
    (let [valids (map (fn [v]
                        (let [target (:target (meta v))
                              target (u/as-seq target)
-                             target-name (reduce #(str %1 " " %2) (map name target))
+                             target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
                              args (:args (meta v))
                              v-type (:type (meta v))
@@ -202,7 +218,7 @@
                                       (apply v value args))
                           :message #?(:clj (apply format message target-name value args)
                                            :cljs (apply gstr/format message target-name value args))})) v-set)]
-     {:valid? (reduce #(and %1 %2) true (map :valid? valids))
+     {:valid? (every? true? (map :valid? valids))
       :results (map :message (filter #(not (:valid? %)) valids))})))
 
 (defn valid?

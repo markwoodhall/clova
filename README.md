@@ -120,6 +120,7 @@ clova has the following built in validators
 14. [longer?](http://markwoodhall.github.io/clova/clova.core.html#var-longer.3F)
 15. [shorter?](http://markwoodhall.github.io/clova/clova.core.html#var-shorter.3F)
 16. [one-of?](http://markwoodhall.github.io/clova/clova.core.html#var-one-of.3F)
+17. [all?](http://markwoodhall.github.io/clova/clova.core.html#var-all.3F)
 
 ## License
 
