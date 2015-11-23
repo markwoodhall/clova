@@ -1,3 +1,9 @@
+## 0.9.0 (23-11-2015)
+
+* Add all? validator.
+* Minor readability fixes to remove use of annonymous functions where using an internal Clojure function
+makes more sense.
+
 ## 0.8.1 (22-11-2015)
 
 * Fix issue where the `one-of?` validator does not return a true/false value and when used in
