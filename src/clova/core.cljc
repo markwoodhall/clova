@@ -188,7 +188,7 @@
               func-meta (meta func)
               args (if (sequential? func-or-seq)
                      {:args (rest func-or-seq)})
-              val-meta (merge args {:target (first %)})]
+              val-meta (merge args {:clova.core/target (first %)})]
           (with-meta func (merge func-meta val-meta))) (partition 2 col)))
 
 (defn validate
@@ -205,7 +205,7 @@
    (validate v-set m {}))
   ([v-set m {:keys [default-message-fn]}]
    (let [valids (map (fn [v]
-                       (let [target (:target (meta v))
+                       (let [target (:clova.core/target (meta v))
                              target (u/as-seq target)
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
@@ -222,7 +222,7 @@
                                            (= :clova.core/key-not-found? value))
                                       (apply v value args))
                           :message #?(:clj (apply format message target-name value args)
-                                           :cljs (apply gstr/format message target-name value args))})) v-set)]
+                                      :cljs (apply gstr/format message target-name value args))})) v-set)]
      {:valid? (every? true? (map :valid? valids))
       :results (map :message (filter #(not (:valid? %)) valids))})))
 

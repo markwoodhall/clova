@@ -1,31 +1,31 @@
 (ns clova.core-test
   (:require #?(:cljs [cljs.test :as t]
-                     :clj  [clojure.test :as t])
+               :clj  [clojure.test :as t])
             [clova.core :as core]))
 
 (def only-clova-meta #(select-keys % [:type :default-message]))
-(def only-clova-set-meta #(select-keys % [:type :target :default-message :args]))
-(def exp-email-meta {:type :email :target :email :default-message "%s should be a valid email address."})
-(def exp-post-meta {:type :post-code :target :post-code :default-message "%s should be a valid post code."})
-(def exp-url-meta {:type :url :target :url :default-message "%s should be a valid url."})
-(def exp-greater-meta {:type :greater :target :count :default-message "%s is %s but it must be greater than %s."})
-(def exp-lesser-meta {:type :lesser  :target :count2 :default-message "%s is %s but it must be less than %s."})
-(def exp-between-meta {:type :between :args [1 9] :target :age :default-message "%s is %s but it must be between %s and %s."})
-(def exp-matches-meta {:type :matches :target :matches :default-message "%s is invalid value %s."})
-(def exp-zip-meta {:type :zip-code :target :zip-code :default-message "%s should be a valid zip code."})
-(def exp-one-of-meta {:type :one-of :target :one-of :default-message "%s is %s but should be one of %s."})
-(def exp-not-nil-meta {:type :not-nil :target :not-nil :default-message "%s is required."})
-(def exp-required-meta {:type :required :target :required :default-message "%s is required."})
-(def exp-positive-meta {:type :positive :target :positive :default-message "%s is %s but it should be a positive number."})
-(def exp-negative-meta {:type :negative :target :negative :default-message "%s is %s but it should be a negative number."})
-(def exp-length-meta {:type :length :target :length :default-message "%s is %s but it should have a length of %s."})
-(def exp-longer-meta {:type :longer :target :longer :default-message "%s is %s but it should have a length longer than %s."})
-(def exp-shorter-meta {:type :shorter :target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
-(def exp-all-meta {:type :all :target :all :default-message "%s is %s but it does not meet all of the requirements."})
+(def only-clova-set-meta #(select-keys % [:type :clova.core/target :default-message :args]))
+(def exp-email-meta {:type :email :clova.core/target :email :default-message "%s should be a valid email address."})
+(def exp-post-meta {:type :post-code :clova.core/target :post-code :default-message "%s should be a valid post code."})
+(def exp-url-meta {:type :url :clova.core/target :url :default-message "%s should be a valid url."})
+(def exp-greater-meta {:type :greater :clova.core/target :count :default-message "%s is %s but it must be greater than %s."})
+(def exp-lesser-meta {:type :lesser  :clova.core/target :count2 :default-message "%s is %s but it must be less than %s."})
+(def exp-between-meta {:type :between :args [1 9] :clova.core/target :age :default-message "%s is %s but it must be between %s and %s."})
+(def exp-matches-meta {:type :matches :clova.core/target :matches :default-message "%s is invalid value %s."})
+(def exp-zip-meta {:type :zip-code :clova.core/target :zip-code :default-message "%s should be a valid zip code."})
+(def exp-one-of-meta {:type :one-of :clova.core/target :one-of :default-message "%s is %s but should be one of %s."})
+(def exp-not-nil-meta {:type :not-nil :clova.core/target :not-nil :default-message "%s is required."})
+(def exp-required-meta {:type :required :clova.core/target :required :default-message "%s is required."})
+(def exp-positive-meta {:type :positive :clova.core/target :positive :default-message "%s is %s but it should be a positive number."})
+(def exp-negative-meta {:type :negative :clova.core/target :negative :default-message "%s is %s but it should be a negative number."})
+(def exp-length-meta {:type :length :clova.core/target :length :default-message "%s is %s but it should have a length of %s."})
+(def exp-longer-meta {:type :longer :clova.core/target :longer :default-message "%s is %s but it should have a length longer than %s."})
+(def exp-shorter-meta {:type :shorter :clova.core/target :shorter :default-message "%s is %s but it should have a length shorter than %s."})
+(def exp-all-meta {:type :all :clova.core/target :all :default-message "%s is %s but it does not meet all of the requirements."})
 
 (t/deftest all-validator
   (t/testing "all validator exposes correct meta data"
-    (t/is (= (dissoc exp-all-meta :target)
+    (t/is (= (dissoc exp-all-meta :clova.core/target)
              (only-clova-meta (meta core/all?)))))
 
   (t/testing "validating a valid value"
@@ -46,7 +46,7 @@
 
 (t/deftest required-validator
   (t/testing "required validator exposes correct meta data"
-    (t/is (= (dissoc exp-required-meta :target)
+    (t/is (= (dissoc exp-required-meta :clova.core/target)
              (only-clova-meta (meta core/required?)))))
 
   (t/testing "validating a valid value"
@@ -59,7 +59,7 @@
 
 (t/deftest not-nil-validator
   (t/testing "not-nil validator exposes correct meta data"
-    (t/is (= (dissoc exp-not-nil-meta :target)
+    (t/is (= (dissoc exp-not-nil-meta :clova.core/target)
              (only-clova-meta (meta core/not-nil?)))))
 
   (t/testing "validating a valid value"
@@ -72,7 +72,7 @@
 
 (t/deftest email-validator
   (t/testing "email validator exposes correct meta data"
-    (t/is (= (dissoc exp-email-meta :target)
+    (t/is (= (dissoc exp-email-meta :clova.core/target)
              (only-clova-meta (meta core/email?)))))
 
   (t/testing "validating a valid email address"
@@ -85,7 +85,7 @@
 
 (t/deftest zip-code-validator
   (t/testing "zip code validator exposes correct meta data"
-    (t/is (= (dissoc exp-zip-meta :target)
+    (t/is (= (dissoc exp-zip-meta :clova.core/target)
              (only-clova-meta (meta core/zip-code?)))))
 
   (t/testing "validating a valid zip code"
@@ -98,7 +98,7 @@
 
 (t/deftest post-code-validator
   (t/testing "post code validator exposes correct meta data"
-    (t/is (= (dissoc exp-post-meta :target)
+    (t/is (= (dissoc exp-post-meta :clova.core/target)
              (only-clova-meta (meta core/post-code?)))))
 
   (t/testing "validating a valid uk post code"
@@ -111,7 +111,7 @@
 
 (t/deftest url-validator
   (t/testing "url validator exposes correct meta data"
-    (t/is (= (dissoc exp-url-meta :target)
+    (t/is (= (dissoc exp-url-meta :clova.core/target)
              (only-clova-meta (meta core/url?)))))
 
   (t/testing "validating a valid url "
@@ -124,7 +124,7 @@
 
 (t/deftest between-validator
   (t/testing "between validator exposes correct meta data"
-    (t/is (= (dissoc exp-between-meta :target :args)
+    (t/is (= (dissoc exp-between-meta :clova.core/target :args)
              (only-clova-meta (meta core/between?)))))
 
   (t/testing "validating a valid between value"
@@ -137,7 +137,7 @@
 
 (t/deftest greater-validator
   (t/testing "greater validator exposes correct meta data"
-    (t/is (= (dissoc exp-greater-meta :target)
+    (t/is (= (dissoc exp-greater-meta :clova.core/target)
              (only-clova-meta (meta core/greater?)))))
 
   (t/testing "validating a valid greater value"
@@ -150,7 +150,7 @@
 
 (t/deftest lesser-validator
   (t/testing "lesser validator exposes correct meta data"
-    (t/is (= (dissoc exp-lesser-meta :target)
+    (t/is (= (dissoc exp-lesser-meta :clova.core/target)
              (only-clova-meta (meta core/lesser?)))))
 
   (t/testing "validating a valid lesser value"
@@ -163,7 +163,7 @@
 
 (t/deftest positive-validator
   (t/testing "positive validator exposes correct meta data"
-    (t/is (= (dissoc exp-positive-meta :target)
+    (t/is (= (dissoc exp-positive-meta :clova.core/target)
              (only-clova-meta (meta core/positive?)))))
 
   (t/testing "validating a valid positive value"
@@ -177,7 +177,7 @@
 
 (t/deftest negative-validator
   (t/testing "negative validator exposes correct meta data"
-    (t/is (= (dissoc exp-negative-meta :target)
+    (t/is (= (dissoc exp-negative-meta :clova.core/target)
              (only-clova-meta (meta core/negative?)))))
 
   (t/testing "validating a valid negative value"
@@ -190,7 +190,7 @@
 
 (t/deftest matches-validator
   (t/testing "matches validator exposes correct meta data"
-    (t/is (= (dissoc exp-matches-meta :target)
+    (t/is (= (dissoc exp-matches-meta :clova.core/target)
              (only-clova-meta (meta core/matches?)))))
 
   (t/testing "validating a value that matches"
@@ -202,7 +202,7 @@
 
 (t/deftest one-of-validator
   (t/testing "one-of validator exposes correct meta data"
-    (t/is (= (dissoc exp-one-of-meta :target)
+    (t/is (= (dissoc exp-one-of-meta :clova.core/target)
              (only-clova-meta (meta core/one-of?)))))
 
   (t/testing "validating a value that is one of a collection"
@@ -214,7 +214,7 @@
 
 (t/deftest length-validator
   (t/testing "length validator exposes correct meta data"
-    (t/is (= (dissoc exp-length-meta :target)
+    (t/is (= (dissoc exp-length-meta :clova.core/target)
              (only-clova-meta (meta core/length?)))))
 
   (t/testing "validating a value that is shorter or longer"
@@ -227,7 +227,7 @@
 
 (t/deftest longer-validator
   (t/testing "longer validator exposes correct meta data"
-    (t/is (= (dissoc exp-longer-meta :target)
+    (t/is (= (dissoc exp-longer-meta :clova.core/target)
              (only-clova-meta (meta core/longer?)))))
 
   (t/testing "validating a value that is shorter or of equal length"
@@ -240,7 +240,7 @@
 
 (t/deftest horter-validator
   (t/testing "shorter validator exposes correct meta data"
-    (t/is (= (dissoc exp-shorter-meta :target)
+    (t/is (= (dissoc exp-shorter-meta :clova.core/target)
              (only-clova-meta (meta core/shorter?)))))
 
   (t/testing "validating a value that is longer or of equal length"
