@@ -25,7 +25,7 @@
 
 (t/deftest all-validator
   (t/testing "all validator exposes correct meta data"
-    (t/is (= (dissoc exp-all-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-all-meta)
              (only-clova-meta (meta core/all?)))))
 
   (t/testing "validating a valid value"
@@ -46,7 +46,7 @@
 
 (t/deftest required-validator
   (t/testing "required validator exposes correct meta data"
-    (t/is (= (dissoc exp-required-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-required-meta)
              (only-clova-meta (meta core/required?)))))
 
   (t/testing "validating a valid value"
@@ -59,7 +59,7 @@
 
 (t/deftest not-nil-validator
   (t/testing "not-nil validator exposes correct meta data"
-    (t/is (= (dissoc exp-not-nil-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-not-nil-meta)
              (only-clova-meta (meta core/not-nil?)))))
 
   (t/testing "validating a valid value"
@@ -72,7 +72,7 @@
 
 (t/deftest email-validator
   (t/testing "email validator exposes correct meta data"
-    (t/is (= (dissoc exp-email-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-email-meta)
              (only-clova-meta (meta core/email?)))))
 
   (t/testing "validating a valid email address"
@@ -85,7 +85,7 @@
 
 (t/deftest zip-code-validator
   (t/testing "zip code validator exposes correct meta data"
-    (t/is (= (dissoc exp-zip-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-zip-meta)
              (only-clova-meta (meta core/zip-code?)))))
 
   (t/testing "validating a valid zip code"
@@ -98,7 +98,7 @@
 
 (t/deftest post-code-validator
   (t/testing "post code validator exposes correct meta data"
-    (t/is (= (dissoc exp-post-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-post-meta)
              (only-clova-meta (meta core/post-code?)))))
 
   (t/testing "validating a valid uk post code"
@@ -111,7 +111,7 @@
 
 (t/deftest url-validator
   (t/testing "url validator exposes correct meta data"
-    (t/is (= (dissoc exp-url-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-url-meta)
              (only-clova-meta (meta core/url?)))))
 
   (t/testing "validating a valid url "
@@ -124,7 +124,7 @@
 
 (t/deftest between-validator
   (t/testing "between validator exposes correct meta data"
-    (t/is (= (dissoc exp-between-meta :clova.core/target :clova.core/args)
+    (t/is (= (only-clova-meta exp-between-meta)
              (only-clova-meta (meta core/between?)))))
 
   (t/testing "validating a valid between value"
@@ -137,7 +137,7 @@
 
 (t/deftest greater-validator
   (t/testing "greater validator exposes correct meta data"
-    (t/is (= (dissoc exp-greater-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-greater-meta)
              (only-clova-meta (meta core/greater?)))))
 
   (t/testing "validating a valid greater value"
@@ -150,7 +150,7 @@
 
 (t/deftest lesser-validator
   (t/testing "lesser validator exposes correct meta data"
-    (t/is (= (dissoc exp-lesser-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-lesser-meta)
              (only-clova-meta (meta core/lesser?)))))
 
   (t/testing "validating a valid lesser value"
@@ -163,7 +163,7 @@
 
 (t/deftest positive-validator
   (t/testing "positive validator exposes correct meta data"
-    (t/is (= (dissoc exp-positive-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-positive-meta)
              (only-clova-meta (meta core/positive?)))))
 
   (t/testing "validating a valid positive value"
@@ -177,7 +177,7 @@
 
 (t/deftest negative-validator
   (t/testing "negative validator exposes correct meta data"
-    (t/is (= (dissoc exp-negative-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-negative-meta)
              (only-clova-meta (meta core/negative?)))))
 
   (t/testing "validating a valid negative value"
@@ -190,7 +190,7 @@
 
 (t/deftest matches-validator
   (t/testing "matches validator exposes correct meta data"
-    (t/is (= (dissoc exp-matches-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-matches-meta)
              (only-clova-meta (meta core/matches?)))))
 
   (t/testing "validating a value that matches"
@@ -202,7 +202,7 @@
 
 (t/deftest one-of-validator
   (t/testing "one-of validator exposes correct meta data"
-    (t/is (= (dissoc exp-one-of-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-one-of-meta)
              (only-clova-meta (meta core/one-of?)))))
 
   (t/testing "validating a value that is one of a collection"
@@ -214,7 +214,7 @@
 
 (t/deftest length-validator
   (t/testing "length validator exposes correct meta data"
-    (t/is (= (dissoc exp-length-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-length-meta)
              (only-clova-meta (meta core/length?)))))
 
   (t/testing "validating a value that is shorter or longer"
@@ -227,7 +227,7 @@
 
 (t/deftest longer-validator
   (t/testing "longer validator exposes correct meta data"
-    (t/is (= (dissoc exp-longer-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-longer-meta)
              (only-clova-meta (meta core/longer?)))))
 
   (t/testing "validating a value that is shorter or of equal length"
@@ -240,7 +240,7 @@
 
 (t/deftest horter-validator
   (t/testing "shorter validator exposes correct meta data"
-    (t/is (= (dissoc exp-shorter-meta :clova.core/target)
+    (t/is (= (only-clova-meta exp-shorter-meta)
              (only-clova-meta (meta core/shorter?)))))
 
   (t/testing "validating a value that is longer or of equal length"
