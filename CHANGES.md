@@ -1,3 +1,13 @@
+## 0.10.1 (24-11-2015)
+
+* Qualify clova specific meta data keys with the clova.core namespace.
+
+    `:type` becomes `:clova.core/type`
+    `:default-message` becomes `:clova.core/default-message`
+    `:allow-missing-key?` becomes `:clova.core/allow-missing-key?`
+    `:target` becomes `:clova.core/target`
+    `:args` becomes `:clova.core/args`
+
 ## 0.10.0 (23-11-2015)
 
 * Add support for using validator functions as predicates to `all?`.
