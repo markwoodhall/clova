@@ -40,8 +40,8 @@ isolation can result in erroneous results."
 
 ## 0.7.0 (20-11-2015)
 
-* Add :allow-missing-key? to enable default behaviour where validators do not fail if a key is not present.
-* Add `required` function to disable :allow-missing-key? and force a key to be present.
+* Add :clova.core/allow-missing-key? to enable default behaviour where validators do not fail if a key is not present.
+* Add `required` function to disable :clova.core/allow-missing-key? and force a key to be present.
 
 ## 0.6.0 (19-11-2015)
 
