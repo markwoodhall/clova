@@ -20,7 +20,7 @@
 (defvalidator
   "Checks for the presence of a non nil value."
   not-nil?
-  {:type :not-nil :default-message "%s is required." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :not-nil :default-message "%s is required." :added "0.2.0" :allow-missing-key? true}
   [value]
   (u/not-nil? value))
 
@@ -28,7 +28,7 @@
   "Checks for the presence of a key based on the default value of :clova.core/key-not-found?
   for a missing key."
   required?
-  {:type :required :default-message "%s is required." :added "0.8.0" :allow-missing-key? false}
+  {:clova.core/type :required :default-message "%s is required." :added "0.8.0" :allow-missing-key? false}
   [value]
   (u/not-missing? value))
 
@@ -37,7 +37,7 @@
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {:type :matches :default-message "%s is invalid value %s." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :matches :default-message "%s is invalid value %s." :added "0.2.0" :allow-missing-key? true}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -45,35 +45,35 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:type :email :default-message "%s should be a valid email address." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :email :default-message "%s should be a valid email address." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:type :zip-code :default-message "%s should be a valid zip code." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :zip-code :default-message "%s should be a valid zip code." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:type :post-code :default-message "%s should be a valid post code." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :post-code :default-message "%s should be a valid post code." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:type :url :default-message "%s should be a valid url." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :url :default-message "%s should be a valid url." :added "0.2.0" :allow-missing-key? true}
   [value]
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is greater than lower."
   greater?
-  {:type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :greater :default-message "%s is %s but it must be greater than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
   (when (u/not-nil-or-missing? value)
     (> value lower)))
@@ -81,7 +81,7 @@
 (defvalidator
   "Checks an input value to see if it is less than lower."
   lesser?
-  {:type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :lesser :default-message "%s is %s but it must be less than %s." :added "0.2.0" :allow-missing-key? true}
   [value lower]
   (when (u/not-nil-or-missing? value)
     (< value lower)))
@@ -89,7 +89,7 @@
 (defvalidator
   "Checks an input value to see if it is a positive number."
   positive?
-  {:type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0" :allow-missing-key? true}
+  {:clova.core/type :positive :default-message "%s is %s but it should be a positive number." :added "0.4.0" :allow-missing-key? true}
   [value]
   (when (u/not-nil-or-missing? value)
     (pos? value)))
@@ -97,7 +97,7 @@
 (defvalidator
   "Checks an input value to see if it is a negative number."
   negative?
-  {:type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0" :allow-missing-key? true}
+  {:clova.core/type :negative :default-message "%s is %s but it should be a negative number." :added "0.4.0" :allow-missing-key? true}
   [value]
   (when (u/not-nil-or-missing? value)
     (neg? value)))
@@ -105,7 +105,7 @@
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :between :default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :allow-missing-key? true}
   [value lower upper]
   (when (u/not-nil-or-missing? value)
     (and (>= value lower)
@@ -115,7 +115,7 @@
   "Check an input value to see if it has a length equal to l.
   Work on sequences and strings."
   length?
-  {:type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0" :allow-missing-key? true}
+  {:clova.core/type :length :default-message "%s is %s but it should have a length of %s." :added "0.5.0" :allow-missing-key? true}
   [value l]
   (when (u/not-nil-or-missing? value)
     (= l (count (seq value)))))
@@ -124,7 +124,7 @@
   "Check an input value to see if it has a length longer than l.
   Work on sequences and strings."
   longer?
-  {:type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :allow-missing-key? true}
+  {:clova.core/type :longer :default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
   (when (u/not-nil-or-missing? value)
     (< l (count (seq value)))))
@@ -133,7 +133,7 @@
   "Check an input value to see if it has a length shorter than l.
   Work on sequences and strings."
   shorter?
-  {:type :shorter :default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :allow-missing-key? true}
+  {:clova.core/type :shorter :default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :allow-missing-key? true}
   [value l]
   (when (u/not-nil-or-missing? value)
     (> l (count (seq value)))))
@@ -141,7 +141,7 @@
 (defvalidator
   "Checks an input value to see if its one of the items in a col"
   one-of?
-  {:type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0" :allow-missing-key? true}
+  {:clova.core/type :one-of :default-message "%s is %s but should be one of %s." :added "0.2.0" :allow-missing-key? true}
   [value col]
   (u/not-nil? (some #{value} col)))
 
@@ -153,7 +153,7 @@
   (all? true [true (fn [v] (= true v))]
   (all? true (fn [v] (= true v)))"
   all?
-  {:type :all :default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" :allow-missing-key? true}
+  {:clova.core/type :all :default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" :allow-missing-key? true}
   [value col]
   (let [c (u/as-seq col)]
     (every? true? (map #(if (u/function? %)
@@ -210,7 +210,7 @@
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
                              args (:clova.core/args (meta v))
-                             v-type (:type (meta v))
+                             v-type (:clova.core/type (meta v))
                              allow-missing-key? (:allow-missing-key? (meta v))
                              default-message (:default-message (meta v))
                              message (if (u/not-nil? default-message-fn)
