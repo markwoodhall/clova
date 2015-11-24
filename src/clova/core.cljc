@@ -187,7 +187,7 @@
                      func-or-seq)
               func-meta (meta func)
               args (if (sequential? func-or-seq)
-                     {:args (rest func-or-seq)})
+                     {:clova.core/args (rest func-or-seq)})
               val-meta (merge args {:clova.core/target (first %)})]
           (with-meta func (merge func-meta val-meta))) (partition 2 col)))
 
@@ -209,7 +209,7 @@
                              target (u/as-seq target)
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
-                             args (:args (meta v))
+                             args (:clova.core/args (meta v))
                              v-type (:type (meta v))
                              allow-missing-key? (:allow-missing-key? (meta v))
                              default-message (:default-message (meta v))

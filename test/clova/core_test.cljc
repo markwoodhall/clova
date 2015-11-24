@@ -4,13 +4,13 @@
             [clova.core :as core]))
 
 (def only-clova-meta #(select-keys % [:type :default-message]))
-(def only-clova-set-meta #(select-keys % [:type :clova.core/target :default-message :args]))
+(def only-clova-set-meta #(select-keys % [:type :clova.core/target :default-message :clova.core/args]))
 (def exp-email-meta {:type :email :clova.core/target :email :default-message "%s should be a valid email address."})
 (def exp-post-meta {:type :post-code :clova.core/target :post-code :default-message "%s should be a valid post code."})
 (def exp-url-meta {:type :url :clova.core/target :url :default-message "%s should be a valid url."})
 (def exp-greater-meta {:type :greater :clova.core/target :count :default-message "%s is %s but it must be greater than %s."})
 (def exp-lesser-meta {:type :lesser  :clova.core/target :count2 :default-message "%s is %s but it must be less than %s."})
-(def exp-between-meta {:type :between :args [1 9] :clova.core/target :age :default-message "%s is %s but it must be between %s and %s."})
+(def exp-between-meta {:type :between :clova.core/args [1 9] :clova.core/target :age :default-message "%s is %s but it must be between %s and %s."})
 (def exp-matches-meta {:type :matches :clova.core/target :matches :default-message "%s is invalid value %s."})
 (def exp-zip-meta {:type :zip-code :clova.core/target :zip-code :default-message "%s should be a valid zip code."})
 (def exp-one-of-meta {:type :one-of :clova.core/target :one-of :default-message "%s is %s but should be one of %s."})
@@ -124,7 +124,7 @@
 
 (t/deftest between-validator
   (t/testing "between validator exposes correct meta data"
-    (t/is (= (dissoc exp-between-meta :clova.core/target :args)
+    (t/is (= (dissoc exp-between-meta :clova.core/target :clova.core/args)
              (only-clova-meta (meta core/between?)))))
 
   (t/testing "validating a valid between value"
