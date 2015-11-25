@@ -198,7 +198,7 @@
 
   Optionally takes a map of options:
 
-  :clova.core/default-message-fn can be specified to override the default validation messages. If specified
+  :default-message-fn can be specified to override the default validation messages. If specified
   the function will be called and receive the validator type as an argument. If the result of calling
   the function is anything but nil it will be used as the default validation message."
   ([v-set m]
