@@ -205,14 +205,11 @@
    (validate v-set m {}))
   ([v-set m {:keys [default-message-fn]}]
    (let [valids (map (fn [v]
-                       (let [target (:clova.core/target (meta v))
+                       (let [{v-type :clova.core/type target :clova.core/target args :clova.core/args
+                              allow-missing-key? :clova.core/allow-missing-key? default-message :clova.core/default-message} (meta v)
                              target (u/as-seq target)
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
-                             args (:clova.core/args (meta v))
-                             v-type (:clova.core/type (meta v))
-                             allow-missing-key? (:clova.core/allow-missing-key? (meta v))
-                             default-message (:clova.core/default-message (meta v))
                              message (if (u/not-nil? default-message-fn)
                                        (if-let [m (default-message-fn v-type)]
                                          m
