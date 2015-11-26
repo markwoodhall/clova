@@ -3,8 +3,6 @@
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
-  :scm {:name "github"
-        :url "https://github.com/markwoodhall/clova"}
   :deploy-repositories [
     ["clojars" {:sign-releases false}]
   ]
