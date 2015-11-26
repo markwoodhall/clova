@@ -11,6 +11,14 @@
   (and (not-missing? value)
        (not-nil? value)))
 
+(defn func-or-default
+  "If the result of calling f is not nil
+  then returns the result, otherwise returns default."
+  [f default]
+  (if-let [r (f)]
+    r
+    default))
+
 (defn as-seq
   "If value is sequential? then just return it. If not
   then wrap it in a vector."

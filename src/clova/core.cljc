@@ -209,17 +209,14 @@
   the function is anything but nil it will be used as the default validation message."
   ([v-set m]
    (validate v-set m {}))
-  ([v-set m {:keys [default-message-fn]}]
+  ([v-set m {:keys [default-message-fn]
+             :or {default-message-fn (fn [x] nil)}}]
    (let [valids (map #(let [{v-type :clova.core/type target :clova.core/target args :clova.core/args
                              allow-missing-key? :clova.core/allow-missing-key? default-message :clova.core/default-message} (meta %)
                              target (u/as-seq target)
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
-                             message (if (u/not-nil? default-message-fn)
-                                       (if-let [m (default-message-fn v-type)]
-                                         m
-                                         default-message)
-                                       default-message)]
+                             message (u/func-or-default (partial default-message-fn v-type) default-message)]
                          {:valid? (or (and allow-missing-key?
                                            (= :clova.core/key-not-found? value))
                                       (apply % value args))
