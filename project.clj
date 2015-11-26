@@ -1,4 +1,4 @@
-(defproject clova "0.10.4"
+(defproject clova "0.10.5"
   :description "A simple validation library for Clojure and ClojureScript."
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"

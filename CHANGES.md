@@ -1,11 +1,12 @@
+## 0.10.5 (26-11-2015)
 ## 0.10.4 (26-11-2015)
 
 * No functional difference. Enable package signing for Clojars deployment.
 
 ## 0.10.3 (26-11-2015)
 
-* Protect against nil values in numerical validators. Where either the 
-value being validated or any of the required validator arguments are nil then 
+* Protect against nil values in numerical validators. Where either the
+value being validated or any of the required validator arguments are nil then
 that validator will be falsey.
 
 ## 0.10.1 (24-11-2015)
