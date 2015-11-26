@@ -1,3 +1,7 @@
+## 0.10.4 (26-11-2015)
+
+* No functional difference. Enable package signing for Clojars deployment.
+
 ## 0.10.3 (26-11-2015)
 
 * Protect against nil values in numerical validators. Where either the 
