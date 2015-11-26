@@ -75,7 +75,8 @@
   greater?
   {:clova.core/type :greater :clova.core/default-message "%s is %s but it must be greater than %s." :added "0.2.0" :clova.core/allow-missing-key? true}
   [value lower]
-  (when (u/not-nil-or-missing? value)
+  (when (and (u/not-nil-or-missing? value)
+             (u/not-nil? lower))
     (> value lower)))
 
 (defvalidator
@@ -83,7 +84,8 @@
   lesser?
   {:clova.core/type :lesser :clova.core/default-message "%s is %s but it must be less than %s." :added "0.2.0" :clova.core/allow-missing-key? true}
   [value lower]
-  (when (u/not-nil-or-missing? value)
+  (when (and (u/not-nil-or-missing? value)
+             (u/not-nil? lower))
     (< value lower)))
 
 (defvalidator
@@ -107,7 +109,9 @@
   between?
   {:clova.core/type :between :clova.core/default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :clova.core/allow-missing-key? true}
   [value lower upper]
-  (when (u/not-nil-or-missing? value)
+  (when (and (u/not-nil-or-missing? value)
+             (not-nil? lower)
+             (not-nil? upper))
     (and (>= value lower)
          (<= value upper))))
 
@@ -126,7 +130,8 @@
   longer?
   {:clova.core/type :longer :clova.core/default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :clova.core/allow-missing-key? true}
   [value l]
-  (when (u/not-nil-or-missing? value)
+  (when (and (u/not-nil-or-missing? value)
+             (u/not-nil? l))
     (< l (count (seq value)))))
 
 (defvalidator
@@ -135,7 +140,8 @@
   shorter?
   {:clova.core/type :shorter :clova.core/default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :clova.core/allow-missing-key? true}
   [value l]
-  (when (u/not-nil-or-missing? value)
+  (when (and (u/not-nil-or-missing? value)
+             (u/not-nil? l))
     (> l (count (seq value)))))
 
 (defvalidator

@@ -128,12 +128,16 @@
              (only-clova-meta (meta core/between?)))))
 
   (t/testing "validating a valid between value"
-    (doseq [between [1 2 3 4 5 6 7 8 9]]
-      (t/is (core/between? between 1 9))))
+    (doseq [value [1 2 3 4 5 6 7 8 9]]
+      (t/is (core/between? value 1 9))))
 
   (t/testing "validating an invalid between"
-    (doseq [between [0 10 11 12 20 30 40 nil]]
-      (t/is (not (core/between? between 1 9))))))
+    (doseq [value [0 10 11 12 20 30 40 nil]]
+      (t/is (not (core/between? value 1 9)))))
+
+  (t/testing "validating with nil lower and upper bounds"
+    (doseq [value [0 10 11 12 20 30 40 nil]]
+      (t/is (not (core/between? value nil nil))))))
 
 (t/deftest greater-validator
   (t/testing "greater validator exposes correct meta data"
@@ -141,12 +145,16 @@
              (only-clova-meta (meta core/greater?)))))
 
   (t/testing "validating a valid greater value"
-    (doseq [greater [1 2 3 4 5 6 7 8 9]]
-      (t/is (core/greater? greater 0))))
+    (doseq [value [1 2 3 4 5 6 7 8 9]]
+      (t/is (core/greater? value 0))))
 
   (t/testing "validating an invalid greater value"
-    (doseq [greater [nil 1 2 3 4 5 6 7 8 9]]
-      (t/is (not (core/greater? greater 10))))))
+    (doseq [value [nil 1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/greater? value 10)))))
+
+  (t/testing "validating with nil greater"
+    (doseq [value [nil 1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/greater? value nil))))))
 
 (t/deftest lesser-validator
   (t/testing "lesser validator exposes correct meta data"
@@ -154,12 +162,16 @@
              (only-clova-meta (meta core/lesser?)))))
 
   (t/testing "validating a valid lesser value"
-    (doseq [lesser [1 2 3 4 5 6 7 8 9]]
-      (t/is (core/lesser? lesser 10))))
+    (doseq [value [1 2 3 4 5 6 7 8 9]]
+      (t/is (core/lesser? value 10))))
 
   (t/testing "validating an invalid lesser value"
-    (doseq [lesser [nil 1 2 3 4 5 6 7 8 9]]
-      (t/is (not (core/lesser? lesser 0))))))
+    (doseq [value [nil 1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/lesser? value 0)))))
+
+  (t/testing "validating with nil lesser"
+    (doseq [value [nil 1 2 3 4 5 6 7 8 9]]
+      (t/is (not (core/lesser? value nil))))))
 
 (t/deftest positive-validator
   (t/testing "positive validator exposes correct meta data"
@@ -223,7 +235,11 @@
 
   (t/testing "validating a value that is the correct length"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/length? v 3)))))
+            (t/is (core/length? v 3))))
+
+  (t/testing "validating nil length"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (not (core/length? v nil))))))
 
 (t/deftest longer-validator
   (t/testing "longer validator exposes correct meta data"
@@ -236,9 +252,13 @@
 
   (t/testing "validating a value that is longer"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/longer? v 2)))))
+            (t/is (core/longer? v 2))))
 
-(t/deftest horter-validator
+  (t/testing "validating nil longer"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (not (core/longer? v nil))))))
+
+(t/deftest shorter-validator
   (t/testing "shorter validator exposes correct meta data"
     (t/is (= (only-clova-meta exp-shorter-meta)
              (only-clova-meta (meta core/shorter?)))))
@@ -249,7 +269,11 @@
 
   (t/testing "validating a value that is shorter"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/shorter? v 4)))))
+            (t/is (core/shorter? v 4))))
+
+  (t/testing "validating nil shorter"
+    (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
+            (t/is (not (core/shorter? v nil))))))
 
 (t/deftest validation-set
   (t/testing "validation set returns a sequence of the correct
