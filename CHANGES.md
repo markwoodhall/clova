@@ -1,3 +1,9 @@
+## 0.10.3 (26-11-2015)
+
+* Protect against nil values in numerical validators. Where either the 
+value being validated or any of the required validator arguments are nil then 
+that validator will be falsey.
+
 ## 0.10.1 (24-11-2015)
 
 * Qualify clova specific meta data keys with the clova.core namespace.
