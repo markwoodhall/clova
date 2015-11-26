@@ -3,9 +3,6 @@
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
-  :deploy-repositories [
-    ["clojars" {:sign-releases false}]
-  ]
   :codox {:namespaces [clova.core]
           :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}#L{line}"}
   :dependencies [[org.clojure/clojure "1.7.0" :scope "provided"]
