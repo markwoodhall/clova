@@ -1,6 +1,6 @@
 (ns clova.core
   (:require [clova.util :as u]
-            [clojure.string :refer [join]]
+            [clojure.string :refer [join] :as st]
              #?(:cljs [goog.string :as gstr])
              #?(:cljs [goog.string.format]))
   #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
@@ -171,6 +171,23 @@
                                 (apply func value args)))
                             %)) c))))
 
+(defvalidator
+  "Chacks an input value to see if it is a \"valid\" credit
+ card number based on the Luhn algorithm."
+  credit-card?
+  {:clova.core/type :credit-card :clova.core/default-message "%s is %s but it should be a valid credit card number." :added "0.11.0" :clova.core/allow-missing-key? true}
+  [value]
+  (when (u/not-nil? value)
+    (let [value (str value)
+          value (st/replace value #" " "")
+          value (st/replace value #"-" "")
+          factors (flatten (repeat [1 2]))
+          numbers (map #?(:clj #(Character/digit % 10)
+                          :cljs #(js/parseInt %)) (seq value))
+          sum (reduce + (map #(int (+ (/ % 10) (mod % 10)))
+                             (map * (reverse numbers) factors)))]
+      (zero? (mod sum 10)))))
+
 (defn validation-set
   "Takes a sequence (col) that represents
   keys to validate and the functions used to validate them.
@@ -226,6 +243,7 @@
                                         :cljs (apply gstr/format message target-name value args)))}) v-set)]
      {:valid? (every? true? (map :valid? valids))
       :results (remove nil? (map :message valids))})))
+
 
 (defn valid?
   "Takes a validation set and applies it to m.
