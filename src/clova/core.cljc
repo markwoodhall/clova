@@ -216,14 +216,16 @@
                              target (u/as-seq target)
                              target-name (join " " (map name target))
                              value (get-in m target :clova.core/key-not-found?)
-                             message (u/func-or-default (partial default-message-fn v-type) default-message)]
-                         {:valid? (or (and allow-missing-key?
+                             message (u/func-or-default (partial default-message-fn v-type) default-message)
+                             valid? (or (and allow-missing-key?
                                            (= :clova.core/key-not-found? value))
-                                      (apply % value args))
-                          :message #?(:clj (apply format message target-name value args)
-                                      :cljs (apply gstr/format message target-name value args))}) v-set)]
+                                      (apply % value args))]
+                         {:valid? valid?
+                          :message (when-not valid?
+                                     #?(:clj (apply format message target-name value args)
+                                        :cljs (apply gstr/format message target-name value args)))}) v-set)]
      {:valid? (every? true? (map :valid? valids))
-      :results (map :message (filter #(not (:valid? %)) valids))})))
+      :results (remove nil? (map :message valids))})))
 
 (defn valid?
   "Takes a validation set and applies it to m.
