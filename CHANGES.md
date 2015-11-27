@@ -1,3 +1,7 @@
+## 0.11.0 (27-11-2015)
+
+* Add `credit-card?` validator based on the Luhn algorithm.
+
 ## 0.10.5 (26-11-2015)
 ## 0.10.4 (26-11-2015)
 
