@@ -2,11 +2,17 @@
 
 (def not-nil? (complement nil?))
 
-(defn not-missing?
+(defn missing?
+  "If value is equal to :clova.core/key-not-found?
+  then returns true oterwise returns false."
   [value]
-  (not= :clova.core/key-not-found? value))
+  (= :clova.core/key-not-found? value))
+
+(def not-missing? (complement missing?))
 
 (defn not-nil-or-missing?
+  "If the value is not nil and not equal to :clova.core/key-not-found?
+  then returns true, otherwise returns false."
   [value]
   (and (not-missing? value)
        (not-nil? value)))
