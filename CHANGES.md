@@ -1,6 +1,15 @@
+## 0.13.0 (29-11-2015)
+
+* Add much better support for using multiple validators against a key. It is now
+possible to do the following.
+
+```clojure
+(let [validation-set (core/validation-set [:age required? [greater? 18] [lesser? 30]]))
+```
+
 ## 0.12.0 (29-11-2015)
 
-* Add `:short-circuit?` option to validate option map. Can be used to break validation 
+* Add `:short-circuit?` option to validate option map. Can be used to break validation
 on the first validation failure.
 
 ## 0.11.0 (27-11-2015)

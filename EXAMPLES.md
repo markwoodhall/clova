@@ -5,8 +5,7 @@ the map and it's value should be less than 5.
 
 ```clojure
 
-(let [v-set (validation-set [:failed-login-count required?
-                             :failed-login-count [lesser? 5]])]
+(let [v-set (validation-set [:failed-login-count required? [lesser? 5]])]
 
   (validate v-set {:failed-login-count 5})
   ;; {:results (), :valid? true}
@@ -25,8 +24,7 @@ it's value should be between 5 and 10.
 
 ```clojure
 
-(let [v-set (validation-set [:quantity required?
-                             :quantity [between? 5 10]])]
+(let [v-set (validation-set [:quantity required? [between? 5 10]])]
 
   (validate v-set {:quantity 5})
   ;; {:results (), :valid? true}
