@@ -204,18 +204,18 @@
   the validation."
   [col]
   (let [key-or-key-seq? (fn [i] (or (keyword? i)
-                                   (and (sequential? i)
-                                        (every? keyword? i))))
+                                    (and (sequential? i)
+                                         (every? keyword? i))))
         key-func-pairs (partition 2 (partition-by key-or-key-seq? col))
         metaify (fn [f target] (let [func-or-seq f
-                              func (if (sequential? func-or-seq)
-                                     (first func-or-seq)
-                                     func-or-seq)
-                              func-meta (meta func)
-                              args (if (sequential? func-or-seq)
-                                     {:clova.core/args (rest func-or-seq)})
-                              val-meta (merge args {:clova.core/target target})]
-                          (with-meta func (merge func-meta val-meta))))]
+                                     func (if (sequential? func-or-seq)
+                                            (first func-or-seq)
+                                            func-or-seq)
+                                     func-meta (meta func)
+                                     args (if (sequential? func-or-seq)
+                                            {:clova.core/args (rest func-or-seq)})
+                                     val-meta (merge args {:clova.core/target target})]
+                                 (with-meta func (merge func-meta val-meta))))]
     (flatten (map #(let [target (first (first %))
                          function-seq (second %)]
                      (map (fn [f] (metaify f target)) function-seq)) key-func-pairs))))
