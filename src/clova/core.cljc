@@ -203,16 +203,22 @@
   Returns a sequence of functions merged with meta data used by
   the validation."
   [col]
-  {:pre [(even? (count col))]}
-  (map #(let [func-or-seq (second %)
-              func (if (sequential? func-or-seq)
-                     (first func-or-seq)
-                     func-or-seq)
-              func-meta (meta func)
-              args (if (sequential? func-or-seq)
-                     {:clova.core/args (rest func-or-seq)})
-              val-meta (merge args {:clova.core/target (first %)})]
-          (with-meta func (merge func-meta val-meta))) (partition 2 col)))
+  (let [key-or-key-seq? (fn [i] (or (keyword? i)
+                                   (and (sequential? i)
+                                        (every? keyword? i))))
+        key-func-pairs (partition 2 (partition-by key-or-key-seq? col))
+        metaify (fn [f target] (let [func-or-seq f
+                              func (if (sequential? func-or-seq)
+                                     (first func-or-seq)
+                                     func-or-seq)
+                              func-meta (meta func)
+                              args (if (sequential? func-or-seq)
+                                     {:clova.core/args (rest func-or-seq)})
+                              val-meta (merge args {:clova.core/target target})]
+                          (with-meta func (merge func-meta val-meta))))]
+    (flatten (map #(let [target (first (first %))
+                         function-seq (second %)]
+                     (map (fn [f] (metaify f target)) function-seq)) key-func-pairs))))
 
 (defn validate
   "Takes a validation set an applies it to m.
