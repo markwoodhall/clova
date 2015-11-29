@@ -25,27 +25,27 @@ Define a validation set. Validation sets are pairs of keys to validate
 and the functions used to validate them.
 
 ```clojure
-(let [validation-set (core/validation-set
-                       [:email core/email?
-                        :post-code core/post-code?
-                        :zip-code core/zip-code?
-                        :matches [core/matches? #"amatch"]
-                        :url core/url?
-                        :age [core/between? 18 40]
-                        [:nested :value] [core/between? 0 10]])]
+(let [validation-set (validation-set
+                       [:email email?
+                        :post-code post-code?
+                        :zip-code zip-code?
+                        :matches [matches? #"amatch"]
+                        :url url?
+                        :age [between? 18 40]
+                        [:nested :value] [between? 0 10]])]
 
 ```
 
 If you want to compose multiple validators you can.
 
 ```clojure
-(let [validation-set (core/validation-set [:age required? [greater? 18] [lesser? 30]]))
+(let [validation-set (validation-set [:age required? [greater? 18] [lesser? 30]]))
 ```
 
 You can also use an `all?` validator to achieve the above. This will be deprecated in a future version.
 
 ```clojure
-(let [validation-set (core/validation-set [:age [all? [[greater? 18] [lesser? 30]]]])]
+(let [validation-set (validation-set [:age [all? [[greater? 18] [lesser? 30]]]])]
 
 ```
 
@@ -55,28 +55,17 @@ Just use a `required?` validator as well.
 
 
 ```clojure
-(let [validation-set (core/validation-set
-                       [:email core/required?
-                        :email core/email?])]
+(let [validation-set (validation-set
+                       [:email required? email?])]
 
-(let [validation-set (core/validation-set
-                       [:age core/required?
-                        :age [core/between? 18 30]])]
-```
-
-Note, it is not currently possible to use `required?` as part of an `all?` validator but you can use the following.
-
-```clojure
-(let [validation-set (core/validation-set
-                       [:age required?
-                        :age [all? [[greater? 18] [lesser? 30]]]])]
-
+(let [validation-set (validation-set
+                       [:age required? [between? 18 30]])]
 ```
 
 Use the validation set:
 
 ```clojure
-(let [result (core/validate validation-set
+(let [result (validate validation-set
                             {:email "test.email@googlemail.com"
                              :post-code "B11 2SB"
                              :matches "amatch"
@@ -106,10 +95,10 @@ be called with the validator type specified as an argument, if the custom functi
 the default validation message will be used.
 
 ```clojure
-(core/validate v-set {:email ""} {:default-message-fn (fn [v-type]
-                                                        (case v-type
-                                                          :email (str "custom email error")
-                                                           nil))})
+(validate v-set {:email ""} {:default-message-fn (fn [v-type]
+                                                    (case v-type
+                                                      :email (str "custom email error")
+                                                       nil))})
 ```
 
 By default clova will execute all validators and provide validation messages for all failures. You
@@ -118,7 +107,7 @@ validators after the first validation failure and will therefore only return one
 message.
 
 ```clojure
-(core/validate v-set {:email ""} {:short-circuit? true })
+(validate v-set {:email ""} {:short-circuit? true })
 ```
 
 [See more usage examples.](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md)
