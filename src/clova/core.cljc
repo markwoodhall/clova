@@ -223,24 +223,32 @@
 
   :default-message-fn can be specified to override the default validation messages. If specified
   the function will be called and receive the validator type as an argument. If the result of calling
-  the function is anything but nil it will be used as the default validation message."
+  the function is anything but nil it will be used as the default validation message.
+
+  :short-circuit? when true no further validators for the validation set will be processed.
+  The default is false and therefore to process all validators."
   ([v-set m]
    (validate v-set m {}))
-  ([v-set m {:keys [default-message-fn]
-             :or {default-message-fn (fn [x] nil)}}]
-   (let [valids (map #(let [{v-type :clova.core/type target :clova.core/target args :clova.core/args
-                             allow-missing-key? :clova.core/allow-missing-key? default-message :clova.core/default-message} (meta %)
-                             target (u/as-seq target)
-                             target-name (join " " (map name target))
-                             value (get-in m target :clova.core/key-not-found?)
-                             message (u/func-or-default (partial default-message-fn v-type) default-message)
-                             valid? (or (and allow-missing-key?
-                                           (= :clova.core/key-not-found? value))
-                                      (apply % value args))]
-                         {:valid? valid?
-                          :message (when-not valid?
-                                     #?(:clj (apply format message target-name value args)
-                                        :cljs (apply gstr/format message target-name value args)))}) v-set)]
+  ([v-set m {:keys [default-message-fn short-circuit?]
+             :or {default-message-fn (fn [x] nil)
+                  short-circuit? false}}]
+   (let [done (atom false)
+         valids (map #(when (or (not short-circuit?)
+                                (not @done))
+                          (let [{v-type :clova.core/type target :clova.core/target args :clova.core/args
+                                 allow-missing-key? :clova.core/allow-missing-key? default-message :clova.core/default-message} (meta %)
+                                target (u/as-seq target)
+                                target-name (join " " (map name target))
+                                value (get-in m target :clova.core/key-not-found?)
+                                message (u/func-or-default (partial default-message-fn v-type) default-message)
+                                valid? (or (and allow-missing-key?
+                                                (= :clova.core/key-not-found? value))
+                                           (apply % value args))]
+                            (reset! done (not valid?))
+                            {:valid? valid?
+                             :message (when-not valid?
+                                        #?(:clj (apply format message target-name value args)
+                                           :cljs (apply gstr/format message target-name value args)))})) v-set)]
      {:valid? (every? true? (map :valid? valids))
       :results (remove nil? (map :message valids))})))
 

@@ -453,6 +453,12 @@
         (t/is (= "not-nil is required." (second (:results result))))
         (t/is (= "custom email error" (first (:results result))))))
 
+    (t/testing "validate short circuits if configured"
+      (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])
+            result (core/validate v-set {:email "" :not-nil nil} {:short-circuit? true})]
+        (t/is (= "email should be a valid email address." (first (:results result))))
+        (t/is (=  1 (count (:results result))))))
+
     (t/testing "validate respects allow missing keys so the only failure is for a required field"
       (let [result (core/validate v-set {})]
         (t/is (not (:valid? result)))
