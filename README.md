@@ -105,6 +105,16 @@ the default validation message will be used.
                                                           :email (str "custom email error")
                                                            nil))})
 ```
+
+By default clova will execute all validators and provide validation messages for all failures. You
+can override this behaviour using the `:short-circuit?` option. This will stop execution of subsequent
+validators after the first validation failure and will therefore only return one validation failure
+message.
+
+```clojure
+(core/validate v-set {:email ""} {:short-circuit? true })
+```
+
 [See more usage examples.](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md)
 
 ## Validators

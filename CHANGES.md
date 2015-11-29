@@ -1,3 +1,8 @@
+## 0.12.0 (29-11-2015)
+
+* Add `:short-circuit?` option to validate option map. Can be used to break validation 
+on the first validation failure.
+
 ## 0.11.0 (27-11-2015)
 
 * Add `credit-card?` validator based on the Luhn algorithm.
