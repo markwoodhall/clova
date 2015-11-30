@@ -25,7 +25,7 @@
 (defmacro defvalidator
   "Wraps body in a function and defines it with meta data
   used to support the validation process.
-  Works using a similar pattern to \"defn\"."
+  Works using a similar pattern to `defn`."
   [doc-string fname validator-meta-data args & body]
   `(do
      (def
@@ -42,7 +42,7 @@
   (u/not-nil? value))
 
 (defvalidator
-  "Checks for the presence of a key based on the default value of :clova.core/key-not-found?
+  "Checks for the presence of a key based on the default value of `:clova.core/key-not-found?`
   for a missing key."
   required?
   {:clova.core/type :required :clova.core/default-message "%s is required." :added "0.8.0" :clova.core/allow-missing-key? false}
@@ -162,7 +162,7 @@
     (> l (count (seq value)))))
 
 (defvalidator
-  "Checks an input value to see if its one of the items in a col"
+  "Checks an input value to see if it is one of the items in a col"
   one-of?
   {:clova.core/type :one-of :clova.core/default-message "%s is %s but should be one of %s." :added "0.2.0" :clova.core/allow-missing-key? true}
   [value col]
@@ -173,8 +173,8 @@
   of predicates. Predicates can be concrete values or they can be functions, they
   can be single items or collections.
 
-  (all? true [true (fn [v] (= true v))]
-  (all? true (fn [v] (= true v)))"
+  `(all? true [true (fn [v] (= true v))])`
+  `(all? true (fn [v] (= true v)))`"
   all?
   {:clova.core/type :all :clova.core/default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" :clova.core/allow-missing-key? true}
   [value col]
@@ -239,16 +239,16 @@
 
 (defn validate
   "Takes a validation set an applies it to m.
-  Returns a map containing :valid? which either has a truthy or falsy value as
+  Returns a map containing `:valid?` which either has a truthy or falsy value as
   well as a sequence of validation failure messages, if applicable.
 
   Optionally takes a map of options:
 
-  :default-message-fn can be specified to override the default validation messages. If specified
+  `:default-message-fn` can be specified to override the default validation messages. If specified
   the function will be called and receive the validator type as an argument. If the result of calling
   the function is anything but nil it will be used as the default validation message.
 
-  :short-circuit? when true no further validators for the validation set will be processed.
+  `:short-circuit?` when true no further validators for the validation set will be processed.
   The default is false and therefore to process all validators."
   ([v-set m]
    (validate v-set m {}))
