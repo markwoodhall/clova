@@ -209,13 +209,13 @@
   "Takes a sequence (col) that represents
   keys to validate and the functions used to validate them.
 
-  e.g. [:email email? :post-code post-code?]
+  e.g. `[:email email? :post-code post-code?]`
 
   It is also possible to specify keys to traverse nested maps.
 
-  e.g. using [[:user :credentials :name] [matches? #\"someregex\"]]
+  e.g. using `[[:user :credentials :name] [matches? #\"someregex\"]]`
   we can define a validation function to target the :name key in a map like
-  {:user {:credentials {:name \"username\" }}}
+  `{:user {:credentials {:name \"username\" }}}`
 
   Returns a sequence of functions merged with meta data used by
   the validation."
