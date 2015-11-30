@@ -1,4 +1,21 @@
 (ns clova.core
+  "The core namespace contains all of the built in validators and the
+  defvalidator macro.
+
+  The only other public functions are
+
+  - `validation-set`
+  - `validate`
+  - `valid?`
+
+  You can view more information at the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
+  There are also example validation scenarios [here](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md).
+
+  The API documentation is available [here](http://markwoodhall.github.io/clova/).
+
+  You can also view [blog posts] (http://markwoodhall.com/tag/clova/) about clova.
+  "
+  {:author "Mark Woodhall"}
   (:require [clova.util :as u]
             [clojure.string :refer [join] :as st]
              #?(:cljs [goog.string :as gstr])
