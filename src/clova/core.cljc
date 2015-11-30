@@ -8,8 +8,8 @@
   - `validate`
   - `valid?`
 
-  You can view more information at the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
-  There are also example validation scenarios [here](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md).
+  You can view more information in the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
+  There are also example validation scenarios [here](http://markwoodhall.github.io/clova/EXAMPLES.html).
 
   The API documentation is available [here](http://markwoodhall.github.io/clova/).
 
