@@ -41,7 +41,7 @@
     (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
       (t/is (not (core/all? 2 col)))))
 
-  (t/testing "validating an valid value with other validators"
+  (t/testing "validating a valid value with other validators"
     (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
       (t/is (core/all? 7 col)))))
 
