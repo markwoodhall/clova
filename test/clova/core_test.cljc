@@ -23,6 +23,20 @@
 (def exp-shorter-meta {:clova.core/type :shorter :clova.core/target :shorter :clova.core/default-message "%s is %s but it should have a length shorter than %s."})
 (def exp-all-meta {:clova.core/type :all :clova.core/target :all :clova.core/default-message "%s is %s but it does not meet all of the requirements."})
 (def exp-cc-meta {:clova.core/type :credit-card :clova.core/target :credit-card :clova.core/default-message "%s is %s but it should be a valid credit card number."})
+(def exp-numeric-meta {:clova.core/type :numeric :clova.core/target :numeric :clova.core/default-message "%s is %s but it should be a number."})
+
+(t/deftest numeric-validator
+  (t/testing "numeric validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-numeric-meta)
+             (only-clova-meta (meta core/numeric?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [n [1 2 5 9 0 4 -1 100 -50 3]]
+      (t/is (core/numeric? n))))
+
+  (t/testing "validating an invalid value"
+    (doseq [n [nil {} [] "500" "1"]]
+      (t/is (not (core/numeric? n))))))
 
 (t/deftest credit-card-validator
   (t/testing "credit card validator exposes correct meta data"
@@ -35,15 +49,7 @@
 
   (t/testing "validating an invalid value"
     (doseq [cc [nil 1 "500 500 111 111"]]
-      (t/is (not (core/credit-card? cc)))))
-
-  (t/testing "validating an invalid value with other validators"
-    (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
-      (t/is (not (core/all? 2 col)))))
-
-  (t/testing "validating a valid value with other validators"
-    (doseq [col [[[core/greater? 3] [core/lesser? 10]]]]
-      (t/is (core/all? 7 col)))))
+      (t/is (not (core/credit-card? cc))))))
 
 (t/deftest all-validator
   (t/testing "all validator exposes correct meta data"
@@ -335,6 +341,7 @@
                                     :required [core/required?]
                                     :all [core/all? [(fn[v] (= v 5))]]
                                     :credit-card [core/credit-card?]
+                                    :numeric core/numeric?
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -354,6 +361,7 @@
                                       :shorter "aaa"
                                       :all 4
                                       :credit-card 1
+                                      :numeric ""
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -376,6 +384,7 @@
                                       :required nil
                                       :all 5
                                       :credt-card "5105 1051 0510 5100"
+                                      :numeric 1
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -398,6 +407,7 @@
                                          :shorter "aaa"
                                          :all 4
                                          :credit-card 1
+                                         :numeric ""
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -418,7 +428,8 @@
         (t/is (= "required is required." (nth (:results result) 15)))
         (t/is (= "all is 4 but it does not meet all of the requirements." (nth (:results result) 16)))
         (t/is (= "credit-card is 1 but it should be a valid credit card number." (nth (:results result) 17)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 18)))))
+        (t/is (= "numeric is  but it should be a number." (nth (:results result) 18)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 19)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -440,6 +451,7 @@
                                          :required nil
                                          :all 5
                                          :credt-card "5105 1051 0510 5100"
+                                         :numeric 1
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))

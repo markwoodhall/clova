@@ -189,6 +189,13 @@
                             %)) c))))
 
 (defvalidator
+  "Checks an input value to see if it is numeric."
+  numeric?
+  {:clova.core/type :numeric :clova.core/default-message "%s is %s but it should be a number." :added "0.13.0" :clova.core/allow-missing-key? true}
+  [value]
+  (number? value))
+
+(defvalidator
   "Chacks an input value to see if it is a \"valid\" credit
  card number based on the Luhn algorithm."
   credit-card?
