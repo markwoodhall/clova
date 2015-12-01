@@ -2,14 +2,14 @@
 
 A minimal validation library for Clojure and ClojureScript.
 
+- [API Docs](http://markwoodhall.github.io/clova)
+- [Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
+
 ## Status
 
 [![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
 
-[Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
-
 ## Installation
-
 
 `clova` is available from [Clojars](https://clojars.org/clova)
 
@@ -20,8 +20,6 @@ Add the following to `project.clj` `:dependencies`:
 [![Clojars Project](http://clojars.org/clova/latest-version.svg)](http://clojars.org/clova)
 
 ## Usage
-
-[API Docs](http://markwoodhall.github.io/clova)
 
 Define a validation set. Validation sets are pairs of keys to validate
 and the functions used to validate them.
