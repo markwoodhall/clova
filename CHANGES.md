@@ -1,3 +1,7 @@
+## 0.13.0 (01-12-2015)
+
+* Add `numeric?` validator.
+
 ## 0.13.0 (29-11-2015)
 
 * Add much better support for using multiple validators against a key. It is now
