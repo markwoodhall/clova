@@ -19,6 +19,7 @@ Add the following to `project.clj` `:dependencies`:
 
 ## Usage
 
+[Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
 [API Docs](http://markwoodhall.github.io/clova)
 
 Define a validation set. Validation sets are pairs of keys to validate
