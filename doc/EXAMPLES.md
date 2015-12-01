@@ -1,4 +1,4 @@
-## Examples
+# Examples
 
 * You want to validate a `:failed-login-count` key. The key should be present in
 the map and it's value should be less than 5.
