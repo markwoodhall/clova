@@ -1,3 +1,5 @@
+# Change Log
+
 ## 0.13.0 (01-12-2015)
 
 * Add `numeric?` validator.
