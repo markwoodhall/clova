@@ -289,7 +289,6 @@
      {:valid? (every? true? (map :valid? valids))
       :results (remove nil? (map :message valids))})))
 
-
 (defn valid?
   "Takes a validation set and applies it to m.
   This is just a shorthand method over the validate function and returns
