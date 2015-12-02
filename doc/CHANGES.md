@@ -1,6 +1,6 @@
 # Change Log
 
-### 0.13.0 (01-12-2015)
+### 0.13.0 (02-12-2015)
 
 * Add `stringy?` validator.
 
