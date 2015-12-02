@@ -196,6 +196,13 @@
   (number? value))
 
 (defvalidator
+  "Checks an input value to see if it is a string"
+  stringy?
+  {:clova.core/type :stringy :clova.core/default-message "%s is %s but it should be a string." :added "0.15.0" :clova.core/allow-missing-key? true}
+  [value]
+  (string? value))
+
+(defvalidator
   "Chacks an input value to see if it is a \"valid\" credit
  card number based on the Luhn algorithm."
   credit-card?

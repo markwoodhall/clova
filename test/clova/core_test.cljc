@@ -24,6 +24,20 @@
 (def exp-all-meta {:clova.core/type :all :clova.core/target :all :clova.core/default-message "%s is %s but it does not meet all of the requirements."})
 (def exp-cc-meta {:clova.core/type :credit-card :clova.core/target :credit-card :clova.core/default-message "%s is %s but it should be a valid credit card number."})
 (def exp-numeric-meta {:clova.core/type :numeric :clova.core/target :numeric :clova.core/default-message "%s is %s but it should be a number."})
+(def exp-stringy-meta {:clova.core/type :stringy :clova.core/target :stringy :clova.core/default-message "%s is %s but it should be a string."})
+
+(t/deftest stringy-validator
+  (t/testing "stringy validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-stringy-meta)
+             (only-clova-meta (meta core/stringy?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [s ["a string" "a" "19298" "{:a 1}" "[a 1 4 3 b]"]]
+      (t/is (core/stringy? s))))
+
+  (t/testing "validating an invalid value"
+    (doseq [s [nil {} [] {:a 1} [1 2 3]]]
+      (t/is (not (core/stringy? s))))))
 
 (t/deftest numeric-validator
   (t/testing "numeric validator exposes correct meta data"
@@ -342,6 +356,7 @@
                                     :all [core/all? [(fn[v] (= v 5))]]
                                     :credit-card [core/credit-card?]
                                     :numeric core/numeric?
+                                    :stringy core/stringy?
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -362,6 +377,7 @@
                                       :all 4
                                       :credit-card 1
                                       :numeric ""
+                                      :stringy 1
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -385,6 +401,7 @@
                                       :all 5
                                       :credt-card "5105 1051 0510 5100"
                                       :numeric 1
+                                      :stringy "abc"
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -408,6 +425,7 @@
                                          :all 4
                                          :credit-card 1
                                          :numeric ""
+                                         :stringy 1
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -429,7 +447,8 @@
         (t/is (= "all is 4 but it does not meet all of the requirements." (nth (:results result) 16)))
         (t/is (= "credit-card is 1 but it should be a valid credit card number." (nth (:results result) 17)))
         (t/is (= "numeric is  but it should be a number." (nth (:results result) 18)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 19)))))
+        (t/is (= "stringy is 1 but it should be a string." (nth (:results result) 19)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 20)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -452,6 +471,7 @@
                                          :all 5
                                          :credt-card "5105 1051 0510 5100"
                                          :numeric 1
+                                         :stringy "abc"
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
