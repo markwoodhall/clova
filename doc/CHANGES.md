@@ -1,10 +1,18 @@
 # Change Log
 
-### 0.13.0 (02-12-2015)
+### 0.16.0 (03-12-2015)
+
+* Add `anon` function. This can be used to declare an on the fly annonymous validator.
+
+```clojure
+(validate (validation-set [:name (anon #(= % "mark"))]) {:name "mark"})
+```
+
+### 0.15.0 (02-12-2015)
 
 * Add `stringy?` validator.
 
-### 0.13.0 (01-12-2015)
+### 0.14.0 (01-12-2015)
 
 * Add `numeric?` validator.
 
