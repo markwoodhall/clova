@@ -7,7 +7,7 @@
   - `validation-set`
   - `validate`
   - `valid?`
-  - `anon`
+  - `as-validator`
 
   You can view more information in the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
   There are also example validation scenarios [here](http://markwoodhall.github.io/clova/EXAMPLES.html).
@@ -220,23 +220,23 @@
                              (map * (reverse numbers) factors)))]
       (zero? (mod sum 10)))))
 
-(defn anon
+(defn as-validator
   "Takes a function f and applies optional m as meta data around it. f should be accept
   a first argument as the value to validate.
 
-  When m is present the following keys are taken and used as meta data to declare an anonymous validator:
+  When m is present the following keys are taken and used as meta data to declare a validator:
 
   - `:default-message` The default message template to be used when validation fails.
   - `:allow-missing-key? Should validation fail if the `:target` key is not present.
 
   When m is not specified suitable defaults are used."
   ([f]
-   (anon f {}))
+   (as-validator f {}))
   ([f {:keys [default-message allow-missing-key?]
        :or {default-message "%s is %s but this is not a valid value."
             allow-missing-key? true}
        :as m}]
-   (let [m-data {:clova.core/type :anon :clova.core/default-message default-message :clova.core/allow-missing-key? allow-missing-key?}]
+   (let [m-data {:clova.core/type :as-validator :clova.core/default-message default-message :clova.core/allow-missing-key? allow-missing-key?}]
      (with-meta f m-data))))
 
 (defn validation-set
