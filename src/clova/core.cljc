@@ -227,7 +227,7 @@
   When m is present the following keys are taken and used as meta data to declare a validator:
 
   - `:default-message` The default message template to be used when validation fails.
-  - `:allow-missing-key? Should validation fail if the `:target` key is not present.
+  - `:allow-missing-key?` Should validation fail if the `:target` key is not present.
 
   When m is not specified suitable defaults are used."
   ([f]
@@ -248,7 +248,7 @@
   It is also possible to specify keys to traverse nested maps.
 
   e.g. using `[[:user :credentials :name] [matches? #\"someregex\"]]`
-  we can define a validation function to target the :name key in a map like
+  we can define a validation function to target the `:name` key in a map like
   `{:user {:credentials {:name \"username\" }}}`
 
   Returns a sequence of functions merged with meta data used by
