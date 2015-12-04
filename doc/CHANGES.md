@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.18.0 (04-12-2015)
+
+* Add `date?` validator. It is now possible to do:
+
+```clojure
+(validate (validation-set [:date date?]) {:date "20150101"})
+```
+
 ### 0.17.0 (04-12-2015)
 
 * Rename `anon` to `as-validator`. 
