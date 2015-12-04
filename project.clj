@@ -7,6 +7,8 @@
           :namespaces [clova.core]
           :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}#L{line}"}
   :dependencies [[org.clojure/clojure "1.7.0"]
+                 [clj-time "0.11.0"]
+                 [com.andrewmcveigh/cljs-time "0.3.14"]
                  [org.clojure/clojurescript "1.7.170"]]
   :jar-exclusions [#"\.swp|\.swo|user.clj"]
   :source-paths ["src"])

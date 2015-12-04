@@ -1,6 +1,8 @@
 (ns clova.core-test
-  (:require #?(:cljs [cljs.test :as t]
-               :clj  [clojure.test :as t])
+  (:require #?(:cljs [cljs.test :as t])
+            #?(:clj  [clojure.test :as t])
+            #?(:clj  [clj-time.format :as f])
+            #?(:cljs [cljs-time.format :as f])
             [clova.core :as core]))
 
 (def only-clova-meta #(select-keys % [:clova.core/type :clova.core/default-message]))
@@ -27,6 +29,28 @@
 (def exp-stringy-meta {:clova.core/type :stringy :clova.core/target :stringy :clova.core/default-message "%s is %s but it should be a string."})
 (def exp-default-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but this is not a valid value."})
 (def exp-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but it should be XXX."})
+(def exp-date-meta {:clova.core/type :date :clova.core/target :date :clova.core/default-message "%s is %s but it should be a date."})
+
+(t/deftest date-validator
+  (t/testing "date validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-date-meta)
+             (only-clova-meta (meta core/date?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [d ["20110101" "20151212" "20012401"]]
+      (t/is (core/date? d))))
+
+  (t/testing "validating an invalid value"
+    (doseq [d [nil {} [] {:a 1} [1 2 3]]]
+      (t/is (not (core/date? d)))))
+
+  (t/testing "validating an invalid value using custom date formatter"
+    (doseq [d [nil {} [] {:a 1} [1 2 3] "211000000000"]]
+      (t/is (not (core/date? d {:formatter (f/formatters :year-month-day)})))))
+
+  (t/testing "validating a valid value using custom date formatter"
+    (doseq [d ["2015-12-01" "2014-01-12" "2015-12-24"]]
+      (t/is (core/date? d {:formatter (f/formatters :year-month-day)})))))
 
 (t/deftest as-validator-validator
   (t/testing "as-validator validator exposes default meta data"

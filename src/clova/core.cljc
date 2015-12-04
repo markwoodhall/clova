@@ -20,7 +20,9 @@
   (:require [clova.util :as u]
             [clojure.string :refer [join] :as st]
              #?(:cljs [goog.string :as gstr])
-             #?(:cljs [goog.string.format]))
+             #?(:cljs [goog.string.format])
+             #?(:clj  [clj-time.format :as f])
+             #?(:cljs [cljs-time.format :as f]))
   #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
 
 (defmacro defvalidator
@@ -202,6 +204,24 @@
   {:clova.core/type :stringy :clova.core/default-message "%s is %s but it should be a string." :added "0.15.0" :clova.core/allow-missing-key? true}
   [value]
   (string? value))
+
+(defvalidator
+  "Checks an input value to see if it is a date. 
+  
+  Optionally, takes a map argument and makes use of the following keys:
+  
+  - `:formatter` You can use one of the built in ISO8601 formatters 
+  from clj-time or cljs-time. You can also define your own custom format string."
+  date?
+  {:clova.core/type :date :clova.core/default-message "%s is %s but it should be a date." :added "0.17.0" :clova.core/allow-missing-key? true}
+  [value & [opt & _]]
+  (let [{formatter :formatter} opt]
+    (try
+      (not-nil? (if formatter
+                  (f/parse formatter value)
+                  (f/parse value)))
+      #?(:clj  (catch Exception e false))
+      #?(:cljs (catch js/Error e false)))))
 
 (defvalidator
   "Chacks an input value to see if it is a \"valid\" credit
