@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.18.1 (04-12-2015)
+
+* Fix bug where a custom string `:formatter` for the `date?` validator was never
+coverted to a clj-time/cljs-time formatter.
+
 ### 0.18.0 (04-12-2015)
 
 * Add `date?` validator. It is now possible to do:
@@ -10,7 +15,7 @@
 
 ### 0.17.0 (04-12-2015)
 
-* Rename `anon` to `as-validator`. 
+* Rename `anon` to `as-validator`.
 
 ### 0.16.0 (03-12-2015)
 
