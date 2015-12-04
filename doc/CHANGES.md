@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.17.0 (04-12-2015)
+
+* Rename `anon` to `as-validator`. 
+
 ### 0.16.0 (03-12-2015)
 
 * Add `anon` function. This can be used to declare an on the fly annonymous validator.
