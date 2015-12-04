@@ -213,7 +213,7 @@
   - `:formatter` You can use one of the built in ISO8601 formatters 
   from clj-time or cljs-time. You can also define your own custom format string."
   date?
-  {:clova.core/type :date :clova.core/default-message "%s is %s but it should be a date." :added "0.17.0" :clova.core/allow-missing-key? true}
+  {:clova.core/type :date :clova.core/default-message "%s is %s but it should be a date." :added "0.18.0" :clova.core/allow-missing-key? true}
   [value & [opt & _]]
   (let [{formatter :formatter} opt]
     (try
