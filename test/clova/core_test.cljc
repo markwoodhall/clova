@@ -50,7 +50,11 @@
 
   (t/testing "validating a valid value using custom date formatter"
     (doseq [d ["2015-12-01" "2014-01-12" "2015-12-24"]]
-      (t/is (core/date? d {:formatter (f/formatters :year-month-day)})))))
+      (t/is (core/date? d {:formatter (f/formatters :year-month-day)}))))
+
+  (t/testing "validating a valid value using custom string date formatter"
+    (doseq [d ["2015-12-01" "2014-01-12" "2015-12-24"]]
+      (t/is (core/date? d {:formatter "yyyy-MM-dd"})))))
 
 (t/deftest as-validator-validator
   (t/testing "as-validator validator exposes default meta data"

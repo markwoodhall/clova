@@ -206,16 +206,19 @@
   (string? value))
 
 (defvalidator
-  "Checks an input value to see if it is a date. 
-  
+  "Checks an input value to see if it is a date.
+
   Optionally, takes a map argument and makes use of the following keys:
-  
-  - `:formatter` You can use one of the built in ISO8601 formatters 
+
+  - `:formatter` You can use one of the built in ISO8601 formatters
   from clj-time or cljs-time. You can also define your own custom format string."
   date?
   {:clova.core/type :date :clova.core/default-message "%s is %s but it should be a date." :added "0.18.0" :clova.core/allow-missing-key? true}
-  [value & [opt & _]]
-  (let [{formatter :formatter} opt]
+  [value & [opt]]
+  (let [{formatter :formatter} opt
+        formatter (if (string? formatter)
+                    (f/formatter formatter)
+                    formatter)]
     (try
       (not-nil? (if formatter
                   (f/parse formatter value)
