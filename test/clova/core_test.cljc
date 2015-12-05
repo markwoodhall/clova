@@ -37,7 +37,8 @@
              (only-clova-meta (meta core/date?)))))
 
   (t/testing "validating a valid value"
-    (doseq [d ["20110101" "20151212" "20012401"]]
+    (doseq [d [(f/parse "20150101") "20110101" "20151212" "20012401" #?(:clj (java.util.Date.)
+                                                                        :cljs (js/Date.))]]
       (t/is (core/date? d))))
 
   (t/testing "validating an invalid value"

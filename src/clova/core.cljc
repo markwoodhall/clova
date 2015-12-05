@@ -218,13 +218,17 @@
   (let [{formatter :formatter} opt
         formatter (if (string? formatter)
                     (f/formatter formatter)
-                    formatter)]
-    (try
-      (not-nil? (if formatter
-                  (f/parse formatter value)
-                  (f/parse value)))
-      #?(:clj  (catch Exception e false))
-      #?(:cljs (catch js/Error e false)))))
+                    formatter)
+        valid-types #?(:clj [java.util.Date org.joda.time.DateTime]
+                       :cljs [js/Date goog.date.Date goog.date.DateTime])]
+    (if (some true? (map #(instance? % value) valid-types))
+      true
+      (try
+        (not-nil? (if formatter
+                    (f/parse formatter value)
+                    (f/parse value)))
+        #?(:clj  (catch Exception e false))
+        #?(:cljs (catch js/Error e false))))))
 
 (defvalidator
   "Chacks an input value to see if it is a \"valid\" credit
