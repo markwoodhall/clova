@@ -1,5 +1,11 @@
 # Change Log
 
+### 0.18.2 (05-12-2015)
+
+* Fix issue where date validator is unable to handle values that are
+already "dates". Consider java.util.Date org.joda.time.DateTime and js/Date goog.date.Date goog.date.DateTime as
+valid dates without requiring any additonal validation.
+
 ### 0.18.1 (04-12-2015)
 
 * Fix bug where a custom string `:formatter` for the `date?` validator was never
