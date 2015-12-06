@@ -208,6 +208,11 @@
 (defvalidator
   "Checks an input value to see if it is a date.
 
+  If value is a string then it is parsed using `clj-time` or `cljs-time`.
+
+  If value is not a string but is one of `[java.util.Date org.joda.time.DateTime]` or
+  `[js/Date goog.date.Date goog.date.DateTime]` then it will be considered a `date?`.
+
   Optionally, takes a map argument and makes use of the following keys:
 
   - `:formatter` You can use one of the built in ISO8601 formatters
