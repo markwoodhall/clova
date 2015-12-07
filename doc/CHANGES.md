@@ -1,5 +1,15 @@
 # Change Log
 
+### 0.19.0 (07-12-2015)
+
+* Add before? validator.
+
+```clojure
+(before? "01-01-2011" "01-01-2012")
+;; or specify an optional date formatter
+(before? "01-01-2011" "01-01-2012" {:formatter "dd-MM-yyyy"})
+```
+
 ### 0.18.2 (05-12-2015)
 
 * Fix issue where date validator is unable to handle values that are

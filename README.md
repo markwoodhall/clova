@@ -137,6 +137,7 @@ clova has the following built in validators
 19. [numeric?](http://markwoodhall.github.io/clova/clova.core.html#var-numeric.3F)
 20. [stringy?](http://markwoodhall.github.io/clova/clova.core.html#var-stringy.3F)
 21. [date?](http://markwoodhall.github.io/clova/clova.core.html#var-date.3F)
+22. [before?](http://markwoodhall.github.io/clova/clova.core.html#var-before.3F)
 
 ## License
 
