@@ -30,6 +30,25 @@
 (def exp-default-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but this is not a valid value."})
 (def exp-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but it should be XXX."})
 (def exp-date-meta {:clova.core/type :date :clova.core/target :date :clova.core/default-message "%s is %s but it should be a date."})
+(def exp-before-meta {:clova.core/type :before :clova.core/target :date :clova.core/default-message "%s is %s but it should be before %s."})
+
+(t/deftest before-validator
+  (t/testing "before validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-before-meta)
+             (only-clova-meta (meta core/before?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [d [(f/parse "2015-01-01") "2011-01-01" "2014-12-12" "2001-01-24" #?(:clj (java.util.Date.)
+                                                                                :cljs (js/Date.))]]
+      (t/is (core/before? d "2020-01-01"))
+      (t/is (core/before? d (f/parse "2020-01-01")))
+      (t/is (core/before? d #?(:clj (java.util.Date.)
+                               :cljs (js/Date.))))))
+
+  (t/testing "validating an invalid value"
+    (doseq [d ["20150101" (f/parse "2014-01-01")]]
+      (t/is (not (core/before? d "2001-01-01")))
+      (t/is (not (core/before? d (f/parse "2001-01-01")))))))
 
 (t/deftest date-validator
   (t/testing "date validator exposes correct meta data"
@@ -37,8 +56,8 @@
              (only-clova-meta (meta core/date?)))))
 
   (t/testing "validating a valid value"
-    (doseq [d [(f/parse "20150101") "20110101" "20151212" "20012401" #?(:clj (java.util.Date.)
-                                                                        :cljs (js/Date.))]]
+    (doseq [d [(f/parse "2015-01-01") "2011-01-01" "2015-12-12" "2001-01-24" #?(:clj (java.util.Date.)
+                                                                                :cljs (js/Date.))]]
       (t/is (core/date? d))))
 
   (t/testing "validating an invalid value"

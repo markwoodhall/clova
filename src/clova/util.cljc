@@ -1,4 +1,10 @@
-(ns clova.util)
+(ns clova.util
+  (:require #?(:clj [clj-time.format :as f])
+            #?(:clj [clj-time.core :as t])
+            #?(:clj [clj-time.coerce :as c])
+            #?(:cljs [cljs-time.format :as f])
+            #?(:cljs [cljs-time.core :as t])
+            #?(:cljs [cljs-time.coerce :as c])))
 
 (def not-nil? (complement nil?))
 
@@ -50,3 +56,26 @@
         (and (fn? value)
              (not (:macro (meta v))))))
     (fn? x)))
+
+(defn to-clj-date
+  "Turns value into a clj-time date."
+  ([value]
+   (to-clj-date value nil))
+  ([value formatter]
+   (let [formatter (if (string? formatter)
+                     (f/formatter formatter)
+                     formatter)
+         from-str #(if (not-nil? formatter)
+                     (f/parse formatter %)
+                     (f/parse %))]
+     #?(:clj (if (instance? java.util.Date value)
+               (c/from-date value)
+               (if (instance? org.joda.time.DateTime value)
+                 value
+                 (from-str value))))
+     #?(:cljs (if (instance? js/Date value)
+                (c/from-date value)
+                (if (or (instance? goog.date.Date value)
+                        (instance? goog.date.DateTime value))
+                  value
+                  (from-str value)))))))
