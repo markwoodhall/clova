@@ -1,5 +1,18 @@
 # Change Log
 
+### 0.21.0 (08-12-2015)
+
+* Add =date? validator.
+
+Not to be confused with the `date?` validator which tests that a value is a date. The
+`=date?` validator checks that a value is equal to a given date.
+
+```clojure
+(=date? "01-01-2011" "01-01-2011")
+;; or specify an optional date formatter
+(=date? "01-01-2011" "02-01-2011" {:formatter "dd-MM-yyyy"})
+```
+
 ### 0.20.0 (08-12-2015)
 
 * Add after? validator.
