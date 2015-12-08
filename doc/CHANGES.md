@@ -1,5 +1,15 @@
 # Change Log
 
+### 0.20.0 (08-12-2015)
+
+* Add after? validator.
+
+```clojure
+(after? "01-01-2011" "02-01-2012")
+;; or specify an optional date formatter
+(after? "01-01-2011" "02-01-2012" {:formatter "dd-MM-yyyy"})
+```
+
 ### 0.19.0 (07-12-2015)
 
 * Add before? validator.
