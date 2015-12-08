@@ -238,6 +238,26 @@
         #?(:cljs (catch js/Error e false))))))
 
 (defvalidator
+  "Check an input value to see if it is chronoligically equal to d. Where
+  d is either the string representation of a date or one of `[java.util.Date org.joda.time.DateTime]` or
+  `[js/Date goog.date.Date goog.date.DateTime]`
+
+  Optionally, takes a map argument and makes use of the following keys:
+
+  - `:formatter` You can use one of the built in ISO8601 formatters
+  from clj-time or cljs-time. You can also define your own custom format string."
+  =date?
+  {:clova.core/type :=date :clova.core/default-message "%s is %s but it should be %s." :added "0.21.0" :clova.core/allow-missing-key? true}
+  [value d & [opt]]
+  (if (and (not-nil? value)
+           (not-nil? d))
+    (let [{formatter :formatter} opt
+          value (u/to-clj-date value formatter)
+          d (u/to-clj-date d formatter)]
+      #?(:clj (c/equal? value d)
+         :cljs (c/= value d)))))
+
+(defvalidator
   "Check an input value to see if it is chronoligically after d. Where
   d is either the string representation of a date or one of `[java.util.Date org.joda.time.DateTime]` or
   `[js/Date goog.date.Date goog.date.DateTime]`
