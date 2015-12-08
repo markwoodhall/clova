@@ -30,7 +30,7 @@
 (def exp-default-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but this is not a valid value."})
 (def exp-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but it should be XXX."})
 (def exp-date-meta {:clova.core/type :date :clova.core/target :date :clova.core/default-message "%s is %s but it should be a date."})
-(def exp-before-meta {:clova.core/type :before :clova.core/target :date :clova.core/default-message "%s is %s but it should be before %s."})
+(def exp-before-meta {:clova.core/type :before :clova.core/target :before :clova.core/default-message "%s is %s but it should be before %s."})
 (def exp-after-meta {:clova.core/type :after :clova.core/target :after :clova.core/default-message "%s is %s but it should be after %s."})
 
 (t/deftest before-validator
@@ -436,6 +436,7 @@
                                     :stringy core/stringy?
                                     :as-validator (core/as-validator #(= % 1))
                                     :after [core/after? "2015-01-01"]
+                                    :before [core/before? "2015-01-01"]
                                     [:nested :value] [core/between? 1 10]])]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set {:email "abc"
@@ -459,6 +460,7 @@
                                       :stringy 1
                                       :as-validator 2
                                       :after "2014-01-01"
+                                      :before "2016-01-01"
                                       :nested {:value 0}})]
         (t/is (not valid))))
 
@@ -485,6 +487,7 @@
                                       :stringy "abc"
                                       :as-validator 1
                                       :after "2015-01-02"
+                                      :before "2014-01-02"
                                       :nested {:value 5}})]
         (t/is valid)))
 
@@ -511,6 +514,7 @@
                                          :stringy 1
                                          :as-validator 2
                                          :after "2014-01-01"
+                                         :before "2016-01-01"
                                          :nested {:value 0}})]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
@@ -535,7 +539,8 @@
         (t/is (= "stringy is 1 but it should be a string." (nth (:results result) 19)))
         (t/is (= "as-validator is 2 but this is not a valid value." (nth (:results result) 20)))
         (t/is (= "after is 2014-01-01 but it should be after 2015-01-01." (nth (:results result) 21)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 22)))))
+        (t/is (= "before is 2016-01-01 but it should be before 2015-01-01." (nth (:results result) 22)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 23)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -561,6 +566,7 @@
                                          :stringy "abc"
                                          :as-validator 1
                                          :after "2015-01-02"
+                                         :before "2014-01-02"
                                          :nested {:value 5}})]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
