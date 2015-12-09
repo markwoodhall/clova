@@ -84,7 +84,7 @@ Get the validation status:
 (:valid? result)
 ```
 
-Get the validation results (messages):
+Get the validation results (error messages):
 
 ```clojure
 (:results result)
