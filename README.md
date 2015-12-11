@@ -8,6 +8,7 @@ A minimal validation library for Clojure and ClojureScript.
 ## Status
 
 [![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
+[![Dependency Status](https://www.versioneye.com/user/projects/566b4d044e049b003b000704/badge.svg?style=flat)](https://www.versioneye.com/user/projects/566b4d044e049b003b000704)
 
 ## Installation
 
