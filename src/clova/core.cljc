@@ -208,6 +208,16 @@
   (string? value))
 
 (defvalidator
+  "Check an input value to see if it is equal to v using the regular `=` function.
+
+  It is worthwhile using `=date?` for validating date equality, since it has support
+  for parsing string dates and comparing DateTime objects."
+  =?
+  {:clova.core/type := :clova.core/default-message "%s is %s but it should be %s." :added "0.22.0" :clova.core/allow-missing-key? true}
+  [value v]
+  (= value v))
+
+(defvalidator
   "Checks an input value to see if it is a date.
 
   If value is a string then it is parsed using `clj-time` or `cljs-time`.
