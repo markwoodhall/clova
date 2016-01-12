@@ -9,6 +9,6 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [clj-time "0.11.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [org.clojure/clojurescript "1.7.189"]]
+                 [org.clojure/clojurescript "1.7.228"]]
   :jar-exclusions [#"\.swp|\.swo|user.clj"]
   :source-paths ["src"])
