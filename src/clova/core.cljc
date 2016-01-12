@@ -264,8 +264,7 @@
     (let [{formatter :formatter} opt
           value (u/to-clj-date value formatter)
           d (u/to-clj-date d formatter)]
-      #?(:clj (c/equal? value d)
-         :cljs (c/= value d)))))
+      (c/equal? value d))))
 
 (defvalidator
   "Check an input value to see if it is chronoligically after d. Where
