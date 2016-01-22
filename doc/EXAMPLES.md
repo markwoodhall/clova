@@ -7,7 +7,7 @@ the map and it's value should be less than 5.
 
 (let [v-set (validation-set [:failed-login-count required? [lesser? 5]])]
 
-  (validate v-set {:failed-login-count 5})
+  (validate v-set {:failed-login-count 4})
   ;; {:results (), :valid? true}
 
   (validate v-set {:failed-login-count 5})
