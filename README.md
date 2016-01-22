@@ -111,7 +111,7 @@ message.
 (validate v-set {:email ""} {:short-circuit? true })
 ```
 
-[See more usage examples.](https://github.com/markwoodhall/clova/blob/master/EXAMPLES.md)
+[See more usage examples.](https://github.com/markwoodhall/clova/blob/master/doc/EXAMPLES.md)
 
 ## Validators
 
