@@ -1,5 +1,5 @@
 # Change Log
-### 0.23.0 (13-03-2016)
+### 0.24.0 (13-03-2016)
 
 * Upgrade clojure dependency from 1.7.0 > 1.8.0.
 
