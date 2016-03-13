@@ -1,4 +1,8 @@
 # Change Log
+### 0.23.0 (13-03-2016)
+
+* Upgrade clojure dependency from 1.7.0 > 1.8.0.
+
 ### 0.22.0 (04-01-2016)
 
 * Add =? validator.
