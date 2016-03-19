@@ -374,8 +374,8 @@
 
 (defn validate
   "Takes a validation set and applies it to m.
-  Returns a map containing `:valid?` which either has a truthy or falsy value as
-  well as a sequence of validation failure messages, if applicable.
+  Returns a map containing `:valid?` with either a truthy or falsy value and
+  `:results` which is a sequence of validation failure messages, if applicable.
 
   Optionally takes a map of options:
 
