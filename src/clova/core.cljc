@@ -373,7 +373,7 @@
                      (map (fn [f] (metaify f target)) function-seq)) key-func-pairs))))
 
 (defn validate
-  "Takes a validation set an applies it to m.
+  "Takes a validation set and applies it to m.
   Returns a map containing `:valid?` which either has a truthy or falsy value as
   well as a sequence of validation failure messages, if applicable.
 
