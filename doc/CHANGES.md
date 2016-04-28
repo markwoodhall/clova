@@ -1,4 +1,8 @@
 # Change Log
+### 0.25.0 (28-04-2016)
+
+* Upgrade clojurescript dependency from 1.7.228 > 1.8.40
+
 ### 0.24.0 (13-03-2016)
 
 * Upgrade clojure dependency from 1.7.0 > 1.8.0.
