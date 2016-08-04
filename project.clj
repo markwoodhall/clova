@@ -1,4 +1,4 @@
-(defproject clova "0.26.0"
+(defproject clova "0.27.0"
   :description "A simple validation library for Clojure and ClojureScript."
   :url "http://github.com/markwoodhall/clova"
   :license {:name "The MIT License"
@@ -7,8 +7,8 @@
           :namespaces [clova.core]
           :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}#L{line}"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-time "0.11.0"]
+                 [clj-time "0.12.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [org.clojure/clojurescript "1.8.51"]]
+                 [org.clojure/clojurescript "1.9.93"]]
   :jar-exclusions [#"\.swp|\.swo|user.clj"]
   :source-paths ["src"])

@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.27.0 (04-08-2016)
+
+* Upgrade clojurescript dependency from 1.8.51 > 1.9.93
+* Upgrade clj-time dependency from 0.11.0 > 0.12.0
+
 ### 0.26.0 (11-05-2016)
 
 * Upgrade clojurescript dependency from 1.8.40 > 1.8.51
