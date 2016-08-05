@@ -14,7 +14,7 @@
 
   The API documentation is available [here](http://markwoodhall.github.io/clova/).
 
-  You can also view [blog posts] (http://markwoodhall.com/tag/clova/) about clova.
+  You can also view [blog posts] (http://markw.xyz/tags/clova/) about clova.
   "
   {:author "Mark Woodhall"}
   (:require [clova.util :as u]
