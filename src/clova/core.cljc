@@ -208,7 +208,9 @@
   (string? value))
 
 (defvalidator
-  "Checks an input value to see if it is alphanumeric"
+  "Checks an input value to see if it is alphanumeric. Alphanumeric
+  is defined as `[a-zA-Z0-9*$]`, if you need to customise this you can use the
+  `matches?` validator with a custom regex."
   alphanumeric?
   {:clova.core/type :alphanumeric :clova.core/default-message "%s is %s but it should be an alphanumeric value." :added "0.28.0" :clova.core/allow-missing-key? true}
   [value]
