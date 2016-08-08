@@ -27,6 +27,7 @@
 (def exp-cc-meta {:clova.core/type :credit-card :clova.core/target :credit-card :clova.core/default-message "%s is %s but it should be a valid credit card number."})
 (def exp-numeric-meta {:clova.core/type :numeric :clova.core/target :numeric :clova.core/default-message "%s is %s but it should be a number."})
 (def exp-stringy-meta {:clova.core/type :stringy :clova.core/target :stringy :clova.core/default-message "%s is %s but it should be a string."})
+(def exp-alphanumeric-meta {:clova.core/type :alphanumeric :clova.core/target :alphanumeric :clova.core/default-message "%s is %s but it should be an alphanumeric value."})
 (def exp-default-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but this is not a valid value."})
 (def exp-as-validator-meta {:clova.core/type :as-validator :clova.core/target :as-validator :clova.core/default-message "%s is %s but it should be XXX."})
 (def exp-date-meta {:clova.core/type :date :clova.core/target :date :clova.core/default-message "%s is %s but it should be a date."})
@@ -145,6 +146,19 @@
   (t/testing "validating an invalid value"
     (doseq [s [nil {} [] {:a 1} [1 2 3]]]
       (t/is (not (core/stringy? s))))))
+
+(t/deftest alphanumeric-validator
+  (t/testing "alphanumeric validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-alphanumeric-meta)
+             (only-clova-meta (meta core/alphanumeric?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [s ["abc123" "a1b2c3" "123abc" "zesdsds"]]
+      (t/is (core/alphanumeric? s))))
+
+  (t/testing "validating an invalid value"
+    (doseq [s ["£222dcds" "&*@2ncjkbvfd"]]
+      (t/is (not (core/alphanumeric? s))))))
 
 (t/deftest numeric-validator
   (t/testing "numeric validator exposes correct meta data"
@@ -464,6 +478,7 @@
                                     :credit-card [core/credit-card?]
                                     :numeric core/numeric?
                                     :stringy core/stringy?
+                                    :alphanumeric core/alphanumeric?
                                     :as-validator (core/as-validator #(= % 1))
                                     :after [core/after? "2015-01-01"]
                                     :before [core/before? "2015-01-01"]
@@ -490,6 +505,7 @@
                                       :credit-card 1
                                       :numeric ""
                                       :stringy 1
+                                      :alphanumeric "!abc"
                                       :as-validator 2
                                       :after "2014-01-01"
                                       :before "2016-01-01"
@@ -519,6 +535,7 @@
                                       :credt-card "5105 1051 0510 5100"
                                       :numeric 1
                                       :stringy "abc"
+                                      :alphanumeric "abc123"
                                       :as-validator 1
                                       :after "2015-01-02"
                                       :before "2014-01-02"
@@ -548,6 +565,7 @@
                                          :credit-card 1
                                          :numeric ""
                                          :stringy 1
+                                         :alphanumeric "!abc"
                                          :as-validator 2
                                          :after "2014-01-01"
                                          :before "2016-01-01"
@@ -575,12 +593,13 @@
         (t/is (= "credit-card is 1 but it should be a valid credit card number." (nth (:results result) 17)))
         (t/is (= "numeric is  but it should be a number." (nth (:results result) 18)))
         (t/is (= "stringy is 1 but it should be a string." (nth (:results result) 19)))
-        (t/is (= "as-validator is 2 but this is not a valid value." (nth (:results result) 20)))
-        (t/is (= "after is 2014-01-01 but it should be after 2015-01-01." (nth (:results result) 21)))
-        (t/is (= "before is 2016-01-01 but it should be before 2015-01-01." (nth (:results result) 22)))
-        (t/is (= "=date is 2016-01-01 but it should be 2015-01-01." (nth (:results result) 23)))
-        (t/is (= "= is 2 but it should be 1." (nth (:results result) 24)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 25)))))
+        (t/is (= "alphanumeric is !abc but it should be an alphanumeric value." (nth (:results result) 20)))
+        (t/is (= "as-validator is 2 but this is not a valid value." (nth (:results result) 21)))
+        (t/is (= "after is 2014-01-01 but it should be after 2015-01-01." (nth (:results result) 22)))
+        (t/is (= "before is 2016-01-01 but it should be before 2015-01-01." (nth (:results result) 23)))
+        (t/is (= "=date is 2016-01-01 but it should be 2015-01-01." (nth (:results result) 24)))
+        (t/is (= "= is 2 but it should be 1." (nth (:results result) 25)))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 26)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
@@ -604,6 +623,7 @@
                                          :credt-card "5105 1051 0510 5100"
                                          :numeric 1
                                          :stringy "abc"
+                                         :alphanumeric "abc"
                                          :as-validator 1
                                          :after "2015-01-02"
                                          :before "2014-01-02"

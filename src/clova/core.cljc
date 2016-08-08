@@ -208,6 +208,13 @@
   (string? value))
 
 (defvalidator
+  "Checks an input value to see if it is alphanumeric"
+  alphanumeric?
+  {:clova.core/type :alphanumeric :clova.core/default-message "%s is %s but it should be an alphanumeric value." :added "0.28.0" :clova.core/allow-missing-key? true}
+  [value]
+  (matches? value #"^[a-zA-Z0-9*$]"))
+
+(defvalidator
   "Check an input value to see if it is equal to v using the regular `=` function.
 
   It is worthwhile using `=date?` for validating date equality, since it has support

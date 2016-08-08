@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.28.0 (08-08-2016)
+
+* Add `alphanumeric?` validator.
+
+```clojure
+(alphanumeric? "abc")
+```
+
 ### 0.27.0 (04-08-2016)
 
 * Upgrade clojurescript dependency from 1.8.51 > 1.9.93
