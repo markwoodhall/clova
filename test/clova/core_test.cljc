@@ -484,94 +484,71 @@
                                     :before [core/before? "2015-01-01"]
                                     :=date [core/=date? "2015-01-01"]
                                     := [core/=? 1]
-                                    [:nested :value] [core/between? 1 10]])]
+                                    [:nested :value] [core/between? 1 10]])
+        invalid-map {:email "abc"
+                     :post-code 12
+                     :zip-code "abc"
+                     :matches "nomatch"
+                     :url "abc"
+                     :age 10
+                     :one-of 4
+                     :not-nil nil
+                     :count 1
+                     :count2 1
+                     :positive -1
+                     :negative 1
+                     :length  "aaaaa"
+                     :longer [1 2]
+                     :shorter "aaa"
+                     :all 4
+                     :credit-card 1
+                     :numeric ""
+                     :stringy 1
+                     :alphanumeric "!abc"
+                     :as-validator 2
+                     :after "2014-01-01"
+                     :before "2016-01-01"
+                     :=date "2016-01-01"
+                     := 2
+                     :nested {:value 0}}
+        valid-map {:email "test.email@googlemail.com"
+                   :post-code "B11 2SB"
+                   :matches "amatch"
+                   :zip-code 96801
+                   :url "http://google.com"
+                   :age 21
+                   :one-of 1
+                   :not-nil true
+                   :count 3
+                   :count2 -1
+                   :positive 1
+                   :negative -1
+                   :length  "aaa"
+                   :longer [1 2 3]
+                   :shorter "a"
+                   :required nil
+                   :all 5
+                   :credt-card "5105 1051 0510 5100"
+                   :numeric 1
+                   :stringy "abc"
+                   :alphanumeric "abc123"
+                   :as-validator 1
+                   :after "2015-01-02"
+                   :before "2014-01-02"
+                   :=date "2015-01-01"
+                   := 1
+                   :nested {:value 5}}]
     (t/testing "valid? returns correct result for a failure"
-      (let [valid (core/valid? v-set {:email "abc"
-                                      :post-code 12
-                                      :zip-code "abc"
-                                      :matches "nomatch"
-                                      :url "abc"
-                                      :age 10
-                                      :one-of 4
-                                      :not-nil nil
-                                      :count 1
-                                      :count2 1
-                                      :positive -1
-                                      :negative 1
-                                      :length  "aaaaa"
-                                      :longer [1 2]
-                                      :shorter "aaa"
-                                      :all 4
-                                      :credit-card 1
-                                      :numeric ""
-                                      :stringy 1
-                                      :alphanumeric "!abc"
-                                      :as-validator 2
-                                      :after "2014-01-01"
-                                      :before "2016-01-01"
-                                      :=date "2016-01-01"
-                                      := 2
-                                      :nested {:value 0}})]
+      (let [valid (core/valid? v-set invalid-map)]
         (t/is (not valid))))
 
     (t/testing "valid? returns correct result for a success"
-      (let [valid (core/valid? v-set {:email "test.email@googlemail.com"
-                                      :post-code "B11 2SB"
-                                      :matches "amatch"
-                                      :zip-code 96801
-                                      :url "http://google.com"
-                                      :age 21
-                                      :one-of 1
-                                      :not-nil true
-                                      :count 3
-                                      :count2 -1
-                                      :positive 1
-                                      :negative -1
-                                      :length  "aaa"
-                                      :longer [1 2 3]
-                                      :shorter "a"
-                                      :required nil
-                                      :all 5
-                                      :credt-card "5105 1051 0510 5100"
-                                      :numeric 1
-                                      :stringy "abc"
-                                      :alphanumeric "abc123"
-                                      :as-validator 1
-                                      :after "2015-01-02"
-                                      :before "2014-01-02"
-                                      :=date "2015-01-01"
-                                      := 1
-                                      :nested {:value 5}})]
+      (let [valid (core/valid? v-set valid-map)]
         (t/is valid)))
 
     (t/testing "validate using a validation set returns
                a valid? = false result and a sequence of the validation results"
-      (let [result (core/validate v-set {:email "abc"
-                                         :post-code 12
-                                         :zip-code "abc"
-                                         :matches "nomatch"
-                                         :url "abc"
-                                         :age 10
-                                         :one-of 4
-                                         :not-nil nil
-                                         :count 1
-                                         :count2 1
-                                         :positive -1
-                                         :negative 1
-                                         :length "aaaa"
-                                         :longer [1 2]
-                                         :shorter "aaa"
-                                         :all 4
-                                         :credit-card 1
-                                         :numeric ""
-                                         :stringy 1
-                                         :alphanumeric "!abc"
-                                         :as-validator 2
-                                         :after "2014-01-01"
-                                         :before "2016-01-01"
-                                         :=date "2016-01-01"
-                                         := 2
-                                         :nested {:value 0}})]
+      (let [result (core/validate v-set invalid-map)]
         (t/is (not (:valid? result)))
         (t/is (= "email should be a valid email address." (first (:results result))))
         (t/is (= "post-code should be a valid post code." (second (:results result))))
@@ -585,7 +562,7 @@
         (t/is (= "count2 is 1 but it must be less than 0." (nth (:results result) 9)))
         (t/is (= "positive is -1 but it should be a positive number." (nth (:results result) 10)))
         (t/is (= "negative is 1 but it should be a negative number." (nth (:results result) 11)))
-        (t/is (= "length is aaaa but it should have a length of 3." (nth (:results result) 12)))
+        (t/is (= "length is aaaaa but it should have a length of 3." (nth (:results result) 12)))
         (t/is (= "longer is [1 2] but it should have a length longer than 2." (nth (:results result) 13)))
         (t/is (= "shorter is aaa but it should have a length shorter than 2." (nth (:results result) 14)))
         (t/is (= "required is required." (nth (:results result) 15)))
