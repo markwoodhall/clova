@@ -42,15 +42,15 @@
 (defvalidator
   "Checks for the presence of a non nil value."
   not-nil?
-  {:clova.core/type :not-nil :clova.core/default-message "%s is required." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :not-nil ::default-message "%s is required." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (u/not-nil? value))
 
 (defvalidator
-  "Checks for the presence of a key based on the default value of `:clova.core/key-not-found?`
+  "Checks for the presence of a key based on the default value of `::key-not-found?`
   for a missing key."
   required?
-  {:clova.core/type :required :clova.core/default-message "%s is required." :added "0.8.0" :clova.core/allow-missing-key? false}
+  {::type :required ::default-message "%s is required." :added "0.8.0" ::allow-missing-key? false}
   [value]
   (u/not-missing? value))
 
@@ -59,7 +59,7 @@
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {:clova.core/type :matches :clova.core/default-message "%s is invalid value %s." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :matches ::default-message "%s is invalid value %s." :added "0.2.0" ::allow-missing-key? true}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -67,35 +67,35 @@
 (defvalidator
   "Checks an input value to see if it is a valid email address"
   email?
-  {:clova.core/type :email :clova.core/default-message "%s should be a valid email address." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :email ::default-message "%s should be a valid email address." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (matches? value #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,6}$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid zip code."
   zip-code?
-  {:clova.core/type :zip-code :clova.core/default-message "%s should be a valid zip code." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :zip-code ::default-message "%s should be a valid zip code." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (matches? value #"^[0-9]{5}(-[0-9]{4})?$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid uk post code."
   post-code?
-  {:clova.core/type :post-code :clova.core/default-message "%s should be a valid post code." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :post-code ::default-message "%s should be a valid post code." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
   "Checks an input value to see if it is a valid url."
   url?
-  {:clova.core/type :url :clova.core/default-message "%s should be a valid url." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :url ::default-message "%s should be a valid url." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (matches? value #"^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
 
 (defvalidator
   "Checks an input value to see if it is greater than lower."
   greater?
-  {:clova.core/type :greater :clova.core/default-message "%s is %s but it must be greater than %s." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :greater ::default-message "%s is %s but it must be greater than %s." :added "0.2.0" ::allow-missing-key? true}
   [value lower]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? lower))
@@ -104,7 +104,7 @@
 (defvalidator
   "Checks an input value to see if it is less than lower."
   lesser?
-  {:clova.core/type :lesser :clova.core/default-message "%s is %s but it must be less than %s." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :lesser ::default-message "%s is %s but it must be less than %s." :added "0.2.0" ::allow-missing-key? true}
   [value lower]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? lower))
@@ -113,7 +113,7 @@
 (defvalidator
   "Checks an input value to see if it is a positive number."
   positive?
-  {:clova.core/type :positive :clova.core/default-message "%s is %s but it should be a positive number." :added "0.4.0" :clova.core/allow-missing-key? true}
+  {::type :positive ::default-message "%s is %s but it should be a positive number." :added "0.4.0" ::allow-missing-key? true}
   [value]
   (when (u/not-nil-or-missing? value)
     (pos? value)))
@@ -121,7 +121,7 @@
 (defvalidator
   "Checks an input value to see if it is a negative number."
   negative?
-  {:clova.core/type :negative :clova.core/default-message "%s is %s but it should be a negative number." :added "0.4.0" :clova.core/allow-missing-key? true}
+  {::type :negative ::default-message "%s is %s but it should be a negative number." :added "0.4.0" ::allow-missing-key? true}
   [value]
   (when (u/not-nil-or-missing? value)
     (neg? value)))
@@ -129,7 +129,7 @@
 (defvalidator
   "Checks an input value to see if it is between lower and upper."
   between?
-  {:clova.core/type :between :clova.core/default-message "%s is %s but it must be between %s and %s." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :between ::default-message "%s is %s but it must be between %s and %s." :added "0.2.0" ::allow-missing-key? true}
   [value lower upper]
   (when (and (u/not-nil-or-missing? value)
              (not-nil? lower)
@@ -141,7 +141,7 @@
   "Check an input value to see if it has a length equal to l.
   Work on sequences and strings."
   length?
-  {:clova.core/type :length :clova.core/default-message "%s is %s but it should have a length of %s." :added "0.5.0" :clova.core/allow-missing-key? true}
+  {::type :length ::default-message "%s is %s but it should have a length of %s." :added "0.5.0" ::allow-missing-key? true}
   [value l]
   (when (u/not-nil-or-missing? value)
     (= l (count (seq value)))))
@@ -150,7 +150,7 @@
   "Check an input value to see if it has a length longer than l.
   Work on sequences and strings."
   longer?
-  {:clova.core/type :longer :clova.core/default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" :clova.core/allow-missing-key? true}
+  {::type :longer ::default-message "%s is %s but it should have a length longer than %s." :added "0.6.0" ::allow-missing-key? true}
   [value l]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? l))
@@ -160,7 +160,7 @@
   "Check an input value to see if it has a length shorter than l.
   Work on sequences and strings."
   shorter?
-  {:clova.core/type :shorter :clova.core/default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" :clova.core/allow-missing-key? true}
+  {::type :shorter ::default-message "%s is %s but it should have a length shorter than %s." :added "0.6.0" ::allow-missing-key? true}
   [value l]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? l))
@@ -169,7 +169,7 @@
 (defvalidator
   "Checks an input value to see if it is one of the items in a col"
   one-of?
-  {:clova.core/type :one-of :clova.core/default-message "%s is %s but should be one of %s." :added "0.2.0" :clova.core/allow-missing-key? true}
+  {::type :one-of ::default-message "%s is %s but should be one of %s." :added "0.2.0" ::allow-missing-key? true}
   [value col]
   (u/not-nil? (some #{value} col)))
 
@@ -181,7 +181,7 @@
   `(all? true [true (fn [v] (= true v))])`
   `(all? true (fn [v] (= true v)))`"
   all?
-  {:clova.core/type :all :clova.core/default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" :clova.core/allow-missing-key? true}
+  {::type :all ::default-message "%s is %s but it does not meet all of the requirements." :added "0.9.0" ::allow-missing-key? true}
   [value col]
   (let [c (u/as-seq col)]
     (every? true? (map #(if (u/function? %)
@@ -196,14 +196,14 @@
 (defvalidator
   "Checks an input value to see if it is numeric."
   numeric?
-  {:clova.core/type :numeric :clova.core/default-message "%s is %s but it should be a number." :added "0.14.0" :clova.core/allow-missing-key? true}
+  {::type :numeric ::default-message "%s is %s but it should be a number." :added "0.14.0" ::allow-missing-key? true}
   [value]
   (number? value))
 
 (defvalidator
   "Checks an input value to see if it is a string"
   stringy?
-  {:clova.core/type :stringy :clova.core/default-message "%s is %s but it should be a string." :added "0.15.0" :clova.core/allow-missing-key? true}
+  {::type :stringy ::default-message "%s is %s but it should be a string." :added "0.15.0" ::allow-missing-key? true}
   [value]
   (string? value))
 
@@ -212,7 +212,7 @@
   is defined as `[a-zA-Z0-9*$]`, if you need to customise this you can use the
   `matches?` validator with a custom regex."
   alphanumeric?
-  {:clova.core/type :alphanumeric :clova.core/default-message "%s is %s but it should be an alphanumeric value." :added "0.28.0" :clova.core/allow-missing-key? true}
+  {::type :alphanumeric ::default-message "%s is %s but it should be an alphanumeric value." :added "0.28.0" ::allow-missing-key? true}
   [value]
   (matches? value #"^[a-zA-Z0-9*$]"))
 
@@ -222,7 +222,7 @@
   It is worthwhile using `=date?` for validating date equality, since it has support
   for parsing string dates and comparing DateTime objects."
   =?
-  {:clova.core/type := :clova.core/default-message "%s is %s but it should be %s." :added "0.22.0" :clova.core/allow-missing-key? true}
+  {::type := ::default-message "%s is %s but it should be %s." :added "0.22.0" ::allow-missing-key? true}
   [value v]
   (= value v))
 
@@ -239,7 +239,7 @@
   - `:formatter` You can use one of the built in ISO8601 formatters
   from clj-time or cljs-time. You can also define your own custom format string."
   date?
-  {:clova.core/type :date :clova.core/default-message "%s is %s but it should be a date." :added "0.18.0" :clova.core/allow-missing-key? true}
+  {::type :date ::default-message "%s is %s but it should be a date." :added "0.18.0" ::allow-missing-key? true}
   [value & [opt]]
   (let [{formatter :formatter} opt
         formatter (if (string? formatter)
@@ -266,7 +266,7 @@
   - `:formatter` You can use one of the built in ISO8601 formatters
   from clj-time or cljs-time. You can also define your own custom format string."
   =date?
-  {:clova.core/type :=date :clova.core/default-message "%s is %s but it should be %s." :added "0.21.0" :clova.core/allow-missing-key? true}
+  {::type :=date ::default-message "%s is %s but it should be %s." :added "0.21.0" ::allow-missing-key? true}
   [value d & [opt]]
   (if (and (not-nil? value)
            (not-nil? d))
@@ -285,7 +285,7 @@
   - `:formatter` You can use one of the built in ISO8601 formatters
   from clj-time or cljs-time. You can also define your own custom format string."
   after?
-  {:clova.core/type :after :clova.core/default-message "%s is %s but it should be after %s." :added "0.20.0" :clova.core/allow-missing-key? true}
+  {::type :after ::default-message "%s is %s but it should be after %s." :added "0.20.0" ::allow-missing-key? true}
   [value d & [opt]]
   (if (and (not-nil? value)
            (not-nil? d))
@@ -304,7 +304,7 @@
   - `:formatter` You can use one of the built in ISO8601 formatters
   from clj-time or cljs-time. You can also define your own custom format string."
   before?
-  {:clova.core/type :before :clova.core/default-message "%s is %s but it should be before %s." :added "0.19.0" :clova.core/allow-missing-key? true}
+  {::type :before ::default-message "%s is %s but it should be before %s." :added "0.19.0" ::allow-missing-key? true}
   [value d & [opt]]
   (if (and (not-nil? value)
            (not-nil? d))
@@ -317,7 +317,7 @@
   "Chacks an input value to see if it is a \"valid\" credit
  card number based on the Luhn algorithm."
   credit-card?
-  {:clova.core/type :credit-card :clova.core/default-message "%s is %s but it should be a valid credit card number." :added "0.11.0" :clova.core/allow-missing-key? true}
+  {::type :credit-card ::default-message "%s is %s but it should be a valid credit card number." :added "0.11.0" ::allow-missing-key? true}
   [value]
   (when (u/not-nil? value)
     (let [value (str value)
@@ -346,7 +346,7 @@
        :or {default-message "%s is %s but this is not a valid value."
             allow-missing-key? true}
        :as m}]
-   (let [m-data {:clova.core/type :as-validator :clova.core/default-message default-message :clova.core/allow-missing-key? allow-missing-key?}]
+   (let [m-data {::type :as-validator ::default-message default-message ::allow-missing-key? allow-missing-key?}]
      (with-meta f m-data))))
 
 (defn validation-set
@@ -374,8 +374,8 @@
                                             func-or-seq)
                                      func-meta (meta func)
                                      args (if (sequential? func-or-seq)
-                                            {:clova.core/args (rest func-or-seq)})
-                                     val-meta (merge args {:clova.core/target target})]
+                                            {::args (rest func-or-seq)})
+                                     val-meta (merge args {::target target})]
                                  (with-meta func (merge func-meta val-meta))))]
     (flatten (map #(let [target (first (first %))
                          function-seq (second %)]
@@ -402,14 +402,14 @@
    (let [done (atom false)
          valids (map #(when (or (not short-circuit?)
                                 (not @done))
-                          (let [{v-type :clova.core/type target :clova.core/target args :clova.core/args
-                                 allow-missing-key? :clova.core/allow-missing-key? default-message :clova.core/default-message} (meta %)
+                          (let [{v-type ::type target ::target args ::args
+                                 allow-missing-key? ::allow-missing-key? default-message ::default-message} (meta %)
                                 target (u/as-seq target)
                                 target-name (join " " (map name target))
-                                value (get-in m target :clova.core/key-not-found?)
+                                value (get-in m target ::key-not-found?)
                                 message (u/func-or-default (partial default-message-fn v-type) default-message)
                                 valid? (or (and allow-missing-key?
-                                                (= :clova.core/key-not-found? value))
+                                                (= ::key-not-found? value))
                                            (apply % value args))]
                             (reset! done (not valid?))
                             {:valid? valid?
