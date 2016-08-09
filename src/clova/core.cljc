@@ -210,7 +210,7 @@
 (defvalidator
   "Checks an input value to see if it is alphanumeric. Alphanumeric
   is defined as `[a-zA-Z0-9*$]`, if you need to customise this you can use the
-  `matches?` validator with a custom regex."
+  [[matches?]] validator with a custom regex."
   alphanumeric?
   {::type :alphanumeric ::default-message "%s is %s but it should be an alphanumeric value." :added "0.28.0" ::allow-missing-key? true}
   [value]
