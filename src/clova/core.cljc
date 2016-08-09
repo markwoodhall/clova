@@ -219,7 +219,7 @@
 (defvalidator
   "Check an input value to see if it is equal to v using the regular `=` function.
 
-  It is worthwhile using `=date?` for validating date equality, since it has support
+  It is worthwhile using [[=date?]] for validating date equality, since it has support
   for parsing string dates and comparing DateTime objects."
   =?
   {::type := ::default-message "%s is %s but it should be %s." :added "0.22.0" ::allow-missing-key? true}
