@@ -612,10 +612,11 @@
 
     (t/testing "validate uses a custom function for default message lookup"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])
-            result (core/validate v-set {:email "" :not-nil nil} {:default-message-fn (fn [v-type]
-                                                                                        (case v-type
-                                                                                          :email (str "custom email error")
-                                                                                          nil))})]
+            get-message (fn [v-type]
+                          (case v-type
+                            :email (str "custom email error")
+                            nil))
+            result (core/validate v-set {:email "" :not-nil nil} {:default-message-fn get-message})]
         (t/is (= "not-nil is required." (second (:results result))))
         (t/is (= "custom email error" (first (:results result))))))
 
