@@ -611,14 +611,16 @@
         (t/is (empty? (:results result)))))
 
     (t/testing "validate uses a custom function for default message lookup"
-      (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])
-            get-message (fn [v-type]
+      (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil? :age [core/between? 1 9]])
+            get-message (fn [v-type value args]
                           (case v-type
-                            :email (str "custom email error")
+                            :email (str value " is not an email address")
+                            :between (str value " should be between " (first args) " and " (second args))
                             nil))
-            result (core/validate v-set {:email "" :not-nil nil} {:default-message-fn get-message})]
+            result (core/validate v-set {:email "dave" :age 10 :not-nil nil} {:default-message-fn get-message})]
         (t/is (= "not-nil is required." (second (:results result))))
-        (t/is (= "custom email error" (first (:results result))))))
+        (t/is (= "dave is not an email address" (first (:results result))))
+        (t/is (= "10 should be between 1 and 9" (nth (:results result) 2)))))
 
     (t/testing "validate short circuits if configured"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])

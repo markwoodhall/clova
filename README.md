@@ -94,13 +94,15 @@ Get the validation results (error messages):
 ```
 
 You can also specify a custom function for providing validation error messages. This function will
-be called with the validator type specified as an argument, if the custom function returns nil then
-the default validation message will be used.
+be called with the validator type, the target value and any arguments passed to the validator specified as arguments,
+if the custom function returns nil then the default validation message will be used.
+
+For example, we can use the `between?` validator with a custom error message, like so:
 
 ```clojure
-(validate v-set {:email ""} {:default-message-fn (fn [v-type]
+(validate v-set {:age 9} {:default-message-fn (fn [v-type value args]
                                                     (case v-type
-                                                      :email (str "custom email error")
+                                                      :between (str "Age is " value " but it must be between " (first args) " and " (second args))
                                                        nil))})
 ```
 

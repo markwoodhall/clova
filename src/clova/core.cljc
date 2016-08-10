@@ -397,7 +397,7 @@
   ([v-set m]
    (validate v-set m {}))
   ([v-set m {:keys [default-message-fn short-circuit?]
-             :or {default-message-fn (fn [x] nil)
+             :or {default-message-fn (fn [v-type value args] nil)
                   short-circuit? false}}]
    (let [done (atom false)
          valids (map #(when (or (not short-circuit?)
@@ -407,7 +407,7 @@
                                 target (u/as-seq target)
                                 target-name (join " " (map name target))
                                 value (get-in m target ::key-not-found?)
-                                message (u/func-or-default (partial default-message-fn v-type) default-message)
+                                message (u/func-or-default (partial default-message-fn v-type value args) default-message)
                                 valid? (or (and allow-missing-key?
                                                 (= ::key-not-found? value))
                                            (apply % value args))]
