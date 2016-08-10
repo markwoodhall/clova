@@ -1,5 +1,18 @@
 # Change Log
 
+### 0.29.0 (10-08-2016)
+
+* Add validated value and validator arguments as arguments to custom message functions. e.g.
+
+```clojure
+(let [message-func (fn [v-type value args]
+                    (case v-type
+                      :between (str "Age is " value " but it must be between " (first args) " and " (second args))
+                       nil))]
+    (validate v-set {:age 9} {:default-message-fn message-func}))
+```
+
+
 ### 0.28.0 (08-08-2016)
 
 * Add `alphanumeric?` validator.

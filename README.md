@@ -100,10 +100,11 @@ if the custom function returns nil then the default validation message will be u
 For example, we can use the `between?` validator with a custom error message, like so:
 
 ```clojure
-(validate v-set {:age 9} {:default-message-fn (fn [v-type value args]
-                                                    (case v-type
-                                                      :between (str "Age is " value " but it must be between " (first args) " and " (second args))
-                                                       nil))})
+(let [message-func (fn [v-type value args]
+                    (case v-type
+                      :between (str "Age is " value " but it must be between " (first args) " and " (second args))
+                       nil))]
+    (validate v-set {:age 9} {:default-message-fn message-func}))
 ```
 
 By default clova will execute all validators and provide validation messages for all failures. You
