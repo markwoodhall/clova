@@ -7,7 +7,7 @@
 ```clojure
 (let [validation-set (validation-set [:age [> 18]])])
 ```
-In failure scenarios a generic message format of "%s has value %s, which is invalid." is used.
+In failure scenarios a generic message format of `"%s has value %s, which is invalid."` is used.
 
 ### 0.29.0 (10-08-2016)
 

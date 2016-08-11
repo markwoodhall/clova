@@ -39,7 +39,7 @@ and the functions used to validate them.
 
 ```
 You don't have to use pre-defined validator functions, you can also use arbitrary functions. The validation message returned
-in failure scenarios will not be specific. A generic message format of "%s has value %s, which is invalid."
+in failure scenarios will not be specific. A generic message format of `"%s has value %s, which is invalid."`
 
 ```clojure
 (let [validation-set (validation-set [:age [> 18]])])
