@@ -403,7 +403,10 @@
          valids (map #(when (or (not short-circuit?)
                                 (not @done))
                           (let [{v-type ::type target ::target args ::args
-                                 allow-missing-key? ::allow-missing-key? default-message ::default-message} (meta %)
+                                 allow-missing-key? ::allow-missing-key? default-message ::default-message
+                                 :or {default-message "%s has value %s, which is invalid."
+                                      v-type :function
+                                      allow-missing-key? true}} (meta %)
                                 target (u/as-seq target)
                                 target-name (join " " (map name target))
                                 value (get-in m target ::key-not-found?)

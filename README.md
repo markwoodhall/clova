@@ -38,6 +38,12 @@ and the functions used to validate them.
                         [:nested :value] [between? 0 10]])]
 
 ```
+You don't have to use pre-defined validator functions, you can also use arbitrary functions, however the validation message returned
+in failure scenarios will not be specific. A generic message format of "%s has value %s, which is invalid."
+
+```clojure
+(let [validation-set (validation-set [:age [> 18]])])
+```
 
 If you want to compose multiple validators you can.
 

@@ -1,5 +1,14 @@
 # Change Log
 
+### 0.30.0 (11-08-2016)
+
+* Added the ability to use arbitrary functions (not specially defined validators) in validation sets.
+
+```clojure
+(let [validation-set (validation-set [:age [> 18]])])
+```
+In failure scenarios a generic message format of "%s has value %s, which is invalid." is used.
+
 ### 0.29.0 (10-08-2016)
 
 * Add validated value and validator arguments as arguments to custom message functions. e.g.
@@ -11,7 +20,6 @@
                        nil))]
     (validate v-set {:age 9} {:default-message-fn message-func}))
 ```
-
 
 ### 0.28.0 (08-08-2016)
 

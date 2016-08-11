@@ -484,7 +484,8 @@
                                     :before [core/before? "2015-01-01"]
                                     :=date [core/=date? "2015-01-01"]
                                     := [core/=? 1]
-                                    [:nested :value] [core/between? 1 10]])
+                                    [:nested :value] [core/between? 1 10]
+                                    :function [> 5]])
         invalid-map {:email "abc"
                      :post-code 12
                      :zip-code "abc"
@@ -510,7 +511,8 @@
                      :before "2016-01-01"
                      :=date "2016-01-01"
                      := 2
-                     :nested {:value 0}}
+                     :nested {:value 0}
+                     :function 4}
         valid-map {:email "test.email@googlemail.com"
                    :post-code "B11 2SB"
                    :matches "amatch"
@@ -537,7 +539,8 @@
                    :before "2014-01-02"
                    :=date "2015-01-01"
                    := 1
-                   :nested {:value 5}}]
+                   :nested {:value 5}
+                   :function 6}]
     (t/testing "valid? returns correct result for a failure"
       (let [valid (core/valid? v-set invalid-map)]
         (t/is (not valid))))
@@ -576,37 +579,12 @@
         (t/is (= "before is 2016-01-01 but it should be before 2015-01-01." (nth (:results result) 23)))
         (t/is (= "=date is 2016-01-01 but it should be 2015-01-01." (nth (:results result) 24)))
         (t/is (= "= is 2 but it should be 1." (nth (:results result) 25)))
-        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 26)))))
+        (t/is (= "nested value is 0 but it must be between 1 and 10." (nth (:results result) 26)))
+        (t/is (= "function has value 4, which is invalid." (nth (:results result) 27)))))
 
     (t/testing "validate using a validation set returns
                a valid? = true result and no validation results"
-      (let [result (core/validate v-set {:email "test.email@googlemail.com"
-                                         :post-code "B11 2SB"
-                                         :matches "amatch"
-                                         :zip-code 96801
-                                         :url "http://google.com"
-                                         :age 21
-                                         :one-of 1
-                                         :not-nil true
-                                         :count 3
-                                         :count2 -1
-                                         :positive 1
-                                         :negative -1
-                                         :length "aaa"
-                                         :longer [1 2 3]
-                                         :shorter "a"
-                                         :required nil
-                                         :all 5
-                                         :credt-card "5105 1051 0510 5100"
-                                         :numeric 1
-                                         :stringy "abc"
-                                         :alphanumeric "abc"
-                                         :as-validator 1
-                                         :after "2015-01-02"
-                                         :before "2014-01-02"
-                                         :=date "2015-01-01"
-                                         := 1
-                                         :nested {:value 5}})]
+      (let [result (core/validate v-set valid-map)]
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
 
@@ -650,7 +628,12 @@
       (let [v-set (core/validation-set [:test [core/greater? 2]
                                         :test [core/lesser? 5]])
             result (core/validate v-set {:test 4})]
-        (t/is (:valid? result))))))
+        (t/is (:valid? result))))
+
+    (t/testing "validate supports a validation set with regular functions"
+      (let [v-set (core/validation-set [:test [> 2]])
+            result (core/validate v-set {:test 1})]
+        (t/is (not (:valid? result)))))))
 
 #?(:cljs
     (do
