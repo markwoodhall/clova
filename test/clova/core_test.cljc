@@ -644,7 +644,8 @@
             result (core/validate v-set {:test "test2@email.com"})
             result2 (core/validate v-set {:test "test@email.com"})]
         (t/is (:valid? result))
-        (t/is (not (:valid? result2)))))))
+        (t/is (not (:valid? result2)))
+        (t/is (first (:results result2)) "test@email.com already exists")))))
 
 #?(:cljs
     (do
