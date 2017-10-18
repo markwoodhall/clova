@@ -639,7 +639,7 @@
     (t/testing "validate supports a validation set with functional args"
       (let [db {:users ["test@email.com"]}
             users (fn [value]
-                    (:users db))
+                    (filter #{value} (:users db)))
             v-set (core/validation-set [:test [core/not-exists? users]])
             result (core/validate v-set {:test "test2@email.com"})
             result2 (core/validate v-set {:test "test@email.com"})]
