@@ -330,6 +330,14 @@
                              (map * (reverse numbers) factors)))]
       (zero? (mod sum 10)))))
 
+(defvalidator
+  "Checks for the non presence of an item in a collection."
+  not-exists?
+  {::type :not-not-exists ::default-message "%s already exists." :added "0.31.0" ::allow-missing-key? true}
+  [value col]
+  (when (u/not-nil? value)
+    (not (some #{value} col))))
+
 (defn as-validator
   "Takes a function f and applies optional m as meta data around it. f should be accept
   a first argument as the value to validate.
@@ -410,15 +418,19 @@
                                 target (u/as-seq target)
                                 target-name (join " " (map name target))
                                 value (get-in m target ::key-not-found?)
-                                message (u/func-or-default (partial default-message-fn v-type value args) default-message)
+                                realised-args (map (fn [arg] 
+                                                     (if (u/function? arg)
+                                                       (arg value)
+                                                       arg)) args)
+                                message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
                                 valid? (or (and allow-missing-key?
                                                 (= ::key-not-found? value))
-                                           (apply % value args))]
+                                           (apply % value realised-args))]
                             (reset! done (not valid?))
                             {:valid? valid?
                              :message (when-not valid?
-                                        #?(:clj (apply format message target-name value args)
-                                           :cljs (apply gstr/format message target-name value args)))})) v-set)]
+                                        #?(:clj (apply format message target-name value realised-args)
+                                           :cljs (apply gstr/format message target-name value realised-args)))})) v-set)]
      {:valid? (every? true? (map :valid? valids))
       :results (remove nil? (map :message valids))})))
 
