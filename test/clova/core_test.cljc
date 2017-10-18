@@ -640,9 +640,9 @@
       (let [db {:users ["test@email.com"]}
             users (fn [value]
                     (filter #{value} (:users db)))
-            v-set (core/validation-set [:test [core/not-exists? users]])
-            result (core/validate v-set {:test "test2@email.com"})
-            result2 (core/validate v-set {:test "test@email.com"})]
+            v-set (core/validation-set [:email [core/not-exists? users]])
+            result (core/validate v-set {:email "test2@email.com"})
+            result2 (core/validate v-set {:email "test@email.com"})]
         (t/is (:valid? result))
         (t/is (not (:valid? result2)))
         (t/is (first (:results result2)) "test@email.com already exists")))))
