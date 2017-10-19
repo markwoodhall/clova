@@ -72,7 +72,7 @@ or
 Get the validation results (error messages):
 
 ```clojure
-(:valid (validate [:email required? email?] map-to-validate))
+(:results (validate [:email required? email?] map-to-validate))
 ```
 
 You can also specify a custom function for providing validation error messages. This function will
