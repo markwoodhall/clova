@@ -36,7 +36,7 @@ and the functions used to validate them.
 ```
 You don't have to use pre-defined validator functions, you can also use arbitrary functions. 
 
-Arbitray functions will not generate scenarios specific failure messages but a generic message format of `"%s has value %s, which is invalid."` will be used.
+Arbitrary functions will not generate scenarios specific failure messages but a generic message format of `"%s has value %s, which is invalid."` will be used.
 
 ```clojure
 (validate [:age [> 18]] map-to-validate)
