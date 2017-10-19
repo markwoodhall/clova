@@ -35,6 +35,20 @@
 (def exp-after-meta {::core/type :after ::core/target :after ::core/default-message "%s is %s but it should be after %s."})
 (def exp-=date-meta {::core/type :=date ::core/target :=date ::core/default-message "%s is %s but it should be %s."})
 (def exp-=-meta {::core/type := ::core/target := ::core/default-message "%s is %s but it should be %s."})
+(def exp-not-exists {::core/type :not-exists ::core/default-message "%s already exists."})
+
+(t/deftest not-exists-validator
+  (t/testing "not-exists validator exposes correct meta data"
+    (t/is (= (only-clova-meta exp-not-exists)
+             (only-clova-meta (meta core/not-exists?)))))
+
+  (t/testing "validating a valid value"
+    (doseq [d ["1" "2" "99"]]
+      (t/is (core/not-exists? d ["3" "5" "98"]))))
+
+  (t/testing "validating an invalid value"
+    (doseq [d ["1" "2" "99"]]
+      (t/is (not (core/not-exists? d ["1" "2" "99"]))))))
 
 (t/deftest =date-validator
   (t/testing "=date validator exposes correct meta data"

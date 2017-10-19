@@ -61,3 +61,29 @@ but if it is then it must be one of "GET" or "POST".
   ;; {:results (), :valid? true}
 
 ```
+
+* You want to validate an email address to check if it already exists in your system
+
+Note, in this example we make use of "functional args". If an argument to a validator is
+a function then it will be invoked at validation time.
+
+```clojure
+
+(let [database {:emails ["test@email.com"]}
+      emails (fn [email] (filter #{email} (:emails database)))
+      v-set (validation-set [:email required? [not-exists? emails]])]
+
+  (validate v-set {: "test2@email.com"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:action "anothertest@email.com"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:action "test@email.com"})
+  ;; {:results ("test@email.com already exists."),
+  ;;  :valid? false}
+
+  (validate v-set {})
+  ;; {:results ("email is required."), :valid? false}
+
+```

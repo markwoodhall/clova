@@ -333,7 +333,7 @@
 (defvalidator
   "Checks for the non presence of an item in a collection."
   not-exists?
-  {::type :not-not-exists ::default-message "%s already exists." :added "0.31.0" ::allow-missing-key? true}
+  {::type :not-exists ::default-message "%s already exists." :added "0.31.0" ::allow-missing-key? true}
   [value col]
   (when (u/not-nil? value)
     (not (some #{value} col))))
