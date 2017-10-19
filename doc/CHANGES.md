@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.32.0 (19-10-2017)
+
+* Added functonality to support plain vector validators and added `exists?` validator.
+
 ### 0.31.0 (19-10-2017)
 
 * Added functonality to support "functional args" to validators, and added `not-exists?` validator.
