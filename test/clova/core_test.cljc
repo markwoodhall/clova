@@ -35,7 +35,7 @@
 (def exp-after-meta {::core/type :after ::core/target :after ::core/default-message "%s is %s but it should be after %s."})
 (def exp-=date-meta {::core/type :=date ::core/target :=date ::core/default-message "%s is %s but it should be %s."})
 (def exp-=-meta {::core/type := ::core/target := ::core/default-message "%s is %s but it should be %s."})
-(def exp-not-exists {::core/type :not-exists ::core/default-message "%s already exists."})
+(def exp-not-exists {::core/type :not-exists ::core/default-message "%s %s already exists."})
 
 (t/deftest not-exists-validator
   (t/testing "not-exists validator exposes correct meta data"
@@ -603,6 +603,7 @@
         (t/is (:valid? result))
         (t/is (empty? (:results result)))))
 
+
     (t/testing "validate uses a custom function for default message lookup"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil? :age [core/between? 1 9]])
             get-message (fn [v-type value args]
@@ -631,6 +632,10 @@
       (let [v-set (core/validation-set [:email core/email?
                                         :email core/required?])
             result (core/validate v-set {})]
+        (t/is (not (:valid? result)))))
+
+    (t/testing "validate supports standard vector validation sets"
+      (let [result (core/validate [:email core/required? core/email?] {})]
         (t/is (not (:valid? result)))))
 
     (t/testing "validate supports a failing validation set with duplicate keys and multiple validators"
