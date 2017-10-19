@@ -1,5 +1,30 @@
 # Change Log
 
+### 0.31.0 (19-10-2017)
+
+* Added functonality to support "functional args" to validators, and added `not-exists?` validator.
+
+```clojure
+
+(let [database {:emails ["test@email.com"]}
+      emails (fn [email] (filter #{email} (:emails database)))
+      v-set (validation-set [:email required? [not-exists? emails]])]
+
+  (validate v-set {:email "test2@email.com"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:email "anothertest@email.com"})
+  ;; {:results (), :valid? true}
+
+  (validate v-set {:email "test@email.com"})
+  ;; {:results ("test@email.com already exists."),
+  ;;  :valid? false}
+
+  (validate v-set {})
+  ;; {:results ("email is required."), :valid? false}
+
+```
+
 ### 0.30.0 (11-08-2016)
 
 * Added the ability to use arbitrary functions (not specially defined validators) in validation sets.
