@@ -75,6 +75,11 @@ Get the validation results (error messages):
 (:results (validate [:email required? email?] map-to-validate))
 ```
 
+or
+```clojure
+(results [:email required? email?] map-to-validate)
+```
+
 You can also specify a custom function for providing validation error messages. This function will
 be called with the validator type, the target value and any arguments passed to the validator specified as arguments,
 if the custom function returns nil then the default validation message will be used.
