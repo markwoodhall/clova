@@ -7,6 +7,7 @@
   - `validation-set`
   - `validate`
   - `valid?`
+  - `results`
   - `as-validator`
 
   You can view more information in the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
@@ -450,3 +451,10 @@
   only a truthy or falsy value indicating the validation status."
   [v-set m]
   (:valid? (validate v-set m)))
+
+(defn results
+  "Takes a validation set and applies it to m.
+  This is just a shorthand method over the validate function and returns
+  only the validation results."
+  [v-set m]
+  (:results (validate v-set m)))
