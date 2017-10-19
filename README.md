@@ -28,11 +28,10 @@ Validation sets are pairs of keys to validate
 and the functions used to validate them.
 
 ```clojure
-(let [result 
-       (validate
-         [:email email?
-          :age [between? 18 40]
-          [:nested :value] [between? 0 10]], {:email "test@email.com" :age 20 :nested {:value 9}})]
+(validate
+  [:email email?
+   :age [between? 18 40]
+   [:nested :value] [between? 0 10]], {:email "test@email.com" :age 20 :nested {:value 9}})
 
 ```
 You don't have to use pre-defined validator functions, you can also use arbitrary functions. 
