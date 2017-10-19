@@ -3,7 +3,7 @@ lein codox
 cp -r ./target/doc ../doctemp
 git fetch origin gh-pages:gh-pages
 git checkout gh-pages
-cp -r ../doctemp/ ./
+cp -r ../doctemp/* ./
 rm -rf ../doctemp
 git add .
 git commit -m "Regenerate documentation".
