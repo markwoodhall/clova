@@ -24,38 +24,29 @@ Add the following to `project.clj` `:dependencies`:
 
 ## Usage
 
-Define a validation set. Validation sets are pairs of keys to validate
+Validation sets are pairs of keys to validate
 and the functions used to validate them.
 
 ```clojure
-(let [validation-set (validation-set
-                       [:email email?
-                        :post-code post-code?
-                        :zip-code zip-code?
-                        :matches [matches? #"amatch"]
-                        :url url?
-                        :age [between? 18 40]
-                        [:nested :value] [between? 0 10]])]
+(let [result 
+       (validate
+         [:email email?
+          :age [between? 18 40]
+          [:nested :value] [between? 0 10]], {:email "test@email.com" :age 20 :nested {:value 9}})]
 
 ```
-You don't have to use pre-defined validator functions, you can also use arbitrary functions. The validation message returned
-in failure scenarios will not be specific. A generic message format of `"%s has value %s, which is invalid."`
+You don't have to use pre-defined validator functions, you can also use arbitrary functions. 
+
+Arbitray functions will not generate scenarios specific failure messages but a generic message format of `"%s has value %s, which is invalid."` will be used.
 
 ```clojure
-(let [validation-set (validation-set [:age [> 18]])])
+(validate [:age [> 18]] map-to-validate)
 ```
 
 If you want to compose multiple validators you can.
 
 ```clojure
-(let [validation-set (validation-set [:age required? [greater? 18] [lesser? 30]])])
-```
-
-You can also use an `all?` validator to achieve the above.
-
-```clojure
-(let [validation-set (validation-set [:age [all? [[greater? 18] [lesser? 30]]]])]
-
+(validate [:age required? [greater? 18] [lesser? 30]] map-to-validate)
 ```
 
 Most of the time it is useful to only apply and fail validation if a given key is present in the map getting validated, this is
@@ -64,39 +55,25 @@ Just use a `required?` validator as well.
 
 
 ```clojure
-(let [validation-set (validation-set
-                       [:email required? email?])]
-
-(let [validation-set (validation-set
-                       [:age required? [between? 18 30]])]
+(validate [:email required? email?] map-to-validate)
+(validate [:age required? [between? 18 30]] map-to-validate)
 ```
-
-Use the validation set:
-
-```clojure
-(let [result (validate validation-set
-                            {:email "test.email@googlemail.com"
-                             :post-code "B11 2SB"
-                             :matches "amatch"
-                             :zip-code 96801
-                             :url "http://google.com"
-                             :age 21
-                             :nested {:value 1}})]
-```
-
-Notice how we can use a seqeunce of keys to define a validation function for a value in a
-nested map.
 
 Get the validation status:
 
 ```clojure
-(:valid? result)
+(:valid (validate [:email required? email?] map-to-validate))
+```
+
+or
+```clojure
+(valid? [:email required? email?] map-to-validate)
 ```
 
 Get the validation results (error messages):
 
 ```clojure
-(:results result)
+(:valid (validate [:email required? email?] map-to-validate))
 ```
 
 You can also specify a custom function for providing validation error messages. This function will
@@ -155,6 +132,7 @@ clova has the following built in validators
 25. [=?](http://markwoodhall.github.io/clova/clova.core.html#var-.3D.3F)
 26. [alphanumeric?](http://markwoodhall.github.io/clova/clova.core.html#var-alphanumeric.3F)
 27. [not-exists?](http://markwoodhall.github.io/clova/clova.core.html#var-not-exists.3F)
+27. [exists?](http://markwoodhall.github.io/clova/clova.core.html#var-exists.3F)
 
 ## License
 
