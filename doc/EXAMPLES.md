@@ -73,13 +73,13 @@ a function then it will be invoked at validation time.
       emails (fn [email] (filter #{email} (:emails database)))
       v-set (validation-set [:email required? [not-exists? emails]])]
 
-  (validate v-set {: "test2@email.com"})
+  (validate v-set {:email "test2@email.com"})
   ;; {:results (), :valid? true}
 
-  (validate v-set {:action "anothertest@email.com"})
+  (validate v-set {:email "anothertest@email.com"})
   ;; {:results (), :valid? true}
 
-  (validate v-set {:action "test@email.com"})
+  (validate v-set {:email "test@email.com"})
   ;; {:results ("test@email.com already exists."),
   ;;  :valid? false}
 
