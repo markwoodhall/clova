@@ -338,6 +338,13 @@
   (when (u/not-nil? value)
     (not (some #{value} col))))
 
+(defvalidator
+  "Checks for the presence of an item in a collection."
+  exists?
+  {::type :exists ::default-message "%s %s does not exist." :added "0.32.0" ::allow-missing-key? true}
+  [value col]
+  (u/not-nil? (some #{value} col)))
+
 (defn as-validator
   "Takes a function f and applies optional m as meta data around it. f should be accept
   a first argument as the value to validate.
