@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.32.0 (20-10-2017)
+
+* Added `results` convenience function
+
+```clojure
+(results [:email required? email?] map-to-validate)
+```
+
 ### 0.32.0 (19-10-2017)
 
 * Added functonality to support plain vector validators and added `exists?` validator.
