@@ -13,7 +13,7 @@
 (def exp-greater-meta {::core/type :greater ::core/target :count ::core/default-message "%s is %s but it must be greater than %s."})
 (def exp-lesser-meta {::core/type :lesser  ::core/target :count2 ::core/default-message "%s is %s but it must be less than %s."})
 (def exp-between-meta {::core/type :between ::core/args [1 9] ::core/target :age ::core/default-message "%s is %s but it must be between %s and %s."})
-(def exp-matches-meta {::core/type :matches ::core/target :matches ::core/default-message "%s is invalid value %s."})
+(def exp-matches-meta {::core/type :matches ::core/target :matches ::core/default-message "%s has invalid value %s, it should match pattern %s."})
 (def exp-zip-meta {::core/type :zip-code ::core/target :zip-code ::core/default-message "%s should be a valid zip code."})
 (def exp-one-of-meta {::core/type :one-of ::core/target :one-of ::core/default-message "%s is %s but should be one of %s."})
 (def exp-not-nil-meta {::core/type :not-nil ::core/target :not-nil ::core/default-message "%s is required."})
@@ -577,15 +577,36 @@
       (let [valid (core/valid? v-set valid-map)]
         (t/is valid)))
 
+    (t/testing "validate returns original map on success"
+      (let [data {:user "mark" :profile {:email "mark@email.com" :age 99}}
+            result (core/validate [] data)]
+        (t/is (= data result))))
+
+    (t/testing "validate returns original map transposed with errors on failure"
+      (let [data {:user "mark" :profile {:age 99}}
+            expected  {:clova.core/invalid? true :clova.core/results '("profile email is required.") 
+                       :user "mark" :profile {:email '("profile email is required.") :age 99}}
+            result (core/validate [[:profile :email] core/required? core/email?] data)]
+        (t/is (= expected result))))
+
+    (t/testing "validate returns original map transposed with multiple errors on failure"
+      (let [data {:user "mark" :profile {:email 123456789 :age 99}}
+            expected  {:clova.core/invalid? true 
+                       :clova.core/results '("user is mark but it should have a length longer than 5." "profile email is 123456789 but it should be a string." "profile email should be a valid email address.") 
+                       :user '("user is mark but it should have a length longer than 5.") 
+                       :profile {:email '("profile email is 123456789 but it should be a string." "profile email should be a valid email address.") :age 99}}
+            result (core/validate [:user core/required? core/stringy? [core/longer? 5] [:profile :email] core/required? core/stringy? core/email?] data)]
+        (t/is (= expected result))))
+
     (t/testing "validate using a validation set returns
-               a valid? = false result and a sequence of the validation results"
+               a invalid? = true result and a sequence of the validation results"
       (let [result (core/validate v-set invalid-map)
-            results (:results result)]
-        (t/is (not (:valid? result)))
+            results (:clova.core/results result)]
+        (t/is (:clova.core/invalid? result))
         (t/is (= "email should be a valid email address." (first results)))
         (t/is (= "post-code should be a valid post code." (second results)))
         (t/is (= "zip-code should be a valid zip code." (nth results 2)))
-        (t/is (= "matches is invalid value nomatch." (nth results 3)))
+        (t/is (= "matches has invalid value nomatch, it should match pattern amatch." (reduce str (remove #{\/} (nth results 3)))))
         (t/is (= "url should be a valid url." (nth results 4)))
         (t/is (= "age is 10 but it must be between 18 and 40." (nth results 5)))
         (t/is (= "one-of is 4 but should be one of [1 2 3]." (nth results 6)))
@@ -612,11 +633,10 @@
         (t/is (= "function has value 4, which is invalid." (nth results 27)))))
 
     (t/testing "validate using a validation set returns
-               a valid? = true result and no validation results"
+               a invalid? = false result and no validation results"
       (let [result (core/validate v-set valid-map)]
-        (t/is (:valid? result))
-        (t/is (empty? (:results result)))))
-
+        (t/is (not (:clova.core/invalid? result)))
+        (t/is (nil? (:clova.core/results result)))))
 
     (t/testing "validate uses a custom function for default message lookup"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil? :age [core/between? 1 9]])
@@ -626,48 +646,48 @@
                             :between (str value " should be between " (first args) " and " (second args))
                             nil))
             result (core/validate v-set {:email "dave" :age 10 :not-nil nil} {:default-message-fn get-message})]
-        (t/is (= "not-nil is required." (second (:results result))))
-        (t/is (= "dave is not an email address" (first (:results result))))
-        (t/is (= "10 should be between 1 and 9" (nth (:results result) 2)))))
+        (t/is (= "not-nil is required." (second (:clova.core/results result))))
+        (t/is (= "dave is not an email address" (first (:clova.core/results result))))
+        (t/is (= "10 should be between 1 and 9" (nth (:clova.core/results result) 2)))))
 
     (t/testing "validate short circuits if configured"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil?])
             result (core/validate v-set {:email "" :not-nil nil} {:short-circuit? true})]
-        (t/is (= "email should be a valid email address." (first (:results result))))
-        (t/is (=  1 (count (:results result))))))
+        (t/is (= "email should be a valid email address." (first (:clova.core/results result))))
+        (t/is (=  1 (count (:clova.core/results result))))))
 
     (t/testing "validate respects allow missing keys so the only failure is for a required field"
       (let [result (core/validate v-set {})]
-        (t/is (not (:valid? result)))
-        (t/is (= (count (:results result)) 1))
-        (t/is (= (first (:results result)) "required is required."))))
+        (t/is (:clova.core/invalid? result))
+        (t/is (= (count (:clova.core/results result)) 1))
+        (t/is (= (first (:clova.core/results result)) "required is required."))))
 
     (t/testing "validate respects allow missing keys when using a required combination"
       (let [v-set (core/validation-set [:email core/email?
                                         :email core/required?])
             result (core/validate v-set {})]
-        (t/is (not (:valid? result)))))
+        (t/is (:clova.core/invalid? result))))
 
     (t/testing "validate supports standard vector validation sets"
       (let [result (core/validate [:email core/required? core/email?] {})]
-        (t/is (not (:valid? result)))))
+        (t/is (:clova.core/invalid? result))))
 
     (t/testing "validate supports a failing validation set with duplicate keys and multiple validators"
       (let [v-set (core/validation-set [:test [core/greater? 2]
                                         :test [core/lesser? 5]])
             result (core/validate v-set {:test 6})]
-        (t/is (not (:valid? result)))))
+        (t/is (:clova.core/invalid? result))))
 
     (t/testing "validate supports a validation set with duplicate keys and multiple validators"
       (let [v-set (core/validation-set [:test [core/greater? 2]
                                         :test [core/lesser? 5]])
             result (core/validate v-set {:test 4})]
-        (t/is (:valid? result))))
+        (t/is (not (:clova.core/invalid? result)))))
 
     (t/testing "validate supports a validation set with regular functions"
       (let [v-set (core/validation-set [:test [> 2]])
             result (core/validate v-set {:test 1})]
-        (t/is (not (:valid? result)))))
+        (t/is (:clova.core/invalid? result))))
 
     (t/testing "validate supports a validation set with functional args"
       (let [db {:users ["test@email.com"]}
@@ -676,9 +696,9 @@
             v-set (core/validation-set [:email [core/not-exists? users]])
             result (core/validate v-set {:email "test2@email.com"})
             result2 (core/validate v-set {:email "test@email.com"})]
-        (t/is (:valid? result))
-        (t/is (not (:valid? result2)))
-        (t/is (first (:results result2)) "test@email.com already exists")))))
+        (t/is (not (:clova.core/invalid? result)))
+        (t/is (:clova.core/invalid? result2))
+        (t/is (first (:clova.core/results result2)) "test@email.com already exists")))))
 
 #?(:cljs
     (do

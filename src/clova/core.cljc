@@ -60,7 +60,7 @@
   returns true if value matches the regex. If value is not a
   match then returns nil."
   matches?
-  {::type :matches ::default-message "%s is invalid value %s." :added "0.2.0" ::allow-missing-key? true}
+  {::type :matches ::default-message "%s has invalid value %s, it should match pattern %s." :added "0.2.0" ::allow-missing-key? true}
   [value regex]
   (when (re-seq regex (str value))
     true))
@@ -155,7 +155,7 @@
   [value l]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? l))
-    (< l (count (seq value)))))
+    (< l (count (seq (if (sequential? value) value (str value)))))))
 
 (defvalidator
   "Check an input value to see if it has a length shorter than l.
@@ -165,7 +165,7 @@
   [value l]
   (when (and (u/not-nil-or-missing? value)
              (u/not-nil? l))
-    (> l (count (seq value)))))
+    (> l (count (seq (if (sequential? value) value (str value)))))))
 
 (defvalidator
   "Checks an input value to see if it is one of the items in a col"
@@ -399,8 +399,8 @@
 
 (defn validate
   "Takes a validation set and applies it to m.
-  Returns a map containing `:valid?` with either a truthy or falsy value and
-  `:results` which is a sequence of validation failure messages, if applicable.
+  Returns the original map m transposed with error messages for non validating keys, also adds `:clova.core/valid?` with either a truthy or falsy value and
+  `:clova.core/results` which is a sequence of validation failure messages, if applicable.
 
   Optionally takes a map of options:
 
@@ -419,42 +419,49 @@
          realised-v-set (if (every? u/function? v-set)
                           v-set
                           (validation-set v-set))
-         valids (map #(when (or (not short-circuit?)
-                                (not @done))
-                        (let [{v-type ::type target ::target args ::args
-                               allow-missing-key? ::allow-missing-key? default-message ::default-message
-                               :or {default-message "%s has value %s, which is invalid."
-                                    v-type :function
-                                    allow-missing-key? true}} (meta %)
-                              target (u/as-seq target)
-                              target-name (join " " (map name target))
-                              value (get-in m target ::key-not-found?)
-                              realised-args (map (fn [arg] 
-                                                   (if (u/function? arg)
-                                                     (arg value)
-                                                     arg)) args)
-                              message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
-                              valid? (or (and allow-missing-key?
-                                              (= ::key-not-found? value))
-                                         (apply % value realised-args))]
-                            (reset! done (not valid?))
-                            {:valid? valid?
-                             :message (when-not valid?
-                                        #?(:clj (apply format message target-name value realised-args)
-                                           :cljs (apply gstr/format message target-name value realised-args)))})) realised-v-set)]
-     {:valid? (every? true? (map :valid? valids))
-      :results (remove nil? (map :message valids))})))
+         results (map #(when (or (not short-circuit?)
+                                 (not @done))
+                         (let [{v-type ::type target ::target args ::args
+                                allow-missing-key? ::allow-missing-key? default-message ::default-message
+                                :or {default-message "%s has value %s, which is invalid."
+                                     v-type :function
+                                     allow-missing-key? true}} (meta %)
+                               target (u/as-seq target)
+                               target-name (join " " (map name target))
+                               value (get-in m target ::key-not-found?)
+                               realised-args (map (fn [arg] 
+                                                    (if (u/function? arg)
+                                                      (arg value)
+                                                      arg)) args)
+                               message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
+                               valid? (or (and allow-missing-key?
+                                               (= ::key-not-found? value))
+                                          (apply % value realised-args))]
+                           (reset! done (not valid?))
+                           (if-let [message (when-not valid?
+                                              #?(:clj (apply format message target-name value realised-args)
+                                                 :cljs (apply gstr/format message target-name value realised-args)))]
+                             {:valid? valid?
+                              :target target
+                              :message message}))) realised-v-set)
+         results (remove nil? results)]
+     (if (empty? results)
+       m
+       (merge 
+         {::results (map :message results) 
+          ::invalid? (some false? (map :valid? results))}
+         (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))))
 
 (defn valid?
   "Takes a validation set and applies it to m.
   This is just a shorthand method over the validate function and returns
   only a truthy or falsy value indicating the validation status."
   [v-set m]
-  (:valid? (validate v-set m)))
+  (not (::invalid? (validate v-set m))))
 
 (defn results
   "Takes a validation set and applies it to m.
   This is just a shorthand method over the validate function and returns
   only the validation results."
   [v-set m]
-  (:results (validate v-set m)))
+  (::results (validate v-set m)))
