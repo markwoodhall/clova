@@ -1,6 +1,6 @@
 # clova
 
-A minimal validation library for Clojure and ClojureScript.
+A "minimal" validation library for Clojure and ClojureScript.
 
 - [API Docs](http://markwoodhall.github.io/clova)
 - [Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
@@ -24,60 +24,116 @@ Add the following to `project.clj` `:dependencies`:
 
 ## Usage
 
-Validation sets are pairs of keys to validate
-and the functions used to validate them.
+Validation sets are pairs of keys to validate and the functions used to validate them. When a map conforms
+to the validation set then the `validate` function returns the original map.
 
 ```clojure
 (validate
   [:email email?
    :age [between? 18 40]
-   [:nested :value] [between? 0 10]], {:email "test@email.com" :age 20 :nested {:value 9}})
+   [:nested :value] [between? 0 10]] 
+   {:email "test@email.com" :age 20 :nested {:value 9}})
+
+;; {:email "test@email.com", :age 20, :nested {:value 9}}
 
 ```
-You don't have to use pre-defined validator functions, you can also use arbitrary functions. 
 
-Arbitrary functions will not generate scenarios specific failure messages but a generic message format of `"%s has value %s, which is invalid."` will be used.
+When a map does not conform to the validation set then the `validate` function returns the original map
+with a sequence of validation errors transposed onto the applicable keys. All validation errors are available
+using the `:clova.core/results` key and the validation status is available using the `:clova.core/invalid?` key.
 
 ```clojure
-(validate [:age [> 18]] map-to-validate)
+(validate
+  [:email email?
+   :age [between? 18 40]
+   [:nested :value] [between? 0 10]] 
+   {:email "testemail.com" :age 10 :nested {:value 19}})
+
+;; {:clova.core/results ("email should be a valid email address." "age is 10 but it must be between 18 and 40." "nested value is 19 but it must be between 0 and 10.") 
+;;  :clova.core/invalid? true 
+;;  :email ("email should be a valid email address.") 
+;;  :age ("age is 10 but it must be between 18 and 40."), 
+;;  :nested {:value ("nested value is 19 but it must be between 0 and 10.")}}
+
+```
+
+You don't have to use pre-defined validator functions exposed by clova, you can also use arbitrary functions. 
+
+Arbitrary functions will not generate scenario specific failure messages but a generic message format of `"%s has value %s, which is invalid."` will be used.
+
+```clojure
+(validate [:age [> 18]] {:age 21})
+
+;; {:age 21}
 ```
 
 If you want to compose multiple validators you can.
 
 ```clojure
-(validate [:age required? [greater? 18] [lesser? 30]] map-to-validate)
+(validate [:age required? [greater? 18] [lesser? 30]] {:age 29})
+
+;; {:age 29}
 ```
 
-Most of the time it is useful to only apply and fail validation if a given key is present in the map getting validated, this is
-the default behaviour. However if this is not the case and you wish to make a validator fail if the key is not present you can do.
-Just use a `required?` validator as well.
+Most of the time it is useful to only apply and fail validation if a given key is present in the map under validation, this is
+the default behaviour in clova. However if this is not the case and you wish to make a validator fail if the key is not present you can do so
+by using a `required?` validator.
 
 
 ```clojure
-(validate [:email required? email?] map-to-validate)
-(validate [:age required? [between? 18 30]] map-to-validate)
+(validate [:email required? email?] {:email "email@somedomain.com"})
+
+;; {:email "email@somedomain.com"}
+
+(validate [:age required? [between? 18 30]] {:age 29})
+
+;; {:age 29}
 ```
 
 Get the validation status:
 
 ```clojure
-(:valid (validate [:email required? email?] map-to-validate))
+(:clova.core/invalid? (validate [:email required? email?] {:email "notanemail"}))
+
+;; true
+
+(:clova.core/invalid? (validate [:email required? email?] {:email "email@somedomain.com"}))
+
+;; nil
 ```
 
 or
 ```clojure
-(valid? [:email required? email?] map-to-validate)
+(valid? [:email required? email?] {:email "email@somedomain.com"})
+
+;; true
+
+(valid? [:email required? email?] {:email "notanemail"})
+
+;; false
+
 ```
 
 Get the validation results (error messages):
 
 ```clojure
-(:results (validate [:email required? email?] map-to-validate))
+(:clova.core/results (validate [:email required? email?] {:email "email@somedomain.com"}))
+
+;; nil
+(:clova.core/results (validate [:email required? email?] {:email "notanemail"}))
+
+;; ("email should be a valid email address.")
 ```
 
 or
 ```clojure
-(results [:email required? email?] map-to-validate)
+(results [:email required? email?] {:email "email@somedomain.com"})
+
+;; nil
+
+(results [:email required? email?] {:email "notanemail"})
+
+;; ("email should be a valid email address.")
 ```
 
 You can also specify a custom function for providing validation error messages. This function will

@@ -5,18 +5,21 @@ the map and it's value should be less than 5.
 
 ```clojure
 
-(let [v-set (validation-set [:failed-login-count required? [lesser? 5]])]
+(let [v-set [:failed-login-count required? [lesser? 5]]]
 
   (validate v-set {:failed-login-count 4})
-  ;; {:results (), :valid? true}
+  ;; {:failed-login-count 4}
 
   (validate v-set {:failed-login-count 5})
-  ;; {:results ("failed-login-count is 5 but it must be less than 5."),
-  ;;  :valid? false}
+  ;; {:clova.core/results ("failed-login-count is 5 but it must be less than 5.")
+  ;;  :clova.core/invalid? true 
+  ;;  :failed-login-count ("failed-login-count is 5 but it must be less than 5.")}
 
   (validate v-set {}))
-  ;; {:results ("failed-login-count is required."), :valid? false}
-
+  ;; {:clova.core/results ("failed-login-count is required.")
+  ;;  :clova.core/invalid? true,
+  ;;  :failed-login-count ("failed-login-count is required.")}
+ 
 ```
 
 * You want to validate a `:quantity` key. The key should be present in the map and
@@ -24,19 +27,26 @@ it's value should be between 5 and 10.
 
 ```clojure
 
-(let [v-set (validation-set [:quantity required? [between? 5 10]])]
+(let [v-set [:quantity required? [between? 5 10]]]
 
   (validate v-set {:quantity 5})
-  ;; {:results (), :valid? true}
+  ;; {:quantity 5}
 
   (validate v-set {:quantity 4})
   ;; {:results ("quantity is 4 but it must be between 5 and 10."), :valid? false}
+  ;; {:clova.core/results ("quantity is 4 but it must be between 5 and 10.") 
+  ;;  :clova.core/invalid? true 
+  ;;  :quantity ("quantity is 4 but it must be between 5 and 10.")}
 
   (validate v-set {:quantity 11})
-  ;; {:results ("quantity is 11 but it must be between 5 and 10."), :valid? false}
+  ;; {:clova.core/results ("quantity is 11 but it must be between 5 and 10.") 
+  ;;  :clova.core/invalid? true 
+  ;;  :quantity ("quantity is 11 but it must be between 5 and 10.")}
 
   (validate v-set {}))
-  ;; {:results ("quantity is required."), :valid? false}
+  ;; {:clova.core/results ("quantity is required.")
+  ;;  :clova.core/invalid? true
+  ;;  :quantity ("quantity is required.")}
 
 ```
 
@@ -45,20 +55,21 @@ but if it is then it must be one of "GET" or "POST".
 
 ```clojure
 
-(let [v-set (validation-set [:action [one-of? ["GET" "POST"]]])]
+(let [v-set [:action [one-of? ["GET" "POST"]]]]
 
   (validate v-set {:action "POST"})
-  ;; {:results (), :valid? true}
+  ;; {:action "POST"}
 
   (validate v-set {:action "GET"})
-  ;; {:results (), :valid? true}
+  ;; {:action "GET"}
 
   (validate v-set {:action "DEL"})
-  ;; {:results ("action is DEL but should be one of [\"GET\" \"POST\"]."),
-  ;;  :valid? false}
+  ;; {:clova.core/results ("action is DEL but should be one of [\"GET\" \"POST\"].") 
+  ;;  :clova.core/invalid? true 
+  ;;  :action ("action is DEL but should be one of [\"GET\" \"POST\"].")}
 
-  (validate v-set {})
-  ;; {:results (), :valid? true}
+  (validate v-set {}))
+  ;; {}
 
 ```
 
@@ -71,19 +82,22 @@ a function then it will be invoked at validation time.
 
 (let [database {:emails ["test@email.com"]}
       emails (fn [email] (filter #{email} (:emails database)))
-      v-set (validation-set [:email required? [not-exists? emails]])]
+      v-set [:email required? [not-exists? emails]]]
 
   (validate v-set {:email "test2@email.com"})
-  ;; {:results (), :valid? true}
+  ;; {:email "test2@email.com"}
 
   (validate v-set {:email "anothertest@email.com"})
-  ;; {:results (), :valid? true}
+  ;; {:email "anothertest@email.com"}
 
   (validate v-set {:email "test@email.com"})
-  ;; {:results ("test@email.com already exists."),
-  ;;  :valid? false}
+  ;; {:clova.core/results ("email test@email.com already exists.")
+  ;;  :clova.core/invalid? true 
+  ;;  :email ("email test@email.com already exists.")}
 
-  (validate v-set {})
-  ;; {:results ("email is required."), :valid? false}
+  (validate v-set {}))
+  ;; {:clova.core/results ("email is required.") 
+  ;;  :clova.core/invalid? true 
+  ;;  :email ("email is required.")}
 
 ```
