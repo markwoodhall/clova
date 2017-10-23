@@ -397,6 +397,12 @@
                          function-seq (second %)]
                      (map (fn [f] (metaify f target)) function-seq)) key-func-pairs))))
 
+(defn- apply-validator
+  [validator allow-missing-key? value args]
+  (or (and allow-missing-key?
+           (= ::key-not-found? value))
+      (apply validator value args)))
+
 (defn validate
   "Takes a validation set and applies it to m.
   Returns the original map m transposed with error messages for non validating keys, also adds `:clova.core/valid?` with either a truthy or falsy value and
@@ -429,14 +435,9 @@
                                target (u/as-seq target)
                                target-name (join " " (map name target))
                                value (get-in m target ::key-not-found?)
-                               realised-args (map (fn [arg] 
-                                                    (if (u/function? arg)
-                                                      (arg value)
-                                                      arg)) args)
+                               realised-args (u/realise-args args value)
                                message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
-                               valid? (or (and allow-missing-key?
-                                               (= ::key-not-found? value))
-                                          (apply % value realised-args))]
+                               valid? (apply-validator % allow-missing-key? value realised-args)]
                            (reset! done (not valid?))
                            (if-let [message (when-not valid?
                                               #?(:clj (apply format message target-name value realised-args)

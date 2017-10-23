@@ -79,3 +79,12 @@
                         (instance? goog.date.DateTime value))
                   value
                   (from-str value)))))))
+
+(defn realise-args
+  "Given a sequence of arguments (args) will evaluate any argument
+  that is a function by passing in value, or will leave non functional arguments in place."
+  [args value]
+  (map (fn [arg] 
+         (if (function? arg)
+           (arg value)
+           arg)) args))
