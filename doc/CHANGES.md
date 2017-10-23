@@ -1,6 +1,28 @@
 # Change Log
 
-### 0.32.0 (20-10-2017)
+### 0.34.0 (23-10-2017)
+
+* Breaking change to improve value returned from `validate`. Maps that conform
+to a validation set are now returned wihtout modification. Maps that do not conform 
+to a validation set are returned with a validation error sequence transposed onto the
+applicable keys, see example below. 
+
+```clojure
+(validate
+  [:email email?
+   :age [between? 18 40]
+   [:nested :value] [between? 0 10]] 
+   {:email "testemail.com" :age 10 :nested {:value 19}})
+
+;; {:clova.core/results ("email should be a valid email address." "age is 10 but it must be between 18 and 40." "nested value is 19 but it must be between 0 and 10.") 
+;;  :clova.core/invalid? true 
+;;  :email ("email should be a valid email address.") 
+;;  :age ("age is 10 but it must be between 18 and 40."), 
+;;  :nested {:value ("nested value is 19 but it must be between 0 and 10.")}}
+```
+
+
+### 0.33.0 (20-10-2017)
 
 * Added `results` convenience function
 
