@@ -450,7 +450,7 @@
        m
        (merge 
          {::results (map :message results) 
-          ::invalid? (some false? (map :valid? results))}
+          ::invalid? (some (partial not) (map :valid? results))}
          (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))))
 
 (defn valid?
