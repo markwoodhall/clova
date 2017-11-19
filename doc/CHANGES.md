@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.35.1 (16-11-2017)
+
+* Fix issue where `::invalid?` can sometimes be incorrect.
+
 ### 0.34.0 (23-10-2017)
 
 * Breaking change to improve value returned from `validate`. Maps that conform
