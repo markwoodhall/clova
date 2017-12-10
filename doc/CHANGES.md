@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.35.2 (10-12-2017)
+
+* Update Clojure and ClojureScript dependencies
+
 ### 0.35.1 (16-11-2017)
 
 * Fix issue where `::invalid?` can sometimes be incorrect.
