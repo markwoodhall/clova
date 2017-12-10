@@ -6,9 +6,9 @@
   :codox {:metadata {:doc/format :markdown}
           :namespaces [clova.core]
           :source-uri "https://github.com/markwoodhall/clova/blob/master/src/{classpath}#L{line}"}
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
                  [clj-time "0.12.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [org.clojure/clojurescript "1.9.908"]]
+                 [org.clojure/clojurescript "1.9.946"]]
   :jar-exclusions [#"\.swp|\.swo|user.clj"]
   :source-paths ["src"])
