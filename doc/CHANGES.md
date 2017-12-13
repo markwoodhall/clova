@@ -1,8 +1,12 @@
 # Change Log
 
+### 0.36.0 (13-12-2017)
+
+* Update clj-time dependency.
+
 ### 0.35.2 (10-12-2017)
 
-* Update Clojure and ClojureScript dependencies
+* Update Clojure and ClojureScript dependencies.
 
 ### 0.35.1 (16-11-2017)
 
