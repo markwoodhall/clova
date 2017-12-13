@@ -1,8 +1,9 @@
 # Change Log
 
-### 0.36.0 (13-12-2017)
+### 0.37.0 (13-12-2017)
 
 * Update clj-time dependency.
+* Update cljs-time dependency.
 
 ### 0.35.2 (10-12-2017)
 
