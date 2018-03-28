@@ -62,8 +62,7 @@
   matches?
   {::type :matches ::default-message "%s has invalid value %s, it should match pattern %s." :added "0.2.0" ::allow-missing-key? true}
   [value regex]
-  (when (re-seq regex (str value))
-    true))
+  (re-seq regex (str value)))
 
 (defvalidator
   "Checks an input value to see if it is a valid email address"
