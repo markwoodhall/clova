@@ -21,6 +21,10 @@
           {:git/url "https://github.com/cognitect-labs/test-runner.git"
            :sha "5fb4fc46ad0bf2e0ce45eba5b9117a2e89166479"}}
          :main-opts ["-m" "cognitect.test-runner"]}
+  :test-cljs
+  {:extra-deps
+   {olical/cljs-test-runner {:mvn/version "0.1.0"}}
+   :main-opts ["-m" "cljs-test-runner.main"]}
   :dev/nrepl {:jvm-opts ["-Dclova.load_nrepl=true"]
               :extra-paths ["aliases/nrepl"]
               :extra-deps
