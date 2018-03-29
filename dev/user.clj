@@ -4,3 +4,6 @@
 
 (when (System/getProperty "clova.load_nrepl")
   (require 'nrepl))
+
+(when (System/getProperty "clova.codox")
+  (require 'codox))
