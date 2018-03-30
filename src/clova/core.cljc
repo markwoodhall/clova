@@ -423,34 +423,29 @@
    (let [done (atom false)
          realised-v-set (if (every? u/function? v-set)
                           v-set
-                          (validation-set v-set))
-         results (map #(when (or (not short-circuit?)
-                                 (not @done))
-                         (let [{v-type ::type target ::target args ::args
-                                allow-missing-key? ::allow-missing-key? default-message ::default-message
-                                :or {default-message "%s has value %s, which is invalid."
-                                     v-type :function
-                                     allow-missing-key? true}} (meta %)
-                               target (u/as-seq target)
-                               target-name (join " " (map name target))
-                               value (get-in m target ::key-not-found?)
-                               realised-args (u/realise-args args value)
-                               message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
-                               valid? (apply-validator % allow-missing-key? value realised-args)]
-                           (reset! done (not valid?))
-                           (if-let [message (when-not valid?
-                                              #?(:clj (apply format message target-name value realised-args)
-                                                 :cljs (apply gstr/format message target-name value realised-args)))]
-                             {:valid? valid?
-                              :target target
-                              :message message}))) realised-v-set)
-         results (remove nil? results)]
-     (if (empty? results)
-       m
-       (merge 
-         {::results (map :message results) 
-          ::invalid? (some (partial not) (map :valid? results))}
-         (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))))
+                          (validation-set v-set))]
+     (->> (map #(when (or (not short-circuit?)
+                          (not @done))
+                  (let [{v-type ::type target ::target args ::args
+                         allow-missing-key? ::allow-missing-key? default-message ::default-message
+                         :or {default-message "%s has value %s, which is invalid."
+                              v-type :function
+                              allow-missing-key? true}} (meta %)
+                        target (u/as-seq target)
+                        target-name (join " " (map name target))
+                        value (get-in m target ::key-not-found?)
+                        realised-args (u/realise-args args value)
+                        message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
+                        valid? (apply-validator % allow-missing-key? value realised-args)]
+                    (reset! done (not valid?))
+                    (if-let [message (when-not valid?
+                                       #?(:clj (apply format message target-name value realised-args)
+                                          :cljs (apply gstr/format message target-name value realised-args)))]
+                      {:valid? valid?
+                       :target target
+                       :message message}))) realised-v-set)
+          (remove nil?)
+          (u/validated-map m)))))
 
 (defn valid?
   "Takes a validation set and applies it to m.

@@ -83,3 +83,15 @@
          (if (function? arg)
            (arg value)
            arg)) args))
+
+(defn validated-map
+  "Given a sequence of validation results returns a decorated map with
+  validation results transposed to applicable keys or the original map (m)
+  if results is empty."
+  [m results]
+  (if (empty? results)
+    m
+    (merge 
+      {:clova.core/results (map :message results) 
+       :clova.core/invalid? (some (partial not) (map :valid? results))}
+      (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))
