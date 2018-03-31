@@ -95,3 +95,11 @@
       {:clova.core/results (map :message results) 
        :clova.core/invalid? (some (partial not) (map :valid? results))}
       (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))
+
+(defn map-some
+  "Behaves exactly like map but when `short-circuit?` is true
+  uses `some` and wraps the first non nil value in a vector."
+  [short-circuit? f col]
+  (if short-circuit?
+    [(some f col)]
+    (map f col)))
