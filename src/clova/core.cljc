@@ -18,15 +18,20 @@
   You can also view [blog posts] (http://markw.xyz/tags/clova/) about clova.
   "
   {:author "Mark Woodhall"}
-  (:require [clova.util :as u]
-            [clojure.string :refer [join] :as st]
-             #?(:cljs [goog.string :as gstr])
-             #?(:cljs [goog.string.format])
-             #?(:clj  [clj-time.format :as f])
-             #?(:clj  [clj-time.core :as c])
-             #?(:cljs [cljs-time.format :as f])
-             #?(:cljs [cljs-time.core :as c]))
-  #?(:cljs (:require-macros [clova.core :refer [defvalidator]])))
+  #?@(:clj
+       [(:require
+         [clj-time.core :as c]
+         [clj-time.format :as f]
+         [clojure.string :as st :refer [join]]
+         [clova.util :as u])]
+       :cljs
+       [(:require
+         [cljs-time.core :as c]
+         [cljs-time.format :as f]
+         [clojure.string :as st :refer [join]]
+         [clova.util :as u]
+         [goog.string :as gstr])
+        (:require-macros [clova.core :refer [defvalidator]])]))
 
 (defmacro defvalidator
   "Wraps body in a function and defines it with meta data
