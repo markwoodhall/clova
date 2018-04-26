@@ -1,10 +1,12 @@
 (ns clova.util
-  (:require #?(:clj [clj-time.format :as f])
-            #?(:clj [clj-time.core :as t])
-            #?(:clj [clj-time.coerce :as c])
-            #?(:cljs [cljs-time.format :as f])
-            #?(:cljs [cljs-time.core :as t])
-            #?(:cljs [cljs-time.coerce :as c])))
+  #?@(:clj
+       [(:require 
+          [clj-time.coerce :as c] 
+          [clj-time.format :as f])]
+       :cljs 
+       [(:require 
+          [cljs-time.coerce :as c] 
+          [cljs-time.format :as f])]))
 
 (def not-nil? (complement nil?))
 
