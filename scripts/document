@@ -1,5 +1,5 @@
 #!/bin/sh
-lein codox
+clj -A:dev:codox
 cp -r ./target/doc ../doctemp
 git fetch origin gh-pages:gh-pages
 git checkout gh-pages
