@@ -7,3 +7,7 @@ test-clj:
 
 test-cljs:
 	clojure -A:test-cljs
+
+deploy: test
+	clj -Spom
+	mvn deploy
