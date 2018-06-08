@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>clova</groupId>
   <artifactId>clova</artifactId>
-  <version>0.39.0-SNAPSHOT</version>
+  <version>0.39.0</version>
   <name>clova</name>
   <dependencies>
     <dependency>
@@ -27,6 +27,11 @@
       <version>0.5.2</version>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:git:git@github.com:markwoodhall/clova.git</connection>
+    <url>https://github.com/markwoodhall/clova</url>
+    <tag>HEAD</tag>
+  </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -54,7 +59,7 @@
   <repositories>
     <repository>
       <id>clojars</id>
-      <url>https://clojars.org/repo</url>
+      <url>https://repo.clojars.org/</url>
     </repository>
   </repositories>
   <distributionManagement>
@@ -72,7 +77,4 @@
       <url>http://opensource.org/licenses/MIT</url>
     </license>
   </licenses>
-  <scm>
-    <url>https://github.com/markwoodhall/clova</url>
-  </scm>
 </project>

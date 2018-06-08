@@ -29,8 +29,4 @@
               {cider/cider-nrepl {:mvn/version "0.16.0"}
                refactor-nrepl {:mvn/version "2.3.1"}
                com.cemerick/piggieback {:mvn/version "0.2.2"}
-               org.clojure/tools.nrepl {:mvn/version "0.2.12"}}}
-  :codox {:jvm-opts ["-Dclova.codox=true"]
-          :extra-deps
-          {codox {:mvn/version "0.10.3"}}
-          :extra-paths ["aliases/codox"]}}}
+               org.clojure/tools.nrepl {:mvn/version "0.2.12"}}}}}
