@@ -1,11 +1,11 @@
 (ns clova.util
   #?@(:clj
-       [(:require 
-          [clj-time.coerce :as c] 
+       [(:require
+          [clj-time.coerce :as c]
           [clj-time.format :as f])]
-       :cljs 
-       [(:require 
-          [cljs-time.coerce :as c] 
+       :cljs
+       [(:require
+          [cljs-time.coerce :as c]
           [cljs-time.format :as f])]))
 
 (def not-nil? (complement nil?))
@@ -81,7 +81,7 @@
   "Given a sequence of arguments (args) will evaluate any argument
   that is a function by passing in value, or will leave non functional arguments in place."
   [args value]
-  (map (fn [arg] 
+  (map (fn [arg]
          (if (function? arg)
            (arg value)
            arg)) args))
@@ -93,8 +93,8 @@
   [m results]
   (if (empty? results)
     m
-    (merge 
-      {:clova.core/results (map :message results) 
+    (merge
+      {:clova.core/results (map :message results)
        :clova.core/invalid? (some (partial not) (map :valid? results))}
       (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))
 
