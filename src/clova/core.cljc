@@ -384,22 +384,24 @@
   Returns a sequence of functions merged with meta data used by
   the validation."
   [col]
-  (let [key-or-key-seq? (fn [i] (or (keyword? i)
-                                    (and (sequential? i)
-                                         (every? keyword? i))))
-        key-func-pairs (partition 2 (partition-by key-or-key-seq? col))
-        metaify (fn [f target] (let [func-or-seq f
-                                     func (if (sequential? func-or-seq)
-                                            (first func-or-seq)
-                                            func-or-seq)
-                                     func-meta (meta func)
-                                     args (if (sequential? func-or-seq)
-                                            {::args (rest func-or-seq)})
-                                     val-meta (merge args {::target target})]
-                                 (with-meta func (merge func-meta val-meta))))]
-    (flatten (map #(let [target (first (first %))
-                         function-seq (second %)]
-                     (map (fn [f] (metaify f target)) function-seq)) key-func-pairs))))
+  (if (every? u/function? col)
+    col
+    (let [key-or-key-seq? (fn [i] (or (keyword? i)
+                                      (and (sequential? i)
+                                           (every? keyword? i))))
+          key-func-pairs (partition 2 (partition-by key-or-key-seq? col))
+          metaify (fn [f target] (let [func-or-seq f
+                                       func (if (sequential? func-or-seq)
+                                              (first func-or-seq)
+                                              func-or-seq)
+                                       func-meta (meta func)
+                                       args (if (sequential? func-or-seq)
+                                              {::args (rest func-or-seq)})
+                                       val-meta (merge args {::target target})]
+                                   (with-meta func (merge func-meta val-meta))))]
+      (flatten (map #(let [target (first (first %))
+                           function-seq (second %)]
+                       (map (fn [f] (metaify f target)) function-seq)) key-func-pairs)))))
 
 (defn- apply-validator
   [validator m default-message-fn]
@@ -440,9 +442,7 @@
   ([v-set m {:keys [default-message-fn short-circuit?]
              :or {default-message-fn (fn [v-type value args] nil)
                   short-circuit? false}}]
-   (->> (if (every? u/function? v-set)
-          v-set
-          (validation-set v-set))
+   (->> (validation-set v-set)
         (u/map-some short-circuit? #(apply-validator % m default-message-fn))
         (remove nil?)
         (u/validated-map m))))
