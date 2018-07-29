@@ -2,25 +2,18 @@
 
 A "minimal" validation library for Clojure and ClojureScript.
 
-- [API Docs](http://markwoodhall.github.io/clova)
+- [API Docs](https://cljdoc.xyz/d/clova/clova/0.40.2/api/clova)
 - [Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
 
 ## Status
 
 [![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
-[![Dependency Status](https://www.versioneye.com/user/projects/566b4d044e049b003b000704/badge.svg?style=flat)](https://www.versioneye.com/user/projects/566b4d044e049b003b000704)
 [![Clojars Project](https://img.shields.io/clojars/v/clova.svg)](http://clojars.org/clova)
 
 
 ## Installation
 
 `clova` is available from [Clojars](https://clojars.org/clova)
-
-#
-
-Add the following to `project.clj` `:dependencies`:
-
-[![Clojars Project](http://clojars.org/clova/latest-version.svg)](http://clojars.org/clova)
 
 ## Usage
 
