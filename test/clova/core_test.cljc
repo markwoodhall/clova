@@ -100,8 +100,8 @@
   (t/testing "validating a valid value"
     (doseq [d [(f/parse "2015-01-01") "2011-01-01" "2014-12-12" "2001-01-24" #?(:clj (java.util.Date.)
                                                                                 :cljs (js/Date.))]]
-      (t/is (core/before? d "2020-01-01"))
-      (t/is (core/before? d (f/parse "2020-01-01")))
+      (t/is (core/before? d "2040-01-01"))
+      (t/is (core/before? d (f/parse "2040-01-01")))
       (t/is (core/before? d #?(:clj (java.util.Date.)
                                :cljs (js/Date.))))))
 
