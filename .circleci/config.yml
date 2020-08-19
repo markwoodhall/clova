@@ -16,5 +16,6 @@ jobs:
 
     steps:
       - checkout
-      # run tests!
+      - run: sudo apt-get update
+      - run: sudo apt-get install nodejs
       - run: make test
