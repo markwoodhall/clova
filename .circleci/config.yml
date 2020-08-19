@@ -16,19 +16,5 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "deps.edn" }}
-            - v1-dependencies-
-
-      - run: lein deps
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "deps.edn" }}
-
       # run tests!
       - run: make test
