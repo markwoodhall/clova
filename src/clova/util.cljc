@@ -105,3 +105,8 @@
   (if short-circuit?
     [(some f col)]
     (map f col)))
+
+(defn deep-merge [a & maps]
+  (if (map? a)
+    (apply merge-with deep-merge a maps)
+    (apply merge-with deep-merge maps)))

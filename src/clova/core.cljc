@@ -439,13 +439,15 @@
   The default is false and therefore to process all validators."
   ([v-set m]
    (validate v-set m {}))
-  ([v-set m {:keys [default-message-fn short-circuit?]
+  ([v-set m {:keys [default-message-fn short-circuit? defaults]
              :or {default-message-fn (fn [v-type value args] nil)
-                  short-circuit? false}}]
+                  short-circuit? false
+                  defaults {}}}]
+   (let [defaults-applied (u/deep-merge defaults m)]
    (->> (validation-set v-set)
-        (u/map-some short-circuit? #(apply-validator % m default-message-fn))
+        (u/map-some short-circuit? #(apply-validator % defaults-applied default-message-fn))
         (remove nil?)
-        (u/validated-map m))))
+        (u/validated-map defaults-applied)))))
 
 (defn valid?
   "Takes a validation set and applies it to m.
@@ -460,3 +462,4 @@
   only the validation results."
   [v-set m]
   (::results (validate v-set m)))
+
