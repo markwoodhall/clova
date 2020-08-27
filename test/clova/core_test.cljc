@@ -640,7 +640,7 @@
 
     (t/testing "validate uses a custom function for default message lookup"
       (let [v-set (core/validation-set [:email core/email? :not-nil core/not-nil? :age [core/between? 1 9]])
-            get-message (fn [v-type value args]
+            get-message (fn [v-type value args _ _]
                           (case v-type
                             :email (str value " is not an email address")
                             :between (str value " should be between " (first args) " and " (second args))

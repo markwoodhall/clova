@@ -420,7 +420,7 @@
         target-name (join " " (map name target))
         value (get-in m target ::key-not-found?)
         realised-args (u/realise-args args value)
-        message (u/func-or-default (partial default-message-fn v-type value realised-args) default-message)
+        message (u/func-or-default (partial default-message-fn v-type value realised-args target-name default-message) default-message)
         valid? (or (and allow-missing-key?
                         (= ::key-not-found? value))
                    (apply validator value realised-args))]
@@ -446,7 +446,7 @@
   ([v-set m]
    (validate v-set m {}))
   ([v-set m {:keys [default-message-fn short-circuit? defaults only-failures?]
-             :or {default-message-fn (fn [v-type value args] nil)
+             :or {default-message-fn (fn [v-type value args target default] nil)
                   short-circuit? false
                   defaults {}
                   only-failures? false}}]
@@ -469,5 +469,3 @@
   only the validation results."
   [v-set m]
   (::results (validate v-set m)))
-
-(validate [:a required? not-empty? stringy?] {:a ""} )
