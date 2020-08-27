@@ -7,7 +7,7 @@ A "minimal" validation library for Clojure and ClojureScript.
 
 ## Status
 
-[![Build Status](https://api.travis-ci.org/markwoodhall/clova.svg?branch=master)](https://api.travis-ci.org/repositories/markwoodhall/clova)
+[![CircleCI](https://circleci.com/gh/markwoodhall/clova.svg?style=svg)](https://circleci.com/gh/markwoodhall/clova)
 [![Clojars Project](https://img.shields.io/clojars/v/clova.svg)](http://clojars.org/clova)
 
 

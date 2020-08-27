@@ -90,13 +90,20 @@
   "Given a sequence of validation results returns a decorated map with
   validation results transposed to applicable keys or the original map (m)
   if results is empty."
-  [m results]
+  [m 
+   {:keys [only-failures?]
+      :or {only-failures? false}}
+   results]
   (if (empty? results)
-    m
+    (if only-failures? {} m)
     (merge
       {:clova.core/results (map :message results)
        :clova.core/invalid? (some (partial not) (map :valid? results))}
-      (reduce (fn [acc i] (assoc-in acc (key i) (map :message (val i)))) m (group-by :target results)))))
+      (reduce 
+        (fn [acc i] 
+          (assoc-in acc (key i) (map :message (val i)))) 
+        (if only-failures? {} m)
+        (group-by :target results)))))
 
 (defn map-some
   "Behaves exactly like map but when `short-circuit?` is true

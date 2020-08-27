@@ -51,6 +51,12 @@
   {::type :not-nil ::default-message "%s is required." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (u/not-nil? value))
+(defvalidator
+  "Checks for the presence of an empty string."
+  not-empty?
+  {::type :not-empty ::default-message "%s is required." :added "0.43.0" ::allow-missing-key? true}
+  [value]
+  (seq value))
 
 (defvalidator
   "Checks for the presence of a key based on the default value of `::key-not-found?`
@@ -439,15 +445,16 @@
   The default is false and therefore to process all validators."
   ([v-set m]
    (validate v-set m {}))
-  ([v-set m {:keys [default-message-fn short-circuit? defaults]
+  ([v-set m {:keys [default-message-fn short-circuit? defaults only-failures?]
              :or {default-message-fn (fn [v-type value args] nil)
                   short-circuit? false
-                  defaults {}}}]
+                  defaults {}
+                  only-failures? false}}]
    (let [defaults-applied (u/deep-merge defaults m)]
-   (->> (validation-set v-set)
-        (u/map-some short-circuit? #(apply-validator % defaults-applied default-message-fn))
-        (remove nil?)
-        (u/validated-map defaults-applied)))))
+     (->> (validation-set v-set)
+          (u/map-some short-circuit? #(apply-validator % defaults-applied default-message-fn))
+          (remove nil?)
+          (u/validated-map defaults-applied {:only-failures? only-failures?})))))
 
 (defn valid?
   "Takes a validation set and applies it to m.
@@ -463,3 +470,4 @@
   [v-set m]
   (::results (validate v-set m)))
 
+(validate [:a required? not-empty? stringy?] {:a ""} )
