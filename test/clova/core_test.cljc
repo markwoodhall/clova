@@ -267,7 +267,7 @@
              (only-clova-meta (meta core/email?)))))
 
   (t/testing "validating a valid email address"
-    (doseq [email ["test@googlemail.com" "test+test@googlemail.com"]]
+    (doseq [email ["test@googlemail.com" "test+test@googlemail.com" "mark.woodhall@gmail.com" "mark.woodhall@gmail.co.uk"]]
       (t/is (core/email? email))))
 
   (t/testing "validating an invalid email address"
