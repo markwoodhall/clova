@@ -689,6 +689,11 @@
             result (core/validate v-set {:test 1})]
         (t/is (:clova.core/invalid? result))))
 
+    (t/testing "validate supports a validation set with non keyword keys "
+      (let [v-set (core/validation-set [1 [> 2]] {:key-fn int?})
+            result (core/validate (core/validation-set [1 [> 2]] {:key-fn int?}) {1 1})]
+        (t/is (:clova.core/invalid? result))))
+
     (t/testing "validate supports a validation set with functional args"
       (let [db {:users ["test@email.com"]}
             users (fn [value]
