@@ -189,6 +189,6 @@ clova has the following built in validators
 
 ## License
 
-Copyright © 2015-2018 Mark Woodhall
+Copyright © 2015-2024 Mark Woodhall
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
