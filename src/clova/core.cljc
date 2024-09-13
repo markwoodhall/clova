@@ -19,19 +19,19 @@
   "
   {:author "Mark Woodhall"}
   #?@(:clj
-       [(:require
-         [clj-time.core :as c]
-         [clj-time.format :as f]
-         [clojure.string :as st :refer [join]]
-         [clova.util :as u])]
-       :cljs
-       [(:require
-         [cljs-time.core :as c]
-         [cljs-time.format :as f]
-         [clojure.string :as st :refer [join]]
-         [clova.util :as u]
-         [goog.string :as gstr])
-        (:require-macros [clova.core :refer [defvalidator]])]))
+      [(:require
+        [clj-time.core :as c]
+        [clj-time.format :as f]
+        [clojure.string :as st :refer [join]]
+        [clova.util :as u])]
+      :cljs
+      [(:require
+        [cljs-time.core :as c]
+        [cljs-time.format :as f]
+        [clojure.string :as st :refer [join]]
+        [clova.util :as u]
+        [goog.string :as gstr])
+       (:require-macros [clova.core :refer [defvalidator]])]))
 
 (defmacro defvalidator
   "Wraps body in a function and defines it with meta data
@@ -43,7 +43,7 @@
        ~(with-meta fname {:doc doc-string :added (:added validator-meta-data) :arglists `'(~args)})
        (with-meta (fn ~fname ([~@args]
                               ~@body))
-                  ~validator-meta-data))))
+         ~validator-meta-data))))
 
 (defvalidator
   "Checks for the presence of a non nil value."
@@ -51,6 +51,7 @@
   {::type :not-nil ::default-message "%s is required." :added "0.2.0" ::allow-missing-key? true}
   [value]
   (u/not-nil? value))
+
 (defvalidator
   "Checks for the presence of an empty string."
   not-empty?
@@ -371,7 +372,7 @@
   ([f {:keys [default-message allow-missing-key?]
        :or {default-message "%s is %s but this is not a valid value."
             allow-missing-key? true}
-       :as m}]
+       :as _}]
    (let [m-data {::type :as-validator ::default-message default-message ::allow-missing-key? allow-missing-key?}]
      (with-meta f m-data))))
 
@@ -402,7 +403,7 @@
                                                (first func-or-seq)
                                                func-or-seq)
                                         func-meta (meta func)
-                                        args (if (sequential? func-or-seq)
+                                        args (when (sequential? func-or-seq)
                                                {::args (rest func-or-seq)})
                                         val-meta (merge args {::target target})]
                                     (with-meta func (merge func-meta val-meta))))]
@@ -447,7 +448,7 @@
   ([v-set m]
    (validate v-set m {}))
   ([v-set m {:keys [default-message-fn short-circuit? defaults only-failures?]
-             :or {default-message-fn (fn [v-type value args target default] nil)
+             :or {default-message-fn (fn [_v-type _value _args _target _default] nil)
                   short-circuit? false
                   defaults {}
                   only-failures? false}}]
@@ -464,6 +465,7 @@
   [v-set m]
   (not (::invalid? (validate v-set m))))
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn results
   "Takes a validation set and applies it to m.
   This is just a shorthand method over the validate function and returns
