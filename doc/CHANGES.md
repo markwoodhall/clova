@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.48.0 (13-09-2024)
+
+* Add `gov-uk-post-code` validation
+
 ### 0.47.0 (13-09-2024)
 
 * Remove unused `get-possibly-unbound-var` function to fix warnings
