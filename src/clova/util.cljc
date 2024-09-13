@@ -1,12 +1,12 @@
 (ns clova.util
   #?@(:clj
-       [(:require
-          [clj-time.coerce :as c]
-          [clj-time.format :as f])]
-       :cljs
-       [(:require
-          [cljs-time.coerce :as c]
-          [cljs-time.format :as f])]))
+      [(:require
+        [clj-time.coerce :as c]
+        [clj-time.format :as f])]
+      :cljs
+      [(:require
+        [cljs-time.coerce :as c]
+        [cljs-time.format :as f])]))
 
 (def not-nil? (complement nil?))
 
@@ -83,20 +83,20 @@
   "Given a sequence of validation results returns a decorated map with
   validation results transposed to applicable keys or the original map (m)
   if results is empty."
-  [m 
+  [m
    {:keys [only-failures?]
-      :or {only-failures? false}}
+    :or {only-failures? false}}
    results]
   (if (empty? results)
     (if only-failures? {} m)
     (merge
-      {:clova.core/results (map :message results)
-       :clova.core/invalid? (some (partial not) (map :valid? results))}
-      (reduce 
-        (fn [acc i] 
-          (assoc-in acc (key i) (map :message (val i)))) 
-        (if only-failures? {} m)
-        (group-by :target results)))))
+     {:clova.core/results (map :message results)
+      :clova.core/invalid? (some (partial not) (map :valid? results))}
+     (reduce
+      (fn [acc i]
+        (assoc-in acc (key i) (map :message (val i))))
+      (if only-failures? {} m)
+      (group-by :target results)))))
 
 (defn map-some
   "Behaves exactly like map but when `short-circuit?` is true
