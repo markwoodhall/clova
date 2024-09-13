@@ -41,13 +41,6 @@
     value
     [value]))
 
-(defn- get-possibly-unbound-var
-  "Like var-get but returns nil if the var is unbound."
-  [v]
-  (try (var-get v)
-       (catch IllegalStateException e
-         nil)))
-
 (defn function?
   "Returns true if argument is a function or a symbol that resolves to
   a function (not a macro)."
