@@ -300,6 +300,15 @@
     (doseq [post-code [nil "abc" 100 {:a 1} [1 2] "1-1-0" "B112SB" "b112sb"]]
       (t/is (not (core/post-code? post-code))))))
 
+(t/deftest gov-uk-post-code-validator
+  (t/testing "validating a valid uk post code"
+    (doseq [post-code ["B11 2SB" "b11 2sb" "b112sb" "B112SB"]]
+      (t/is (core/gov-uk-post-code? post-code))))
+
+  (t/testing "validating an invalid uk post code"
+    (doseq [post-code [nil "abc" 100 {:a 1} [1 2] "1-1-0" "B11    2SB" "b11 !2sb"]]
+      (t/is (not (core/gov-uk-post-code? post-code))))))
+
 (t/deftest url-validator
   (t/testing "url validator exposes correct meta data"
     (t/is (= (only-clova-meta exp-url-meta)
@@ -377,7 +386,6 @@
     (doseq [not-positive [nil 0 -1 -2 -10 -20 -100 -200]]
       (t/is (not (core/positive? not-positive))))))
 
-
 (t/deftest negative-validator
   (t/testing "negative validator exposes correct meta data"
     (t/is (= (only-clova-meta exp-negative-meta)
@@ -422,15 +430,15 @@
 
   (t/testing "validating a value that is shorter or longer"
     (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
-            (t/is (not (core/length? v 3)))))
+      (t/is (not (core/length? v 3)))))
 
   (t/testing "validating a value that is the correct length"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/length? v 3))))
+      (t/is (core/length? v 3))))
 
   (t/testing "validating nil length"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (not (core/length? v nil))))))
+      (t/is (not (core/length? v nil))))))
 
 (t/deftest longer-validator
   (t/testing "longer validator exposes correct meta data"
@@ -439,15 +447,15 @@
 
   (t/testing "validating a value that is shorter or of equal length"
     (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
-            (t/is (not (core/longer? v 4)))))
+      (t/is (not (core/longer? v 4)))))
 
   (t/testing "validating a value that is longer"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/longer? v 2))))
+      (t/is (core/longer? v 2))))
 
   (t/testing "validating nil longer"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (not (core/longer? v nil))))))
+      (t/is (not (core/longer? v nil))))))
 
 (t/deftest shorter-validator
   (t/testing "shorter validator exposes correct meta data"
@@ -456,15 +464,15 @@
 
   (t/testing "validating a value that is longer or of equal length"
     (doseq [v [nil "aaaa" "aa" [1 2] [1 2 3 4]]]
-            (t/is (not (core/shorter? v 2)))))
+      (t/is (not (core/shorter? v 2)))))
 
   (t/testing "validating a value that is shorter"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (core/shorter? v 4))))
+      (t/is (core/shorter? v 4))))
 
   (t/testing "validating nil shorter"
     (doseq [v ["aaa" "bbb" [1 2 3] ["one" "two" "three"]]]
-            (t/is (not (core/shorter? v nil))))))
+      (t/is (not (core/shorter? v nil))))))
 
 (t/deftest validation-set
   (t/testing "validation set returns a sequence of the correct
@@ -502,7 +510,7 @@
                                     :longer [core/longer? 2]
                                     :shorter [core/shorter? 2]
                                     :required [core/required?]
-                                    :all [core/all? [(fn[v] (= v 5))]]
+                                    :all [core/all? [(fn [v] (= v 5))]]
                                     :credit-card [core/credit-card?]
                                     :numeric core/numeric?
                                     :stringy core/stringy?
@@ -584,16 +592,16 @@
 
     (t/testing "validate returns original map transposed with errors on failure"
       (let [data {:user "mark" :profile {:age 99}}
-            expected  {:clova.core/invalid? true :clova.core/results '("profile email is required.") 
+            expected  {:clova.core/invalid? true :clova.core/results '("profile email is required.")
                        :user "mark" :profile {:email '("profile email is required.") :age 99}}
             result (core/validate [[:profile :email] core/required? core/email?] data)]
         (t/is (= expected result))))
 
     (t/testing "validate returns original map transposed with multiple errors on failure"
       (let [data {:user "mark" :profile {:email 123456789 :age 99}}
-            expected  {:clova.core/invalid? true 
-                       :clova.core/results '("user is mark but it should have a length longer than 5." "profile email is 123456789 but it should be a string." "profile email should be a valid email address.") 
-                       :user '("user is mark but it should have a length longer than 5.") 
+            expected  {:clova.core/invalid? true
+                       :clova.core/results '("user is mark but it should have a length longer than 5." "profile email is 123456789 but it should be a string." "profile email should be a valid email address.")
+                       :user '("user is mark but it should have a length longer than 5.")
                        :profile {:email '("profile email is 123456789 but it should be a string." "profile email should be a valid email address.") :age 99}}
             result (core/validate [:user core/required? core/stringy? [core/longer? 5] [:profile :email] core/required? core/stringy? core/email?] data)]
         (t/is (= expected result))))
@@ -706,13 +714,13 @@
         (t/is (first (:clova.core/results result2)) "test@email.com already exists")))))
 
 #?(:cljs
-    (do
-      (enable-console-print!)
-      (set! *main-cli-fn* #(t/run-tests))))
+   (do
+     (enable-console-print!)
+     (set! *main-cli-fn* #(t/run-tests))))
 
 #?(:cljs
-    (defmethod t/report [:cljs.test/default :end-run-tests]
-      [m]
-      (if (t/successful? m)
-        (set! (.-exitCode js/process) 0)
-        (set! (.-exitCode js/process) 1))))
+   (defmethod t/report [:cljs.test/default :end-run-tests]
+     [m]
+     (if (t/successful? m)
+       (set! (.-exitCode js/process) 0)
+       (set! (.-exitCode js/process) 1))))

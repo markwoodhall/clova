@@ -98,6 +98,14 @@
   (matches? value #"(?i)^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"))
 
 (defvalidator
+  "Checks an input value to see if it is a valid uk post code. 
+  Unlike `post-code?` this version uses the regex made available by gov.uk"
+  gov-uk-post-code?
+  {::type :gov-uk-post-code ::default-message "%s should be a valid post code." :added "0.48.0" ::allow-missing-key? true}
+  [value]
+  (matches? value #"^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) {0,1}[0-9][A-Za-z]{2})$"))
+
+(defvalidator
   "Checks an input value to see if it is a valid url."
   url?
   {::type :url ::default-message "%s should be a valid url." :added "0.2.0" ::allow-missing-key? true}
