@@ -11,11 +11,11 @@
   - `as-validator`
 
   You can view more information in the [readme] (https://github.com/markwoodhall/clova/blob/master/README.md).
-  There are also example validation scenarios [here](http://markwoodhall.github.io/clova/EXAMPLES.html).
+  There are also example validation scenarios [here](https://github.com/markwoodhall/clova/blob/master/doc/EXAMPLES.md).
 
-  The API documentation is available [here](http://markwoodhall.github.io/clova/).
+  The API documentation is available [here](https://cljdoc.org/d/clova/clova/).
 
-  You can also view [blog posts] (http://markw.xyz/tags/clova/) about clova.
+  You can also view [blog posts] (http://markw.tech/tags/clova/) about clova.
   "
   {:author "Mark Woodhall"}
   #?@(:clj
