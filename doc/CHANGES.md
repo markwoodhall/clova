@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.47.0 (13-09-2024)
+
+* Remove unused `get-possibly-unbound-var` function to fix warnings
+* Upgrade base clojure version to resolve security vulnerability - https://github.com/markwoodhall/clova/pull/10
+
 ### 0.37.0 (13-12-2017)
 
 * Update clj-time dependency.
