@@ -31,7 +31,8 @@
         [clojure.string :as st :refer [join]]
         [clova.util :as u]
         [goog.string :as gstr])
-       (:require-macros [clova.core :refer [defvalidator]])]))
+       (:require-macros [clova.core :refer [defvalidator]])
+       (:refer-clojure :exclude [exists?])]))
 
 (defmacro defvalidator
   "Wraps body in a function and defines it with meta data
