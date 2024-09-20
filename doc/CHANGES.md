@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.49.0 (20-09-2024)
+
+Exclude `cljs.core/exists?` to turn off redef warning.
+
 ### 0.48.0 (13-09-2024)
 
 * Add `gov-uk-post-code` validation
