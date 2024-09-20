@@ -2,7 +2,7 @@
 
 A "minimal" validation library for Clojure and ClojureScript.
 
-- [API Docs](https://cljdoc.xyz/d/clova/clova/0.48.0/api/clova)
+- [API Docs](https://cljdoc.xyz/d/clova/clova/0.49.0/api/clova)
 - [Change Log](https://github.com/markwoodhall/clova/blob/master/doc/CHANGES.md)
 
 ## Status
