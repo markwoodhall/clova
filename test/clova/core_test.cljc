@@ -157,10 +157,10 @@
 (t/deftest as-validator-validator
   (t/testing "as-validator validator exposes default meta data"
     (t/is (= (only-clova-meta exp-default-as-validator-meta)
-             (only-clova-meta (meta (core/as-validator #(true)))))))
+             (only-clova-meta (meta (core/as-validator (constantly true))))))))
   (t/testing "as-validator validator exposes correct meta data"
     (t/is (= (only-clova-meta exp-as-validator-meta)
-             (only-clova-meta (meta (core/as-validator #(true) {:target :as-validator :default-message "%s is %s but it should be XXX."})))))))
+             (only-clova-meta (meta (core/as-validator (constantly true) {:target :as-validator :default-message "%s is %s but it should be XXX."}))))))
 
 (t/deftest stringy-validator
   (t/testing "stringy validator exposes correct meta data"
@@ -220,11 +220,11 @@
              (only-clova-meta (meta core/all?)))))
 
   (t/testing "validating a valid value"
-    (doseq [col [true (fn [v] true) [true true] [(fn [v] true) (fn [v] true)]]]
+    (doseq [col [true (fn [_] true) [true true] [(fn [_] true) (fn [_] true)]]]
       (t/is (core/all? true col))))
 
   (t/testing "validating an invalid value"
-    (doseq [col [false (fn [v] false) [false false] [(fn [v] false) (fn [v] false)] [(fn [v] true) (fn [v] false)]]]
+    (doseq [col [false (fn [_] false) [false false] [(fn [_] false) (fn [_] false)] [(fn [_] true) (fn [_] false)]]]
       (t/is (not (core/all? false col)))))
 
   (t/testing "validating an invalid value with other validators"
@@ -409,7 +409,7 @@
 
   (t/testing "validating a value that does not match"
     (doseq [v ["nonmatch" nil]]
-      (t/is (not (core/matches? "nonmatch" #"amatch"))))))
+      (t/is (not (core/matches? v #"amatch"))))))
 
 (t/deftest one-of-validator
   (t/testing "one-of validator exposes correct meta data"
@@ -421,7 +421,7 @@
 
   (t/testing "validating a value that is not one of a collection"
     (doseq [v ["nonmatch" nil]]
-      (t/is (not (core/one-of? "nonmatch" ["one" "two" "three"]))))))
+      (t/is (not (core/one-of? v ["one" "two" "three"]))))))
 
 (t/deftest length-validator
   (t/testing "length validator exposes correct meta data"
@@ -699,7 +699,7 @@
 
     (t/testing "validate supports a validation set with non keyword keys "
       (let [v-set (core/validation-set [1 [> 2]] {:key-fn int?})
-            result (core/validate (core/validation-set [1 [> 2]] {:key-fn int?}) {1 1})]
+            result (core/validate v-set {1 1})]
         (t/is (:clova.core/invalid? result))))
 
     (t/testing "validate supports a validation set with functional args"
